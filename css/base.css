@@ -1,0 +1,269 @@
+﻿@charset "utf-8";
+
+*{
+    box-sizing: border-box;
+}
+*::after,
+*::before {
+    box-sizing: border-box;
+}
+
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center, main,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend, input,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font: 14px, sans-serif;
+	vertical-align: baseline;
+	outline: none;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+
+/*  ================================================================================
+	Page style --- xn 2017-03-20
+	Some style for the current website.
+	To adjust the element for your need.
+  No responsable coding.
+	================================================================================*/
+
+html,
+body {
+	width: 100%;
+	height: 100%;
+	font-family: "微软雅黑",sans-serif;
+	font-size: 14px;
+	color: #666;
+}
+body {
+	line-height: 1;
+	text-align: center;
+	background: #eff3f6;
+	overflow-y: scroll;
+}
+ol,
+ul,
+ul li {
+	list-style: none;
+}
+a {
+	text-decoration: none;
+	outline: none;
+	color: #999;
+}
+a:hover {
+	color: #1882f8;
+}
+img {
+	border: none;
+}
+button::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner {
+  	border: 0;
+}
+
+input,
+textarea,
+select,
+button {
+	blr: expression_r(this.onFocus=this.blur());  /*支持ie*/
+	outline: none;
+	border: 0;
+	cursor: pointer;
+	text-decoration: none;
+}
+input:focus,
+textarea:focus {
+  color: #282828;
+	border-color: #1882f8;
+  transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}
+
+select {
+  border: 1px solid #ccc;
+}
+
+
+/* cancel float */
+.clear-fix {
+	*overflow: hidden;
+	*zoom: 1;
+}
+.clear-fix::after {
+	display: table;
+	content: "";
+	width: 0;
+	clear: both;
+}
+
+/* 右侧快捷 */
+.otherside {
+    position: fixed;
+    left: 50%;
+    bottom: 50px;
+    z-index: 90;
+    font-size: 12px;
+    margin-left: 605px;
+    line-height: 50px;
+}
+.otherside div {
+    margin-bottom: 1px;
+}
+#goTop {
+    display: none;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    background-image: url("../images/backToTop.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #bedbfc;
+    color: transparent;
+}
+#goTop:hover {
+    background: #1882f8;
+    color: #fff;
+}
+
+
+
+/* header */
+
+nav {
+	background-color: #fff;
+}
+nav ul {
+	width: 1200px;
+	margin: 0 auto;
+	padding: 30px 0 20px;
+}
+nav ul li {
+	float: left;
+	margin-right: 50px;
+}
+nav ul li a {
+	display: inline-block;
+	color: #999;
+	font-size: 16px;
+	line-height: 2;
+	border-bottom: 1px solid transparent;
+}
+nav ul li.selected a {
+	color: #1882f8;
+	border-bottom-color: #1882f8;
+}
+
+
+
+
+/* 时间轴 */
+.time-filter {
+    position: fixed;
+    left: 50%;
+    top: 220px;
+    z-index: 90;
+    font-size: 12px;
+    margin-left: 605px;
+    line-height: 50px;
+}
+.time-filter ul li {
+  border-left: 4px solid #ccc;
+  font-size: 12px;
+  line-height: 1.3;
+  margin-bottom: 5px;
+  padding: 5px;
+  min-width: 45px;
+  text-align: left;
+}
+.time-filter ul li .year {
+  padding: 0 5px;
+  font-size: 12px;
+}
+.time-filter ul li .year:hover {
+  color: #1882f8;
+}
+.time-filter ul li ul {
+  display: none;
+}
+.time-filter ul li ul li {
+  border: none;
+  min-width: 35px;
+  text-align: left;
+  margin-left: -17px;
+  line-height: 1;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.time-filter ul li ul li:last-child {
+  padding-top: 5px;
+  padding-left: 5px;
+  margin-top: 0;
+}
+.time-filter ul li ul li a {
+  display: inline-block;
+  position: relative;
+  line-height: 2;
+  font-size: 12px;
+}
+.time-filter ul li ul li a .s-dot {
+  display: inline-block;
+  background-color: #aaa;
+  border-radius: 50%;
+  border: 2px solid #eff3f6;
+  height: 10px;
+  width: 10px;
+  margin-right: 5px;
+  opacity: 0;
+}
+.time-filter ul li ul li a:hover {
+  color: #1882f8;
+}
+.time-filter ul li.swift-edit {
+  color: #1882f8;
+  border-left-color: #1882f8;
+  font-size: 24px;
+  padding: 0 5px;
+  margin-bottom: 15px;
+}
+.time-filter ul li.selected {
+  color: #1882f8;
+  border-left-color: #cee1f6;
+}
+.time-filter ul li.selected .year {
+  color: #fff;
+  background-color: #1882f8;
+  padding: 0 5px;
+}
+.time-filter ul li.selected ul li.selected a {
+  color: #1882f8;
+  font-weight: bold;
+}
+.time-filter ul li.selected ul li.selected a .s-dot {
+  background-color: #1882f8;
+  opacity: 1;
+}
+.time-filter ul li.selected ul li.selected a:hover {
+  color: #1882f8;
+}

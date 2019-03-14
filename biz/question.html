@@ -1,0 +1,267 @@
+﻿<!-- 问题审核 -->
+<div class="content-block">
+	<div class="block-title">问题审核</div>
+	<div class="content-main">
+		<!-- 选项卡，搜索 -->
+		<div class="content-top clear-fix">
+			<div class="content-tabs">
+				<div class="content-tabs-item selected">
+					<div class="tabs-num">53</div>
+					<div class="tabs-text">待审核问题</div>
+				</div>
+				<div class="content-tabs-set">
+					<div class="content-tabs-item">
+						<div class="tabs-num">653</div>
+						<div class="tabs-text">已审核问题</div>
+					</div>
+					<div class="content-tabs-item">
+						<div class="tabs-num">554</div>
+						<div class="tabs-text">通过</div>
+					</div>
+					<div class="content-tabs-item">
+						<div class="tabs-num">99</div>
+						<div class="tabs-text">拒绝</div>
+					</div>
+				</div>
+			</div>
+			<div class="content-search">
+				<input placeholder="搜索问题..." class="input-search" type="text" id="txtSearch">
+                <img id="imgSearch" class="icon-search" src="images/search.png">
+			</div>
+		</div>
+
+		<!-- 表格内容 -->
+		<div class="content-table">
+			<table>
+				<thead>
+		            <tr>
+		                <th>问题及描述</th>
+		                <th width="90">提问人</th>
+		                <th width="90">提问时间</th>
+		                <th width="120">所属分类</th>
+		                <th width="90">所属标签</th>
+		                <th width="150">审核</th>
+		            </tr>
+		        </thead>
+		        <tbody id="tbQuestionApproveList">
+		            <tr>
+		                <td>
+		                	<div class="question-title">时代困境：数据垄断</div>
+		                	<div class="question-describe">
+		                		Facebook 目前最大的问题其实就是广告位用完了。四大app， fb 和instagram 的adload 已经满了，再增加只会减少用户在线时长，whatsapp 和 messager 还没找到很好的盈利手段。如果用户也停止增长，那么未来展望就更不乐观了。
+		                	</div>
+		                </td>
+		                <td>张三</td>
+		                <td class="q-time">
+		                	<p>2019-03-06</p>
+		                	<p>08:20:55</p>
+		                </td>
+		                <td>
+		                	<select>
+		                		<option>智能制造</option>
+		                		<option>工业4.0</option>
+		                	</select>
+		                </td>
+		                <td>
+		                	<a href="javascript:;" class="btn-view">3个</a>
+		                </td>
+		                <td class="to-ratify">
+		                	<a href="javascript:;">通过</a>
+		                	<a href="javascript:;" class="refuse">拒绝</a>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td>
+		                	<div class="question-title">运维专家分析“腾讯云与前沿数控的磁盘数据丢失事件”</div>
+		                	<div class="question-describe">
+		                		Facebook 目前最大的问题其实就是广告位用完了。四大app， fb 和instagram 的adload 已经满了，再增加只会减少用户在线时长，whatsapp 和 messager 还没找到很好的盈利手段。如果用户也停止增长，那么未来展望就更不乐观了。
+		                	</div>
+		                </td>
+		                <td>张三</td>
+		                <td class="q-time">
+		                	<p>2019-03-06</p>
+		                	<p>08:20:55</p>
+		                </td>
+		                <td>
+		                	<select>
+		                		<option>智能制造</option>
+		                		<option>工业4.0</option>
+		                	</select>
+		                </td>
+		                <td>
+		                	<a href="javascript:;" class="btn-view">5个</a>
+		                </td>
+		                <td class="to-ratify">
+		                	<a href="javascript:;">通过</a>
+		                	<a href="javascript:;" class="refuse">拒绝</a>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td>
+		                	<div class="question-title">时代困境：数据垄断</div>
+		                	<div class="question-describe">
+		                		Facebook 目前最大的问题其实就是广告位用完了。四大app， fb 和instagram 的adload 已经满了，再增加只会减少用户在线时长，whatsapp 和 messager 还没找到很好的盈利手段。如果用户也停止增长，那么未来展望就更不乐观了。
+		                	</div>
+		                </td>
+		                <td>张三</td>
+		                <td class="q-time">
+		                	<p>2019-03-06</p>
+		                	<p>08:20:55</p>
+		                </td>
+		                <td>
+		                	<select>
+		                		<option>智能制造</option>
+		                		<option>工业4.0</option>
+		                	</select>
+		                </td>
+		                <td>
+		                	<a href="javascript:;" class="btn-view">1个</a>
+		                </td>
+		                <td class="to-ratify">
+		                	<a href="javascript:;">通过</a>
+		                	<a href="javascript:;" class="refuse">拒绝</a>
+		                </td>
+		            </tr>
+		        </tbody>
+			</table>
+			<div class="pagination">分页</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- 所属标签 -->
+<div class="dialog-tags">
+	<div class="question-title">运维专家分析“腾讯云与前沿数控的磁盘数据丢失事件”</div>
+	<div class="have-tags">
+		<div>所属标签</div>
+		<div class="tags-list clear-fix">
+			<ul>
+				<li>
+					<span>标签1</span>
+					<div class="tags-del" title="删除">
+						<img src="images/trash.png">
+					</div>
+				</li>
+				<li>
+					<span>标签222222222222标签222222222222</span>
+					<div class="tags-del" title="删除">
+						<img src="images/trash.png">
+					</div>
+				</li>
+				<li>
+					<span>标签3</span>
+					<div class="tags-del" title="删除">
+						<img src="images/trash.png">
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="more-tags">
+		<div>更多标签</div>
+		<div class="tags-list clear-fix">
+			<ul>
+				<li>
+					<span>标签4</span>
+					<div class="tags-del" title="添加">
+						<img src="images/add.png">
+					</div>
+				</li>
+				<li>
+					<span>标签5</span>
+					<div class="tags-del" title="添加">
+						<img src="images/add.png">
+					</div>
+				</li>
+				<li>
+					<span>标签6</span>
+					<div class="tags-del" title="添加">
+						<img src="images/add.png">
+					</div>
+				</li>
+				<li>
+					<span>标签7</span>
+					<div class="tags-del" title="添加">
+						<img src="images/add.png">
+					</div>
+				</li>
+				<li>
+					<span>标签8</span>
+					<div class="tags-del" title="添加">
+						<img src="images/add.png">
+					</div>
+				</li>
+				<li>
+					<span>标签9</span>
+					<div class="tags-del" title="添加">
+						<img src="images/add.png">
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+
+<!-- 拒绝 -->
+<div class="dialog-refuse">
+	<div class="question-title">运维专家分析“腾讯云与前沿数控的磁盘数据丢失事件”</div>
+	<div class="refuse-result">
+		<span>审核结果：</span>
+		<span class="refuse-notice">未通过！</span>
+	</div>
+	<div class="refuse-reason">
+		<div>请描述未通过原因</div>
+		<div>
+			<textarea></textarea>
+		</div>
+	</div>
+</div>
+
+
+
+
+<!-- 时间轴 -->
+<div class="time-filter">
+    <ul>
+        <li class="swift-edit">
+            <i class="fa fa-edit"></i>
+        </li>
+        <li>
+            <a href="javascript:void(0);" class="year">全部</a>
+        </li>
+        <li class="selected">
+            <a href="javascript:void(0);" class="year">2018</a>
+            <ul class="month">
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>12月</a></li>
+                <li class="selected"><a href="javascript:void(0);"><em class="s-dot"></em>11月</a></li>
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>10月</a></li>
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>9月</a></li>
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>8月</a></li>
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>7月</a></li>
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>6月</a></li>
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>5月</a></li>
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>4月</a></li>
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>3月</a></li>
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>2月</a></li>
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>1月</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:void(0);" class="year">2017</a>
+            <ul class="month">
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>12月</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:void(0);" class="year">2016
+            </a>
+            <ul class="month">
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>5月</a></li>
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>2月</a></li>
+                <li><a href="javascript:void(0);"><em class="s-dot"></em>1月</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
