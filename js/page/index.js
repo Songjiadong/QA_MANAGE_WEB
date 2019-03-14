@@ -49,32 +49,3 @@
 });
 
 
-//时间轴点击
-function timeLineClick(){
-	//年份切换
-    $(".year").on("click", function() {
-    	var $presentDot =  $(this);
-        $presentDot.parent().siblings().find("ul").hide();
-        $presentDot.parent().addClass("selected").siblings().removeClass("selected");
-        $presentDot.siblings().show().find("li:eq(0)").addClass("selected").siblings().removeClass("selected");
-    });
-    //月份切换
-    $(".month>li").on("click", function() {
-        $(this).addClass("selected").siblings().removeClass("selected");
-    });
-}
-
-
-//风琴效果
-function listAccrodion(){
-	var presentQA = 0;
-	$(".answer-question").on("click", function(){
-		if ( $(this).parent().index() === presentQA ) {
-			$(this).siblings(".answer-list").toggle("blind",300);
-		} else {
-			$(".answer-list").slideUp();
-			$(this).siblings(".answer-list").slideDown();
-		}
-		presentQA = $(this).parent().index();
-	});
-}

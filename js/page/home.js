@@ -5,7 +5,7 @@ Home.Init= function init() {
         if (status == "success") {
 
             //时间轴
-            timeLineClick();
+            $(".year").off("click").on("click", Home.YearClickEvent);
 
             //待审核问题页
             $("#todoQuestion").on('click', function () {
@@ -215,4 +215,14 @@ Home.Init= function init() {
         }
     });
 }
-
+//时间周年点击
+Home.YearClickEvent = function YearClickEvent(event) {
+    var $presentDot = $(this);
+    $presentDot.parent().siblings().find("ul").hide();
+    $presentDot.parent().addClass("selected").siblings().removeClass("selected");
+    $presentDot.siblings().show().find("li:eq(0)").addClass("selected").siblings().removeClass("selected");
+    //月份切换
+    $(".month>li").on("click", function () {
+        $(this).addClass("selected").siblings().removeClass("selected");
+    });
+}
