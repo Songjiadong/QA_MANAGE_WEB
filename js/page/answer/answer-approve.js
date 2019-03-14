@@ -2,12 +2,12 @@
 AnswerInfo.Approve.registerClass("AnswerInfo.Approve");
 //初始化
 AnswerInfo.Approve.Init = function init() {
-    $("#sctMain").load(objPub.BaseUrl + "biz/answer.html", function (respones, status) {
+    $("#sctMain").load(objPub.BaseUrl + "biz/answer/approve-list.html", function (respones, status) {
         if (status == "success") {
             //时间轴
             timeLineClick();
             //切换选项卡
-            tabsClick();
+            //tabsClick();
             //风琴效果
             listAccrodion();
         }

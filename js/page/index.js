@@ -75,13 +75,6 @@ function timeLineClick(){
     });
 }
 
-//切换选项卡
-function tabsClick(){
-	$(".content-tabs .content-tabs-item").on("click", function(){
-		$(".content-tabs-item").removeClass("selected");
-		$(this).addClass("selected")
-	});
-}
 
 //风琴效果
 function listAccrodion(){
