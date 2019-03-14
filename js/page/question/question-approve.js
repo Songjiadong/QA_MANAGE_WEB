@@ -2,7 +2,7 @@
 QuestionInfo.Approve.registerClass("QuestionInfo.Approve");
 //问题审批初始化
 QuestionInfo.Approve.Init = function init() {
-    $("#sctMain").load(objPub.BaseUrl + "biz/question.html", function (respones, status) {
+    $("#sctMain").load(objPub.BaseUrl + "biz/question/approve.html", function (respones, status) {
         if (status == "success") {
             //时间轴
             timeLineClick();

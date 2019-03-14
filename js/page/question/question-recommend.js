@@ -2,7 +2,7 @@
 QuestionInfo.Recommend.registerClass("QuestionInfo.Recommend");
 //问题推荐初始化
 QuestionInfo.Recommend.Init = function init() {
-    $("#sctMain").load(objPub.BaseUrl + "biz/recommend.html", function (respones, status) {
+    $("#sctMain").load(objPub.BaseUrl + "biz/question/recommend-list.html", function (respones, status) {
         if (status == "success") {
                 //时间轴
                 timeLineClick();
