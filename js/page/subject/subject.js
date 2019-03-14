@@ -15,7 +15,7 @@ SubjectInfo.Init = function init() {
                 Keyword: $("#txtSubjectKeyword").val()
 
             }
-            SubjectInfo.Search(keyword, page);
+            //SubjectInfo.Search(keyword, page);
             $("#imgSubjectSearch").off("click").on("click", { Page: page }, SubjectInfo.SearchEvent);
             $("#txtSubjectKeyword").off("keypress").on("keypress", { Page: page }, SubjectInfo.SearchKeyPressEvent);
         }

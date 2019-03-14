@@ -15,7 +15,7 @@ TagInfo.Init = function init() {
                 Keyword: $("#txtTagKeyword").val()
 
             }
-            TagInfo.Search(keyword, page);
+            //TagInfo.Search(keyword, page);
             $("#imgTagSearch").off("click").on("click", { Page: page }, TagInfo.SearchEvent);
             $("#txtTagKeyword").off("keypress").on("keypress", { Page: page }, TagInfo.SearchKeyPressEvent);
         }
