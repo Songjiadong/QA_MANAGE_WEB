@@ -15,11 +15,11 @@
 				<a href="javascript:void(0);" id="aAllRemoveSubject">- 全部删除</a>
 			</div>
 			<div class="content-search">
-				<input placeholder="搜索问题..." class="input-search" type="text" id="txtSearch">
-                <img id="imgSearch" class="icon-search" src="images/search.png">
+				<input placeholder="搜索问题..." class="input-search" type="text" id="txtSubjectKeyword">
+                <img id="imgSubjectSearch" class="icon-search" src="images/search.png">
 			</div>
 		</div>
-		<div class="category-list">
+		<div id="divSubjectList" class="category-list">
 			<!-- begin -->
 			<div class="category-item clear-fix">
 				<div class="category-name">工业4.0</div>
@@ -41,5 +41,8 @@
 				</div>
 			</div>
 		</div>
+        <div class="pagination">
+            <div id="divSubjectListPage"></div>
+        </div>
 	</div>
 </div>
