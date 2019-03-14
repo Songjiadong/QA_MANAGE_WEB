@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>问答管理平台</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/qa-manage.css">
+</head>
+
+<body>
+    <div class="wrapper">
+
+        <!--不包括顶部logo及用户操作-->
+
+        <nav>
+            <ul class="clear-fix">
+                <li id="liHome" class="selected"><a href="index.html">首页</a></li>
+                <li id="liQuestionApproveList"><a href="javascript:void(0);">问题审核</a></li>
+                <li id="liAnswerApproveList"><a href="javascript:void(0);">回答审核</a></li>
+                <li id="liQuestionRecommendList"><a href="javascript:void(0);">问答推荐</a></li>
+                <li id="liSubjectManage"><a href="javascript:void(0);">分类管理</a></li>
+                <li id="liTagManage"><a href="javascript:void(0);">标签管理</a></li>
+            </ul>
+        </nav>
+
+        <!--主页内容-->
+        <main>
+            <section id="sctMain" class="main-wapper"></section>
+        </main>
+
+        <!--不包括尾部-->
+        
+    </div>
+    
+    <div class="otherside">
+        <div id="goTop">回顶部</div>
+    </div>
+
+    <script src="js/base/jquery-2.1.3.min.js"></script>
+    <script src="js/base/jquery-ui-11.4-custom.min.js"></script>
+    <script src="js/base/jquery.url.js"></script>
+    <script src="js/base/jquery.cookie.js"></script>
+    <script src="js/base/MicrosoftAjax.js"></script>
+    <script src="js/common/miic_common-1.0.js"></script>
+    <script src="js/common/miic-common-ui-1.0.js"></script>
+    <script src="js/base/echarts.common.min.js"></script>
+    <script src="js/page/common.js"></script>
+    <script src="js/page/answer/answer.js"></script>
+    <script src="js/page/answer/answer-approve.js"></script>
+
+    <script src="js/page/question/question.js"></script>
+    <script src="js/page/question/question-approve.js"></script>
+    <script src="js/page/question/question-recommend.js"></script>
+
+    <script src="js/page/subject/subject.js"></script>
+    <script src="js/page/tag/tag.js"></script>
+    <script src="js/page/index.js"></script>
+    <script src="js/page/home.js"></script>
+</body>
+
+</html>
