@@ -1,31 +1,20 @@
 ﻿$(document).ready(function () {
-
-	//避免缓存文件
-	$.ajaxSetup({
-		cache: false
-	});
-
-
 	//返回顶部
-	$(document).on("scroll", $(window), function () {
+	$(window).on("scroll",  function (event) {
 		if ($(this).scrollTop() >= 10) {
-			$('#goTop').fadeIn(30);
+			$("#goTop").fadeIn(30);
 		} else {
-			$('#goTop').fadeOut(30);
+			$("#goTop").fadeOut(30);
 		}
 	});
 	//点击返回顶部
-	$(document).on("click", "#goTop", function () {
+	$("#goTop").off("click").on("click", function (event) {
 		$("html,body").animate({
 			scrollTop: 0
 		}, 500);
 	});
     //首页
 	Home.Init();
-
-	
-	
-
 	//问题审核
 	$("#liQuestionApproveList").off("click").on("click", function (event) {
 		$(this).addClass("selected").siblings().removeClass("selected");

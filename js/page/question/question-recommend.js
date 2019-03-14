@@ -6,8 +6,6 @@ QuestionInfo.Recommend.Init = function init() {
         if (status == "success") {
                 //时间轴
                 timeLineClick();
-                //切换选项卡
-               // tabsClick();
                 //风琴效果
                 listAccrodion();
                 //点击推荐
