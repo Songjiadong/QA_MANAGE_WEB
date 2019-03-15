@@ -36,14 +36,14 @@
 			</div>
 		</div>
 		<div class="qa-chart">
-			<div id="qaChart" style="width: 1140px;height:650px;"></div>
+			<div id="divQaStatistics" style="width: 1140px;height:650px;"></div>
 		</div>
 	</div>
 	<div class="qa-hot-block">
 		<div class="qa-hot-question">
 			<div class="qa-hot-title">热点问题</div>
 			<div class="qa-hot-list">
-				<ul>
+				<ul id="ulHotQuestionList">
 					<li>
 						<div class="qa-hot-num"><img src="images/num/1.png"></div>
 						<div class="qa-hot-content">
@@ -140,7 +140,7 @@
 		<div class="qa-hot-answer">
 			<div class="qa-hot-title">热赞回答</div>
 			<div class="qa-hot-list">
-				<ul>
+				<ul id="ulHotPraiseQuestionList">
 					<li>
 						<div class="qa-hot-answer-title">运维专家分析“腾讯云与前沿数控的磁盘数据丢失事件”</div>
 						<div class="qa-hot-answer-text">Facebook 目前最大的问题其实就是广告位用完了。四大app， fb 和instagram 的adload 已经满了，再增加只会减少用户在线时长，whatsapp 和 messager 还没找到很好的盈利手段。如果用户也停止增长，那么未来展望就更不乐观了。几个数字很有意思， 营收同比增长42%， 其中广告价格上涨了20%。 这意味着广告位的增长只有20% （142%/120%）， 广告价格上涨其实并不是什么好事，因为Advertiser 是要看ROI（Return of investment) 去付钱的，简而言之，如果广告效果不变，广告主要花的钱变多了，那广告主还愿意买么？现在各位再来想，假如市场上每个季度新增100个广告主，原来可能谷歌fb 6:4分， 现在fb 广告位满了，广告贵了， 这新增的这100个广告主可能就是谷歌fb 9：1 分了。</div>
@@ -221,7 +221,7 @@
 <div class="content-block visit-block">
 	<div class="home-block-title">用户访问量</div>
 	<div class="visit-chart">
-		<div id="qaVisit" style="width: 1140px;height:650px;"></div>
+        <div id="divUserVisitStatisitics" style="width: 1140px;height:650px;"></div>
 	</div>
 	<div class="aq-ranking">
 		<div class="qa-hot-title">热点问题</div>
@@ -233,7 +233,7 @@
 					<p>提问最多</p>
 				</div>
 				<div class="ranking-list">
-					<ul>
+					<ul id="ulMostQuestionUserList">
 						<li class="clear-fix">
 							<div class="ranking-user">
 								<span class="ranking-user-cover">
@@ -290,7 +290,7 @@
 					<p>回答最多</p>
 				</div>
 				<div class="ranking-list">
-					<ul>
+					<ul id="ulMostAnswerUserList">
 						<li class="clear-fix">
 							<div class="ranking-user">
 								<span class="ranking-user-cover">
@@ -347,7 +347,7 @@
 					<p>被点赞最多</p>
 				</div>
 				<div class="ranking-list">
-					<ul>
+					<ul id="ulMostPraiseUserList">
 						<li class="clear-fix">
 							<div class="ranking-user">
 								<span class="ranking-user-cover">
