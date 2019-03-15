@@ -11,3 +11,7 @@ window.objPub = {
     UserName: $.GetCookie("MegawiseUserName") == undefined ? "" : decodeURI($.GetCookie("MegawiseUserName")),
     LoginUserInfo: null,
 };
+//浏览事件
+window.objPub.BrowseEvent = function BrowseEvent(event) {
+
+}
