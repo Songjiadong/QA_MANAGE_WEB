@@ -7,7 +7,7 @@ Home.Init= function init() {
             //时间轴
             $(".year").off("click").on("click", Home.YearClickEvent);
            // Home.HotPraiseQuestionBind();
-           // Home.HotQuestionBind();
+            Home.HotQuestionBind();
             //Home.MostQuestionUserBind();
             //Home.MostPraiseUserBind();
             //Home.MostAnswerUserBind();
@@ -69,27 +69,61 @@ Home.HotPraiseQuestionBind = function hot_praise_question_bind() {
 }
 Home.HotQuestionBind = function hot_question_bind() {
     var temp = "";
-    var result = [];
-    $.each(result, function (index, item) {
-        temp += "<li>";
-        temp += "<div class='qa-hot-num'><img src='images/num/1.png'></div>";
-        temp += "<div class='qa-hot-content'>";
-        temp += "<div id='divBrowseItem" + index + "' class='qa-hot-question-title'>如何看待 Facebook 2018 年二季度财报公布后盘后竞价大跌 20%？</div>";
-        temp += "<div class='qa-hot-question-opts'>";
-        temp += "<div class='ad-item-view'>";
-        temp += "<span class='aq-item-like-icon'><img src='images/eye.png'></span>";
-        temp += "<span class='aq-item-like-text'>浏览</span><span class='aq-item-like-num'>0</span>";
-        temp += "</div>";
-        temp += "<div class='ad-item-fav'>";
-        temp += "<span class='aq-item-like-icon'><img src='images/my-fav.png'></span>";
-        temp += "<span class='aq-item-like-text'>收藏</span><span class='aq-item-like-num'>0</span>";
-        temp += "</div>";
-        temp += "</div>";
-        temp += "</div>";
-        temp += "</li>";
-        $(document).off("click", "#divBrowseItem" + index);
-        $(document).on("click", "#divBrowseItem" + index, { ID: "" }, objPub.BrowseEvent);
+    var result = [];//"service/question/GetHotList" 
+    var keyword = {
+        Keyword:"1",
+    }
+    var page ={
+        PageStart: 1,
+        PageEnd: 10,
+    }
+    var questionApproveSearchRequest ={
+        //Keyword:"1",
+        QuestionApproveKeyword:JSON.stringify(keyword),
+        MiicPage:JSON.stringify(page),
+    }
+    // $.SimpleAjaxPost("service/question/ApproveSearch", true, JSON.stringify({QuestionApproveSearchRequest:questionApproveSearchRequest})).done(function(json){
+    //     alert(json)
+    // })
+    $.ajax({
+        url: "http://qamanage.megawise.cn/service/question/ApproveSearch",
+        async: false,
+        type: "POST",
+        //  data: params,
+        data: questionApproveSearchRequest,
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        xhrFields: {
+            withCredentials: true
+        },
+        success: function (result) {
+            //alert(result.sys_user);
+        },
+        error: function (e) {
+            alert("s");
+        }
     });
+    // $.each(result, function (index, item) {
+    //     temp += "<li>";
+    //     temp += "<div class='qa-hot-num'><img src='images/num/1.png'></div>";
+    //     temp += "<div class='qa-hot-content'>";
+    //     temp += "<div id='divBrowseItem" + index + "' class='qa-hot-question-title'>如何看待 Facebook 2018 年二季度财报公布后盘后竞价大跌 20%？</div>";
+    //     temp += "<div class='qa-hot-question-opts'>";
+    //     temp += "<div class='ad-item-view'>";
+    //     temp += "<span class='aq-item-like-icon'><img src='images/eye.png'></span>";
+    //     temp += "<span class='aq-item-like-text'>浏览</span><span class='aq-item-like-num'>0</span>";
+    //     temp += "</div>";
+    //     temp += "<div class='ad-item-fav'>";
+    //     temp += "<span class='aq-item-like-icon'><img src='images/my-fav.png'></span>";
+    //     temp += "<span class='aq-item-like-text'>收藏</span><span class='aq-item-like-num'>0</span>";
+    //     temp += "</div>";
+    //     temp += "</div>";
+    //     temp += "</div>";
+    //     temp += "</li>";
+    //     $(document).off("click", "#divBrowseItem" + index);
+    //     $(document).on("click", "#divBrowseItem" + index, { ID: "" }, objPub.BrowseEvent);
+    // });
+    
     $("#ulHotQuestionList").empty().append(temp);
     
 }
