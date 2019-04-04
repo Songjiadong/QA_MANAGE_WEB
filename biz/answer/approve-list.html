@@ -5,42 +5,43 @@
 		<!-- 选项卡，搜索 -->
 		<div class="content-top clear-fix">
 			<div class="content-tabs">
-				<div class="content-tabs-item selected">
-					<div class="tabs-num">53</div>
-					<div class="tabs-text">待审核回答（9个问题）</div>
+				<div class="content-tabs-item selected" data="2" id="divWaitApprove">
+					<div class="tabs-num" id="divWaitApproveNum"> </div>
+                    <div class="tabs-text"id="divWaitApproveText">待审核回答</div>
+                    <!-- （9个问题） -->
 				</div>
 				<div class="content-tabs-set">
-					<div class="content-tabs-item">
-						<div class="tabs-num">653</div>
-						<div class="tabs-text">已审核回答（273个问题）</div>
+					<div class="content-tabs-item"  data="8"  id="divAlreadyApprove" >
+						<div class="tabs-num" id="divAlreadyApproveNum"> </div>
+						<div class="tabs-text" id="divAlreadyApproveText">已审核回答</div>
 					</div>
-					<div class="content-tabs-item">
-						<div class="tabs-num">554</div>
-						<div class="tabs-text">通过（219个问题）</div>
+					<div class="content-tabs-item"  data="0"  id="divAgreeApprove" >
+						<div class="tabs-num" id="divAgreeApproveNum"> </div>
+						<div class="tabs-text" id="divAgreeApproveText">通过</div>
 					</div>
-					<div class="content-tabs-item">
-						<div class="tabs-num">99</div>
-						<div class="tabs-text">拒绝（73个问题）</div>
+					<div class="content-tabs-item"  data="1"  id="divRejectApprove">
+						<div class="tabs-num" id="divRejectApprovrNum"> </div>
+						<div class="tabs-text" id="divRejectApproveText">拒绝</div>
 					</div>
 				</div>
 			</div>
 			<div class="content-search">
 				<input placeholder="搜索问题..." class="input-search" type="text" id="txtSearch">
-                <img id="imgSearch" class="icon-search" src="images/search.png">
+                <img id="imgSearch" class="icon-search" src="images/search.png" >
 			</div>
 		</div>
         <!-- 回答列表 -->
-        <div id="divAnswerList" class="answer-block">
+        <div id="divAnswerList" class="answer-block" >
             <!-- begin -->
             <div class="answer-qa">
                 <div class="answer-question">
-                    <div class="question-title">时代困境：数据垄断</div>
+                    <div class="question-title" id="divQuestionTitle">时代困境：数据垄断</div>
                     <div class="answer-num">
-                        <div class="answer-tag">回答：5</div>
+                        <div class="answer-tag" id="divAnswerTag">回答：5</div>
                     </div>
                 </div>
                 <!-- 回答列表 -->
-                <div class="answer-list">
+                <div class="answer-list" >
                     <!-- begin -->
                     <div class="answer-item">
                         <div class="answer-item-user clear-fix">
@@ -66,7 +67,7 @@
                                 <a href="javascript:;">阅读全文</a>
                             </div>
                             <div class="to-ratify">
-                                <a href="javascript:;">通过</a>
+                                <a href="javascript:;" id="a">通过</a>
                                 <a href="javascript:;" class="refuse">拒绝</a>
                             </div>
                         </div>
@@ -253,29 +254,26 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
+            </div> 
+        </div> 
+        <div class="pagination">
+            <div id="divAnswerListPage"></div>
         </div>
-
-        <div class="pagination">分页</div>
 	</div>
 </div>
 
 
 <!-- 时间轴 -->
 <div class="time-filter">
-    <ul>
-        <li class="swift-edit">
-            <i class="fa fa-edit"></i>
-        </li>
+    <ul id="ulDateList"> 
         <li>
             <a href="javascript:void(0);" class="year">全部</a>
         </li>
         <li class="selected">
             <a href="javascript:void(0);" class="year">2018</a>
-            <ul class="month">
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>12月</a></li>
-                <li class="selected"><a href="javascript:void(0);"><em class="s-dot"></em>11月</a></li>
+            <ul class="month" id="ulMonthListOf">
+                <li><a href="javascript:void(0);" value="12"><em class="s-dot"></em>12月</a></li>
+                <li class="selected"><a href="javascript:void(0);" value="11"><em class="s-dot"></em>11月</a></li>
                 <li><a href="javascript:void(0);"><em class="s-dot"></em>10月</a></li>
                 <li><a href="javascript:void(0);"><em class="s-dot"></em>9月</a></li>
                 <li><a href="javascript:void(0);"><em class="s-dot"></em>8月</a></li>
