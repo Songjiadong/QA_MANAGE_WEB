@@ -69,40 +69,21 @@ Home.HotPraiseQuestionBind = function hot_praise_question_bind() {
 }
 Home.HotQuestionBind = function hot_question_bind() {
     var temp = "";
-    var result = [];//"service/question/GetHotList" 
+    var result = [];
     var keyword = {
         Keyword:"1",
     }
     var page ={
-        PageStart: 1,
-        PageEnd: 10,
+        PageStart: "1",
+        PageEnd: "10"
     }
-    var questionApproveSearchRequest ={
-        //Keyword:"1",
-        QuestionApproveKeyword:JSON.stringify(keyword),
-        MiicPage:JSON.stringify(page),
-    }
-    // $.SimpleAjaxPost("service/question/ApproveSearch", true, JSON.stringify({QuestionApproveSearchRequest:questionApproveSearchRequest})).done(function(json){
-    //     alert(json)
-    // })
-    $.ajax({
-        url: "http://qamanage.megawise.cn/service/question/ApproveSearch",
-        async: false,
-        type: "POST",
-        //  data: params,
-        data: questionApproveSearchRequest,
-        dataType: "json",
-        contentType: "application/json;charset=utf-8",
-        xhrFields: {
-            withCredentials: true
-        },
-        success: function (result) {
-            //alert(result.sys_user);
-        },
-        error: function (e) {
-            alert("s");
-        }
-    });
+     $.SimpleAjaxPost("service/question/ApproveSearch", true, 
+     JSON.stringify({Keyword:keyword,
+        Page:page
+     })).done(function(json){
+         alert(json)
+     })
+   
     // $.each(result, function (index, item) {
     //     temp += "<li>";
     //     temp += "<div class='qa-hot-num'><img src='images/num/1.png'></div>";
