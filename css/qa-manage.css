@@ -888,3 +888,10 @@ a.files input {
 .tags-list ul li:hover .tags-del {
 	display: block;
 }
+.dialog-column {
+    display: none;
+}
+.dialog-column .table-edit td:first-child {
+    width: 90px;
+    text-align: right;
+}

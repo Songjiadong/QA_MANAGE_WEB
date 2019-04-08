@@ -7,6 +7,7 @@
     <title>问答管理平台</title>
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="/css/wPaginate.css" />
     <link rel="stylesheet" href="css/qa-manage.css">
 </head>
 
@@ -28,6 +29,10 @@
         <!--主页内容-->
         <main>
             <section id="sctMain" class="main-wapper"></section>
+            <form method="post" action="" enctype="multipart/form-data" id="fmContractUpload">
+                <input accept=".doc,.docx,.pdf" name="file" type="file" id="fContractUpload"/>
+            </form>
+            <input id="btnContractFileUpload"  value="上传附件" type="button" >
         </main>
 
         <!--不包括尾部-->
@@ -37,14 +42,17 @@
     <div class="otherside">
         <div id="goTop">回顶部</div>
     </div>
-
+    <section class="dialog-normal">
+        <p class="dialog-content"></p>
+    </section>
     <script src="js/base/jquery-2.1.3.min.js"></script>
     <script src="js/base/jquery-ui-11.4-custom.min.js"></script>
+    <script src="js/base/jquery.form.js"></script>
     <script src="js/base/jquery.url.js"></script>
     <script src="js/base/jquery.cookie.js"></script>
+    <script src="js/base/wPaginate.js"></script>
     <script src="js/base/MicrosoftAjax.js"></script>
-    <script src="js/base/wPaginate.js" charset="UTF-8"></script>
-    <script src="js/base/jquery.form.js"></script>
+    
     <script src="js/common/miic_common-1.0.js"></script>
     <script src="js/common/miic-common-ui-1.0.js"></script>
     <script src="js/base/echarts.common.min.js"></script>

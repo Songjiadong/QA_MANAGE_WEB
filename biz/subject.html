@@ -21,28 +21,46 @@
 		</div>
 		<div id="divSubjectList" class="category-list">
 			<!-- begin -->
-			<div class="category-item clear-fix">
-				<div class="category-name">工业4.0</div>
-				<div class="category-item-opts">
-					<a href="javascript:;">删除</a>
-				</div>
-			</div>
-			<!-- end -->
-			<div class="category-item clear-fix">
-				<div class="category-name">智能制造</div>
-				<div class="category-item-opts">
-					<a href="javascript:;">删除</a>
-				</div>
-			</div>
-			<div class="category-item clear-fix">
-				<div class="category-name">机械重工</div>
-				<div class="category-item-opts">
-					<a href="javascript:;">删除</a>
-				</div>
-			</div>
+			
 		</div>
         <div class="pagination">
             <div id="divSubjectListPage"></div>
         </div>
 	</div>
+</div>
+<div id="divSubjectInfoEditDialog">
+		<table class="table-edit">
+				<tbody id="tbDataForm">
+					<tr>
+						<td align="right">
+							Code
+							<span class="necessary-item">*</span>
+						</td>
+						<td>
+							<input value="" id="txtSubjectCode" type="text" />
+						</td>
+					</tr>
+					<tr>
+						<td align="right">
+							功能代码
+							<span class="necessary-item">*</span>
+						</td>
+						<td>
+							<input value="" id="txtSubjectName" type="text" />
+						</td>
+					</tr>
+					<tr>
+						<td align="right">
+							附件
+							<span class="necessary-item">*</span>
+						</td>
+						<td>
+							<form method="post" action="" enctype="multipart/form-data" id="fmSubjectLogoUpload">
+								<input accept=".jpg,.png" name="file" type="file" id="fContractUpload"/>
+							</form>
+							<input id="btnContractFileUpload"  value="上传附件" type="button" >
+						</td>
+					</tr>
+				</tbody>
+			</table>
 </div>
