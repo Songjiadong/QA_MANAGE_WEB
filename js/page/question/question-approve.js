@@ -128,7 +128,6 @@ QuestionInfo.Approve.PassEvent = function PassEvent(event) {
            SubjectName:$("#sltSubjectID"+index+" option:selected").text(),
            ApproveRemark:"同意",
         })).done(function(json){
-            alert(json.Result)
            if(json.Result == true){
                $.Alert("保存成功",function(){
                    var page = {
@@ -147,7 +146,7 @@ QuestionInfo.Approve.PassEvent = function PassEvent(event) {
 }
 
 QuestionInfo.Approve.GetValidTypeCount = function get_valid_type_count() {
-    $.SimpleAjaxPost("service/question/GetValidTypeCount", true,JSON.stringify({Top:10})).done(function(json){
+    $.SimpleAjaxPost("service/question/GetValidTypeCount", true).done(function(json){
         var result = $.Deserialize(json.List);
         if (result != null) {
             $.each(result, function (index, item) {

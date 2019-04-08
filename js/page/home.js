@@ -6,15 +6,15 @@ Home.Init= function init() {
 
             //时间轴
             $(".year").off("click").on("click", Home.YearClickEvent);
-            //Home.HotQuestionBind();
-            //Home.HotPraiseQuestionBind();
+            Home.HotQuestionBind();
+            Home.HotPraiseQuestionBind();
             //调好的
 
            
             
-            Home.MostQuestionUserBind();
-            Home.MostPraiseUserBind();
-            Home.MostAnswerUserBind();
+            //Home.MostQuestionUserBind();
+           // Home.MostPraiseUserBind();
+           // Home.MostAnswerUserBind();
            // Home.HotPraiseQuestionBind();
            // Home.HotQuestionBind();
             //Home.MostQuestionUserBind();
@@ -84,42 +84,32 @@ Home.HotPraiseQuestionBind = function hot_praise_question_bind() {
 Home.HotQuestionBind = function hot_question_bind() {
     var temp = "";
     var result = [];
-    var keyword = {
-        Keyword:"1",
-    }
-    var page ={
-        PageStart: "1",
-        PageEnd: "10"
-    }
-     $.SimpleAjaxPost("service/question/ApproveSearch", true, 
-     JSON.stringify({Keyword:keyword,
-        Page:page
-     })).done(function(json){
-         alert(json)
+     $.SimpleAjaxPost("service/question/GetHotList", true, 
+     JSON.stringify({Top:10})).done(function(json){
+        var result = $.Deserialize(json.List);
+        $.each(result, function (index, item) {
+            temp += "<li>";
+            temp += "<div class='qa-hot-num'><img src='images/num/1.png'></div>";
+            temp += "<div class='qa-hot-content'>";
+            temp += "<div id='divBrowseItem" + index + "' class='qa-hot-question-title'>"+item.Title+"</div>";
+            temp += "<div class='qa-hot-question-opts'>";
+            temp += "<div class='ad-item-view'>";
+            temp += "<span class='aq-item-like-icon'><img src='images/eye.png'></span>";
+            temp += "<span class='aq-item-like-text'>浏览</span><span class='aq-item-like-num'>"+item.BrowseCount+"</span>";
+            temp += "</div>";
+            temp += "<div class='ad-item-fav'>";
+            temp += "<span class='aq-item-like-icon'><img src='images/my-fav.png'></span>";
+            temp += "<span class='aq-item-like-text'>收藏</span><span class='aq-item-like-num'>"+item.CollectCount+"</span>";
+            temp += "</div>";
+            temp += "</div>";
+            temp += "</div>";
+            temp += "</li>";
+            $(document).off("click", "#divBrowseItem" + index);
+            $(document).on("click", "#divBrowseItem" + index, { ID: "" }, objPub.BrowseEvent);
+        });
+        $("#ulHotQuestionList").empty().append(temp);
      })
-   
-    // $.each(result, function (index, item) {
-    //     temp += "<li>";
-    //     temp += "<div class='qa-hot-num'><img src='images/num/1.png'></div>";
-    //     temp += "<div class='qa-hot-content'>";
-    //     temp += "<div id='divBrowseItem" + index + "' class='qa-hot-question-title'>如何看待 Facebook 2018 年二季度财报公布后盘后竞价大跌 20%？</div>";
-    //     temp += "<div class='qa-hot-question-opts'>";
-    //     temp += "<div class='ad-item-view'>";
-    //     temp += "<span class='aq-item-like-icon'><img src='images/eye.png'></span>";
-    //     temp += "<span class='aq-item-like-text'>浏览</span><span class='aq-item-like-num'>0</span>";
-    //     temp += "</div>";
-    //     temp += "<div class='ad-item-fav'>";
-    //     temp += "<span class='aq-item-like-icon'><img src='images/my-fav.png'></span>";
-    //     temp += "<span class='aq-item-like-text'>收藏</span><span class='aq-item-like-num'>0</span>";
-    //     temp += "</div>";
-    //     temp += "</div>";
-    //     temp += "</div>";
-    //     temp += "</li>";
-    //     $(document).off("click", "#divBrowseItem" + index);
-    //     $(document).on("click", "#divBrowseItem" + index, { ID: "" }, objPub.BrowseEvent);
-    // });
     
-    $("#ulHotQuestionList").empty().append(temp);
     
 }
 //最多提问用户绑定
