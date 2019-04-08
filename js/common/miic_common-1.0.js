@@ -101,7 +101,7 @@ function ajax_jsonp(url_str, data_str, callback) {
                     $.Alert(x.responseText);
                 }
                 else {
-                     handle_exception(x);
+                    console.log(x);
                 }
             }
         });
@@ -120,7 +120,7 @@ function ajax_jsonp(url_str, data_str, callback) {
                     $.Alert(x.responseText);
                 }
                 else {
-                     handle_exception(x);
+                    console.log(x);
                 }
             }
         });
@@ -154,7 +154,7 @@ function simple_ajax_json_cors(url_str, transType, data_str) {
                     console.log(x.responseText);
                 }
                 else {
-                     handle_exception(x);
+                    console.log(x);
                 }
             }
         });
@@ -176,7 +176,7 @@ function simple_ajax_json_cors(url_str, transType, data_str) {
                     console.log(x.responseText);
                 }
                 else {
-                     handle_exception(x);
+                    console.log(x);
                 }
             }
         });
@@ -257,7 +257,7 @@ function ajax_json_cors(url_str, transType, data_str, callback) {
                     console.log(x.responseText);
                 }
                 else {
-                     handle_exception(x);
+                    console.log(x);
                 }
             }
         });
@@ -280,7 +280,7 @@ function ajax_json_cors(url_str, transType, data_str, callback) {
                     console.log(x.responseText);
                 }
                 else {
-                     handle_exception(x);
+                    console.log(x);
                 }
             }
         });
@@ -388,7 +388,7 @@ function simple_post_json(url_str, async, data_str, callback) {
                     console.log(x.responseText);
                 }
                 else {
-                    handle_exception(x);
+                    console.log(x);
                 }
             }
         });
@@ -409,7 +409,7 @@ function simple_post_json(url_str, async, data_str, callback) {
                         console.log(x.responseText);
                     }
                     else {
-                        handle_exception(x);
+                        console.log(x);
                     }
                 }
             });
@@ -428,7 +428,7 @@ function simple_post_json(url_str, async, data_str, callback) {
                         console.log(x.responseText);
                     }
                     else {
-                         handle_exception(x);
+                        console.log(x);
                     }
                 }
             });
@@ -448,7 +448,7 @@ function simple_post_json(url_str, async, data_str, callback) {
                     console.log(x.responseText);
                 }
                 else {
-                     handle_exception(x);
+                    console.log(x);
                 }
             }
         });
@@ -541,7 +541,7 @@ function post_json_d(url_str, async, data_str, Cors, transType, callback) {
                         console.log(x.responseText);
                     }
                     else {
-                         handle_exception(x);
+                        console.log(x);
                     }
                 }
             });
@@ -561,7 +561,7 @@ function post_json_d(url_str, async, data_str, Cors, transType, callback) {
                         console.log(x.responseText);
                     }
                     else {
-                         handle_exception(x);
+                        console.log(x);
                     }
                 }
             });
@@ -583,7 +583,7 @@ function post_json_d(url_str, async, data_str, Cors, transType, callback) {
                         console.log(x.responseText);
                     }
                     else {
-                         handle_exception(x);
+                        console.log(x);
                     }
                 }
             });
@@ -602,7 +602,7 @@ function post_json_d(url_str, async, data_str, Cors, transType, callback) {
                         console.log(x.responseText);
                     }
                     else {
-                         handle_exception(x);
+                        console.log(x);
                     }
                 }
             });
