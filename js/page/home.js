@@ -15,6 +15,12 @@ Home.Init= function init() {
             Home.MostQuestionUserBind();
             Home.MostPraiseUserBind();
             Home.MostAnswerUserBind();
+           // Home.HotPraiseQuestionBind();
+           // Home.HotQuestionBind();
+            //Home.MostQuestionUserBind();
+            //Home.MostPraiseUserBind();
+            //Home.MostAnswerUserBind();
+
             Home.QaStatisticsBind();
             Home.UserVisitStatisticsBind();
             //待审核问题页
@@ -101,10 +107,7 @@ Home.HotQuestionBind = function hot_question_bind() {
             $(document).on("click", "#divBrowseItem" + index, { ID: "" }, objPub.BrowseEvent);
         });
         $("#ulHotQuestionList").empty().append(temp);
-     })
-    
-    
-    
+     }) 
     
 }
 //最多提问用户绑定
