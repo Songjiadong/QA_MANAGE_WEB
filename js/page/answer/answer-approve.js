@@ -176,13 +176,13 @@ AnswerInfo.Approve.GetMonthListEvent = function GetMonthListEvent(event) {
     };
     console.log(data_view);
     $.SimpleAjaxPost("service/answer/GetAnswerMonthList", true,JSON.stringify(data_view),function (json) {
-           var result = JSON.parse(json.List);;
+           var result = JSON.parse(json.List);
            var temp = "";
            if (Array.isArray(result)==true) {
-               for (const item of result) {
-                    temp += "<li id='liMonth" + year + "-" + item.MONTH + "'><a href='javascript:void(0);'><em class='s-dot'></em>" + item.MONTH + "月</a></li>";
-                    $(document).off("click", "#liMonth" + year + "-" + item.MONTH).on("click", "#liMonth" + year + "-" + item.MONTH, { Year: year, Month: item.MONTH }, AnswerInfo.Approve.GetMonthInfoListEvent);
-               } 
+            $.each(result, function (index, item) {
+                temp += "<li id='liMonth" + year + "-" + item.MONTH + "'><a href='javascript:void(0);'><em class='s-dot'></em>" + item.MONTH + "月</a></li>";
+                $(document).off("click", "#liMonth" + year + "-" + item.MONTH).on("click", "#liMonth" + year + "-" + item.MONTH, { Year: year, Month: item.MONTH }, AnswerInfo.Approve.GetMonthInfoListEvent);
+            }) 
            }
            $("#ulAnswerInfoListOf" + year).empty().append(temp).show();
        });
