@@ -281,14 +281,24 @@ Home.UserVisitStatisticsBind = function user_visit_statistics_bind() {
     qaVisit.setOption(optionVist);
 }
 Home.QaStatisticsBind = function qa_statistics_bind() {
-    var question_data = ""
+    var question_data=[]
     $.SimpleAjaxPost("service/question/GetQuestionStatisticsInfoList" , true, 
      JSON.stringify({Year:'2014'})).done(function(json){
         var result = $.Deserialize(json.List)
-        $.each(result[0], function (index, item) {
-            question_data+=item.Num+",";
+        $.each(result, function (index, item) {
+            question_data.push(item.January);
+            question_data.push(item.February);
+            question_data.push(item.March);
+            question_data.push(item.April);
+            question_data.push(item.May);
+            question_data.push(item.June);
+            question_data.push(item.July);
+            question_data.push(item.August);
+            question_data.push(item.September);
+            question_data.push(item.October);
+            question_data.push(item.November);
+            question_data.push(item.December);
         });
-        alert(question_data)
         var colors = ['#5793f3', '#d14a61', '#675bba', '#61a0a8', '#d48265', '#2f4554', '#91c7ae'];
     var qaChart = echarts.init($("#divQaStatistics")[0]);
     var optionQa = {
@@ -365,13 +375,13 @@ Home.QaStatisticsBind = function qa_statistics_bind() {
                 type: 'line',
                 xAxisIndex: 1,
                 smooth: true,
-                data: [question_data]
+                data: question_data
             },
             {
                 name: '回答数量',
                 type: 'line',
                 smooth: true,
-                data: [3.9, 5.9, 11.1, 18.7, 48.3, 69.2, 231.6, 46.6, 55.4, 18.4, 10.3, 0.7]
+                data: [3, 5, 11, 18, 48, 69, 231, 46, 55, 18, 10, 7]
             }
         ]
     };
