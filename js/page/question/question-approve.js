@@ -67,7 +67,7 @@ QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
                     temp += "<div class='question-title'>"+item.Title+"</div>";
                     temp += "<div class='question-describe'>"+item.Content+"</div></td>";
                     temp += "<td>"+item.CreaterName+"</td>";
-                    temp += "<td class='q-time'>"+item.CreaterTime+"</td>";
+                    temp += "<td class='q-time'>"+item.CreateTime+"</td>";
                     temp += "<td><select id='sltSubjectID"+index+"'>"+QuestionInfo.Approve.SubjectSltStr+"</select></td>";
                     temp += "<td class='q-time'><a href='javascript:;' class='btn-view'>5个</a></td>";
                     temp +="<td class='to-ratify'>";
