@@ -43,7 +43,7 @@
 
             var paginate = new Paginate(_settings, $elem);
             var $el = paginate.generate();
-            //Èç¹û×ÜÊıÎª0Ôò²»ÏÔÊ¾·ÖÒ³Çø
+            //å¦‚æœæ€»æ•°ä¸º0åˆ™ä¸æ˜¾ç¤ºåˆ†é¡µåŒº
             if (_settings.total != 0) {
                 $elem.append($el);
             }
@@ -61,7 +61,7 @@
         all: '',
         page: '5,10,20',
         // defPage: '10',
-        go: 'ÌøÖÁ',
+        go: 'è·³è‡³',
         spread: 5,			// number of links to display on each side (total 11)
         total: 400,			// total number of results
         index: 0,			// current index (0, 20, 40, etc)
@@ -137,7 +137,7 @@
 	        if (key == "all") {
 	            if (this.settings.ajax) {
 	                var _self = this;
-	                return $('<span style=" margin-left:5px;margin-right:5px;color:#999">' + _self.settings.total + 'Ìõ</span>');
+	                return $('<span style=" margin-left:5px;margin-right:5px;color:#999">' + _self.settings.total + 'æ¡</span>');
 	            }
 	            else {
 	                var url = typeof (this.settings.url) === 'function' ? this.settings.url.apply(this, [i]) : this.settings.url + '/' + i * this.settings.limit;
@@ -150,10 +150,10 @@
 	                var temp = "";
 	                for (var j = 0; j < this.settings[key].split(',').length; j++) {
 	                    if (this.settings[key].split(',')[j] == _self.settings.limit) {
-	                        temp += "<option value='" + this.settings[key].split(',')[j] + "' selected='selected'>" + this.settings[key].split(',')[j] + "Ìõ/Ò³</option>";
+	                        temp += "<option value='" + this.settings[key].split(',')[j] + "' selected='selected'>" + this.settings[key].split(',')[j] + "æ¡/é¡µ</option>";
 	                    }
 	                    else {
-	                        temp += "<option value='" + this.settings[key].split(',')[j] + "'>" + this.settings[key].split(',')[j] + "Ìõ/Ò³</option>";
+	                        temp += "<option value='" + this.settings[key].split(',')[j] + "'>" + this.settings[key].split(',')[j] + "æ¡/é¡µ</option>";
 	                    }
 
 	                }
@@ -177,7 +177,7 @@
                     .click(function () {
                         var $page_val = _self.settings.pid && _self.settings.pid != "" ? $("#" + _self.settings.pid + " ._wPaginate_link_goto").val() : $("._wPaginate_link_goto").val();
                         if ($page_val == "") {
-                            $.Alert("ÇëÊäÈëÒ³Êı£¡");
+                            $.Alert("è¯·è¾“å…¥é¡µæ•°ï¼");
                         }
                         else {
                             var page = parseInt($page_val);
@@ -188,7 +188,7 @@
                                 _self.generateLinks();
                                 _self.settings.url.apply(_self, [sIndex]);
                             } else {
-                                $.Alert("´íÎóµÄÒ³Êı£¡");
+                                $.Alert("é”™è¯¯çš„é¡µæ•°ï¼");
                             }
                         }
                     });
@@ -201,7 +201,7 @@
 	        else if (key == "goto") {
 	            if (this.settings.ajax) {
 	                var _self = this;
-	                return $('<input type="text" class="_wPaginate_link ' + (key ? '_wPaginate_link_' + key : '') + '" style="width:40px;height:10px;line-height:13px;padding:3px 5px"/><span style=" margin-left:10px;color:#999">Ò³</span>')
+	                return $('<input type="text" class="_wPaginate_link ' + (key ? '_wPaginate_link_' + key : '') + '" style="width:40px;height:10px;line-height:13px;padding:3px 5px"/><span style=" margin-left:10px;color:#999">é¡µ</span>')
                         .keyup(function () {
                             var c = $(this);
                             if (/[^\d]/.test(c.val())) {
@@ -219,7 +219,7 @@
                             if (event.keyCode == 13) {
                                 var $page_val = c.val();
                                 if ($page_val == "") {
-                                    $.Alert("ÇëÊäÈëÒ³Êı£¡");
+                                    $.Alert("è¯·è¾“å…¥é¡µæ•°ï¼");
                                 }
                                 else {
                                     var sIndex = parseInt($page_val) - 1;

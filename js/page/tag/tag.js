@@ -8,8 +8,8 @@ TagInfo.Init = function init() {
             $("#aAddTag").off("click").on("click", TagInfo.AddEvent);
             $("#aAllReomoveTag").off("click").on("click", TagInfo.AllRemoveEvent);
             var page = {
-                pageStart: 1,
-                pageEnd: TagInfo.PageSize * 1
+                PageStart: 1,
+                PageEnd: TagInfo.PageSize * 1
             };
             var keyword = {
                 Keyword: $("#txtTagKeyword").val()
@@ -40,9 +40,9 @@ TagInfo.SearchEvent = function SearchEvent(event) {
     TagInfo.Search(keyword, page);
 }
 TagInfo.SearchBind = function SearchBind(keyword, page) {
-    $.SimpleAjaxPost("", true, "{keyword:" + $.Serialize(keyword) + ",page:" + $.Serialize(page) + "}")
+    $.SimpleAjaxPost("service/tag/ManageSearch", true, JSON.stringify({ Keyword: keyword, Page: page }))
         .done(function (json) {
-            var result = $.Deserialize(json.d);
+            var result = json;
             var temp = "";
             if (result != null) {
                 $.each(result, function (index, item) {
@@ -64,9 +64,9 @@ TagInfo.SearchBind = function SearchBind(keyword, page) {
 
 TagInfo.Search = function Search(keyword, page) {
     TagInfo.SearchBind(keyword, page);
-    $.SimpleAjaxPost("", true, "{keyword:" + $.Serialize(keyword) + "}")
+    $.SimpleAjaxPost("service/tag/GetManageSearchCount", true, JSON.stringify({ Keyword: keyword, Page: page }))
         .done(function (json) {
-            var result = json.d;
+            var result = json;
             if (result != 0 && result != null) {
                 $("#ulTagListPage").wPaginate("destroy").wPaginate({
                     theme: "grey",
@@ -96,14 +96,17 @@ TagInfo.AddEvent = function AddEvent(event) {
     var itemStr = "";
     itemStr += '<div class="category-item clear-fix">';
     itemStr += '<div class="category-name">';
-    itemStr += '<input type="text" class="">';
+    itemStr += '<input type="text" class="" id="txtNewTagName">';
     itemStr += '</div>';
     itemStr += '<div class="category-item-opts">';
-    itemStr += '<a href="javascript:;">取消</a>';
-    itemStr += '<a href="javascript:;">保存</a>';
+    itemStr += '<a href="javascript:;" id="txtNewTagCancel">取消</a>';
+    itemStr += '<a href="javascript:;" id="txtNewTagSave">保存</a>';
     itemStr += '</div>';
     itemStr += '</div>';
-    $(".category-list").prepend(itemStr);
+    $(".category-list").prepend(itemStr); 
+    $("#txtNewTagCancel").off("click").on("click", { Page: page }, TagInfo.CancleEvent);
+    $("#txtNewTagSave").off("click").on("click", { Page: page }, TagInfo.SubmitEvent);
+
 }
 //删除所有标签事件
 TagInfo.AllRemoveEvent = function AllRemoveEvent(event) {
