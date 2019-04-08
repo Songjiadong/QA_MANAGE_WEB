@@ -6,11 +6,15 @@ Home.Init= function init() {
 
             //时间轴
             $(".year").off("click").on("click", Home.YearClickEvent);
-           // Home.HotPraiseQuestionBind();
-            Home.HotQuestionBind();
-            //Home.MostQuestionUserBind();
-            //Home.MostPraiseUserBind();
-            //Home.MostAnswerUserBind();
+            //Home.HotQuestionBind();
+            //Home.HotPraiseQuestionBind();
+            //调好的
+
+           
+            
+            Home.MostQuestionUserBind();
+            Home.MostPraiseUserBind();
+            Home.MostAnswerUserBind();
             Home.QaStatisticsBind();
             Home.UserVisitStatisticsBind();
             //待审核问题页
@@ -46,144 +50,130 @@ Home.YearClickEvent = function YearClickEvent(event) {
 //热赞回答绑定
 Home.HotPraiseQuestionBind = function hot_praise_question_bind() {
     var temp = "";
-    var result = [];
-    $.each(result, function (index, item) {
-        temp += "<li>"
-        temp += "<div class='qa-hot-answer-title'>运维专家分析“腾讯云与前沿数控的磁盘数据丢失事件”</div>";
-        temp += "<div class='qa-hot-answer-text'>Facebook 目前最大的问题其实就是广告位用完了。四大app， fb 和instagram 的adload 已经满了，再增加只会减少用户在线时长，思， 营收同比增长42%</div>";
-        temp += "<div class='aq-item-options clear-fix'>";
-        temp += "<div class='ad-item-like'>";
-        temp += "<span class='aq-item-like-icon'><img src='images/like-o.png'></span>";
-        temp += "<span class='aq-item-like-text'>赞</span><span class='aq-item-like-num'>0</span>";
-        temp += "</div>";
-        temp += "<div class='ad-item-view-all'>";
-        temp += "<a id='aBrowseItem" + index + "' href='javascript:void(0);'>查看全文</a>";
-        temp += "</div>";
-        temp += "</div>";
-        temp += "</li>";
-        $(document).off("click", "#aBrowseItem" + index);
-        $(document).on("click", "#aBrowseItem" + index, { ID: "" }, objPub.BrowseEvent);
-    });
-   
-    $("#ulHotPraiseQuestionList").empty().append(temp);
+    $.SimpleAjaxPost("service/question/GetHotPraiseAnswerList" , true, 
+     JSON.stringify({Top:10})).done(function(json){
+        var result = $.Deserialize(json.List)
+        $.each(result, function (index, item) {
+            temp += "<li>"
+            temp += "<div class='qa-hot-answer-title'>"+item.TITLE+"</div>";
+            temp += "<div class='qa-hot-answer-text'>"+item.CONTENT+"</div>";
+            temp += "<div class='aq-item-options clear-fix'>";
+            temp += "<div class='ad-item-like'>";
+            temp += "<span class='aq-item-like-icon'><img src='images/like-o.png'></span>";
+            temp += "<span class='aq-item-like-text'>赞</span><span class='aq-item-like-num'>"+item.PRAISE_COUNT+"</span>";
+            temp += "</div>";
+            temp += "<div class='ad-item-view-all'>";
+            temp += "<a id='aBrowseItem" + index + "' href='javascript:void(0);'>查看全文</a>";
+            temp += "</div>";
+            temp += "</div>";
+            temp += "</li>";
+            $(document).off("click", "#aBrowseItem" + index);
+            $(document).on("click", "#aBrowseItem" + index, { ID: "" }, objPub.BrowseEvent);
+        });
+       
+        $("#ulHotPraiseQuestionList").empty().append(temp);
+     })
+    
 }
 Home.HotQuestionBind = function hot_question_bind() {
     var temp = "";
-    var result = [];//"service/question/GetHotList" 
-    var keyword = {
-        Keyword:"1",
-    }
-    var page ={
-        PageStart: 1,
-        PageEnd: 10,
-    }
-    var questionApproveSearchRequest ={
-        //Keyword:"1",
-        QuestionApproveKeyword:JSON.stringify(keyword),
-        MiicPage:JSON.stringify(page),
-    }
-    // $.SimpleAjaxPost("service/question/ApproveSearch", true, JSON.stringify({QuestionApproveSearchRequest:questionApproveSearchRequest})).done(function(json){
-    //     alert(json)
-    // })
-    $.ajax({
-        url: "http://qamanage.megawise.cn/service/question/ApproveSearch",
-        async: false,
-        type: "POST",
-        //  data: params,
-        data: questionApproveSearchRequest,
-        dataType: "json",
-        contentType: "application/json;charset=utf-8",
-        xhrFields: {
-            withCredentials: true
-        },
-        success: function (result) {
-            //alert(result.sys_user);
-        },
-        error: function (e) {
-            alert("s");
-        }
-    });
-    // $.each(result, function (index, item) {
-    //     temp += "<li>";
-    //     temp += "<div class='qa-hot-num'><img src='images/num/1.png'></div>";
-    //     temp += "<div class='qa-hot-content'>";
-    //     temp += "<div id='divBrowseItem" + index + "' class='qa-hot-question-title'>如何看待 Facebook 2018 年二季度财报公布后盘后竞价大跌 20%？</div>";
-    //     temp += "<div class='qa-hot-question-opts'>";
-    //     temp += "<div class='ad-item-view'>";
-    //     temp += "<span class='aq-item-like-icon'><img src='images/eye.png'></span>";
-    //     temp += "<span class='aq-item-like-text'>浏览</span><span class='aq-item-like-num'>0</span>";
-    //     temp += "</div>";
-    //     temp += "<div class='ad-item-fav'>";
-    //     temp += "<span class='aq-item-like-icon'><img src='images/my-fav.png'></span>";
-    //     temp += "<span class='aq-item-like-text'>收藏</span><span class='aq-item-like-num'>0</span>";
-    //     temp += "</div>";
-    //     temp += "</div>";
-    //     temp += "</div>";
-    //     temp += "</li>";
-    //     $(document).off("click", "#divBrowseItem" + index);
-    //     $(document).on("click", "#divBrowseItem" + index, { ID: "" }, objPub.BrowseEvent);
-    // });
+     $.SimpleAjaxPost("service/question/GetHotList" , true, 
+     JSON.stringify({Top:10})).done(function(json){
+         var result = $.Deserialize(json.List)
+        $.each(result, function (index, item) {
+            temp += "<li>";
+            temp += "<div class='qa-hot-num'><img src='images/num/"+(index+1)+".png'></div>";
+            temp += "<div class='qa-hot-content'>";
+            temp += "<div id='divBrowseItem" + index + "' class='qa-hot-question-title'>"+item.TITLE+"</div>";
+            temp += "<div class='qa-hot-question-opts'>";
+            temp += "<div class='ad-item-view'>";
+            temp += "<span class='aq-item-like-icon'><img src='images/eye.png'></span>";
+            temp += "<span class='aq-item-like-text'>浏览</span><span class='aq-item-like-num'>"+item.BOOST_COUNT+"</span>";
+            temp += "</div>";
+            temp += "<div class='ad-item-fav'>";
+            temp += "<span class='aq-item-like-icon'><img src='images/my-fav.png'></span>";
+            temp += "<span class='aq-item-like-text'>收藏</span><span class='aq-item-like-num'>"+item.SHARE_COUNT+"</span>";
+            temp += "</div>";
+            temp += "</div>";
+            temp += "</div>";
+            temp += "</li>";
+            $(document).off("click", "#divBrowseItem" + index);
+            $(document).on("click", "#divBrowseItem" + index, { ID: "" }, objPub.BrowseEvent);
+        });
+        $("#ulHotQuestionList").empty().append(temp);
+     })
     
-    $("#ulHotQuestionList").empty().append(temp);
+    
+    
     
 }
 //最多提问用户绑定
 Home.MostQuestionUserBind = function most_question_user_bind() {
     var temp = "";
-    var result = [];
-    $.each(result, function (index, item) {
-        temp += "<li class='clear-fix'>";
-        temp += "<div id='divBrowseQuestionUserItem"+index+"' class='ranking-user'>";
-        temp += "<span class='ranking-user-cover'>";
-        temp += "<img src='images/user/boy.png'>";
-        temp += "</span>";
-        temp += "<span>张三</span>";
-        temp += "</div>";
-        temp += "<div class='ranking-num'>0</div>";
-        temp += "</li>";
-        $(document).off("click", "#divBrowseQuestionUserItem" + index);
-        $(document).on("click", "#divBrowseQuestionUserItem" + index, { UserID: "" }, objPub.BrowseUserEvent);
-    });
-    $("#ulMostQuestionUserList").empty().append(temp);
+    $.SimpleAjaxPost("service/user/GetActiveUserListByQuestion" , true, 
+     JSON.stringify({Top:10})).done(function(json){
+        var result = $.Deserialize(json.List)
+        $.each(result, function (index, item) {
+            temp += "<li class='clear-fix'>";
+            temp += "<div id='divBrowseQuestionUserItem"+index+"' class='ranking-user'>";
+            temp += "<span class='ranking-user-cover'>";
+            temp += "<img src='images/user/boy.png'>";
+            temp += "</span>";
+            temp += "<span>"+item.UserName+"</span>";
+            temp += "</div>";
+            temp += "<div class='ranking-num'>"+item.num+"</div>";
+            temp += "</li>";
+            $(document).off("click", "#divBrowseQuestionUserItem" + index);
+            $(document).on("click", "#divBrowseQuestionUserItem" + index, { UserID: "" }, objPub.BrowseUserEvent);
+        });
+        $("#ulMostQuestionUserList").empty().append(temp);
+    })
 }
 //最多回答用户绑定
 Home.MostAnswerUserBind = function most_answer_user_bind() {
     var temp = "";
-    var result = [];
-    $.each(result, function (index, item) {
-        temp+="<li class='clear-fix'>";
-        temp+="<div id='divBrowseAnswerUserItem"+index+"' class='ranking-user'>";
-        temp+="<span class='ranking-user-cover'>";
-		temp+="<img src='images/user/boy.png'>";
-		temp+="</span>";
-		temp+="<span>张三</span>";
-		temp+="</div>";
-		temp+="<div class='ranking-num'>0</div>";
-		temp += "</li>";
-		$(document).off("click", "#divBrowseAnswerUserItem" + index);
-		$(document).on("click", "#divBrowseAnswerUserItem" + index, { UserID: "" }, objPub.BrowseUserEvent);
-        
-    });
-    $("#ulMostAnswerUserList").empty().append(temp);
+    $.SimpleAjaxPost("service/user/GetActiveUserListByAnswer" , true, 
+     JSON.stringify({Top:10})).done(function(json){
+        var result = $.Deserialize(json.List)
+        $.each(result, function (index, item) {
+            temp+="<li class='clear-fix'>";
+            temp+="<div id='divBrowseAnswerUserItem"+index+"' class='ranking-user'>";
+            temp+="<span class='ranking-user-cover'>";
+            temp+="<img src='images/user/boy.png'>";
+            temp+="</span>";
+            temp+="<span>"+item.UserName+"</span>";
+            temp+="</div>";
+            temp+="<div class='ranking-num'>"+item.num+"</div>";
+            temp += "</li>";
+            $(document).off("click", "#divBrowseAnswerUserItem" + index);
+            $(document).on("click", "#divBrowseAnswerUserItem" + index, { UserID: "" }, objPub.BrowseUserEvent);
+            
+        });
+        $("#ulMostAnswerUserList").empty().append(temp);
+    })
 }
 //最多点赞用户绑定
 Home.MostPraiseUserBind = function most_praise_user_bind() {
     var temp = "";
     var result = [];
-    $.each(result, function (index, item) {
-        temp+="<li class='clear-fix'>";
-        temp += "<div id='divBrowsePraiseUserItem"+index+"' class='ranking-user'>";
-        temp+="<span class='ranking-user-cover'>";
-        temp+="<img src='images/user/boy.png'>";
-        temp+="</span>";
-        temp+="<span>张三</span>";
-        temp+="</div>";
-        temp+="<div class='ranking-num'>0</div>";
-        temp += "</li>";
-        $(document).off("click", "#divBrowsePraiseUserItem" + index);
-        $(document).on("click", "#divBrowsePraiseUserItem" + index, { UserID: "" }, objPub.BrowseUserEvent);
-    });
-    $("#ulMostPraiseUserList").empty().append(temp);
+    $.SimpleAjaxPost("service/user/GetActiveUserListByPraise" , true, 
+     JSON.stringify({Top:10})).done(function(json){
+        var result = $.Deserialize(json.List)
+        $.each(result, function (index, item) {
+            temp+="<li class='clear-fix'>";
+            temp += "<div id='divBrowsePraiseUserItem"+index+"' class='ranking-user'>";
+            temp+="<span class='ranking-user-cover'>";
+            temp+="<img src='images/user/boy.png'>";
+            temp+="</span>";
+            temp+="<span>"+item.UserName+"</span>";
+            temp+="</div>";
+            temp+="<div class='ranking-num'>"+item.num+"</div>";
+            temp += "</li>";
+            $(document).off("click", "#divBrowsePraiseUserItem" + index);
+            $(document).on("click", "#divBrowsePraiseUserItem" + index, { UserID: "" }, objPub.BrowseUserEvent);
+        });
+        $("#ulMostPraiseUserList").empty().append(temp);
+    })
 }
 //用户访问量统计绑定
 Home.UserVisitStatisticsBind = function user_visit_statistics_bind() {

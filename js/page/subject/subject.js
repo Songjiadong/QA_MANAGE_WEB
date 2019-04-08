@@ -1,6 +1,7 @@
 ﻿SubjectInfo = function () { }
 SubjectInfo.registerClass("SubjectInfo");
 SubjectInfo.PageSize = 10;
+SubjectInfo.LogoUrl="";
 //初始化
 SubjectInfo.Init = function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/subject.html", function (respones, status) {
@@ -15,28 +16,85 @@ SubjectInfo.Init = function init() {
                 Keyword: $("#txtSubjectKeyword").val()
 
             }
-            //SubjectInfo.Search(keyword, page);
+            SubjectInfo.Search(keyword, page);
             $("#imgSubjectSearch").off("click").on("click", { Page: page }, SubjectInfo.SearchEvent);
             $("#txtSubjectKeyword").off("keypress").on("keypress", { Page: page }, SubjectInfo.SearchKeyPressEvent);
+
+            $("#divSubjectInfoEditDialog").dialog({
+                appendTo: ".main-wapper",
+                autoOpen: false,
+                resizable: false,
+                width: 520,
+                modal: true,
+                title: "新增网络信息",
+                buttons: {
+                    "取　消": function () {
+                        $(this).dialog("close");
+                    },
+                    "确　定": function () {
+                        SubjectInfo.Submit()
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            $("#fSubjectLogo").off("change").on("change", SubjectInfo.UploadSubjectLogoEvent);
         }
     });
 }
+//上传附件
+SubjectInfo.UploadSubjectLogoEvent = function UploadSubjectLogoEvent(event){
+    var $fm = $("#fmSubjectLogoUpload");
+    var $file = $(event.target).val();
+    if ($file != "") {
+        //附件上传
+        $fm.ajaxSubmit({
+            url: "http://qamanage.megawise.cn/service/question/subject/UploadLogo",
+            type: "post",
+            dataType: "json",
+            timeout: 600000,
+            success: function (data, textStatus) {
+                SubjectInfo.LogoUrl = data.Result
+              
+            },
+            error: function (data, status, e) {
+                console.log("上传失败，错误信息：" + e);
+            }
+        });
+    }
+}
 //删除所有主题事件
 SubjectInfo.AllRemoveEvent = function AllRemoveEvent(event) {
+
 }
 //新增主题事件
 SubjectInfo.AddEvent = function AddEvent(event) {
-    var itemStr = "";
-    itemStr += '<div class="category-item clear-fix">';
-    itemStr += '<div class="category-name">';
-    itemStr += '<input type="text" class="">';
-    itemStr += '</div>';
-    itemStr += '<div class="category-item-opts">';
-    itemStr += '<a href="javascript:;">取消</a>';
-    itemStr += '<a href="javascript:;">保存</a>';
-    itemStr += '</div>';
-    itemStr += '</div>';
-    $(".category-list").prepend(itemStr);
+    $("#divSubjectInfoEditDialog").dialog("open");
+    $("#divSubjectInfoEditDialog").data("ID","");
+    //$("#aSubmitSubjectInfo").off("click").on("click",{ID:""},SubjectInfo.SubmitEvent)
+}
+SubjectInfo.Submit = function submit(){
+    var id = ($("#divSubjectInfoEditDialog").data("ID") == "" ? $.NewGuid() : $("#divSubjectInfoEditDialog").data("ID"))
+    $.SimpleAjaxPost("service/question/subject/Submit", true, 
+     JSON.stringify({
+        ID:id,
+        Code:$("#txtSubjectCode").val(),
+        Name:$("#txtSubjectName").val(),
+        Logo:SubjectInfo.LogoUrl
+     })).done(function(json){
+        if(json.Result == true){
+            $.Alert("保存成功",function(){
+                var page = {
+                    pageStart: 1,
+                    pageEnd: SubjectInfo.PageSize * 1
+                };
+                var keyword = {
+                    Keyword: $("#txtSubjectKeyword").val()
+    
+                }
+                SubjectInfo.Search(keyword, page);
+            })
+        }
+     })
 }
 //搜索回车事件
 SubjectInfo.SearchKeyPressEvent = function SearchKeyPressEvent(event) {
@@ -56,24 +114,42 @@ SubjectInfo.SearchEvent = function SearchEvent(event) {
     }
     SubjectInfo.Search(keyword, page);
 }
-SubjectInfo.SearchBind = function SearchBind(keyword, page) {
-    $.SimpleAjaxPost("", true, "{keyword:" + $.Serialize(keyword) + ",page:" + $.Serialize(page) + "}")
+SubjectInfo.GetDetail = function get_detail(id){
+    $.SimpleAjaxPost("service/question/subject/GetInformation", true, JSON.stringify({ID:id}))
         .done(function (json) {
-            var result = $.Deserialize(json.d);
+            var result = json.SubjectInfo
+            $("#txtSubjectCode").val(result.Code);
+            $("#txtSubjectName").val(result.Name);
+        })
+}
+SubjectInfo.UpdateEvent = function UpdateEvent(event){
+    var id = event.data.ID
+    $("#divSubjectInfoEditDialog").dialog("open");
+    $("#divSubjectInfoEditDialog").data("ID",id);
+    SubjectInfo.GetDetail(id);
+}
+SubjectInfo.SearchBind = function SearchBind(keyword, page) {
+    $.SimpleAjaxPost("service/question/subject/Search", true, JSON.stringify({Keyword:keyword,Page:page}))
+        .done(function (json) {
+            var result = $.Deserialize(json.List);
             var temp = "";
             if (result != null) {
                 $.each(result, function (index, item) {
                     temp += "<div class='category-item clear-fix'>";
-                    temp += "<div class='category-name'>工业4.0</div>";
-                    temp += "<div id='divSubjectItem" + index + "' class='category-item-opts'><a href='javascript:void(0);'>删除</a></div>";
+                    temp += "<div class='category-name'>"+item.NAME+"</div>";
+                    temp += "<div class='category-item-opts'>";
+                    temp +="<a id='divSubjectItemUpd" + index + "' href='javascript:void(0);'>修改</a>";
+                    temp +="<a id='divSubjectItemDel" + index + "' href='javascript:void(0);'>删除</a>";
+                    temp +="</div>"
                     temp += "</div>";
-                    $(document).off("click", "#divSubjectItem" + index);
-                    $(document).on("click", "#divSubjectItem" + index, { Item: item }, SubjectInfo.DeleteEvent);
+                    $(document).off("click", "#divSubjectItemDel" + index+",#divSubjectItemUpd"+ index);
+                    $(document).on("click", "#divSubjectItemUpd" + index, { ID: item.ID }, SubjectInfo.UpdateEvent);
+                    $(document).on("click", "#divSubjectItemDel" + index, { ID: item.ID }, SubjectInfo.DeleteEvent);
                 });
-                $("#ulSubjectList").empty().append(temp);
+                $("#divSubjectList").empty().append(temp);
             }
             else {
-                $("#ulSubjectList").empty().append("<tr><td colspan='6'>暂无数据</td></tr>");
+                $("#divSubjectList").empty().append("<tr><td colspan='6'>暂无数据</td></tr>");
                 $("#divSubjectListPage").empty();
             }
         });
@@ -81,9 +157,10 @@ SubjectInfo.SearchBind = function SearchBind(keyword, page) {
 
 SubjectInfo.Search = function Search(keyword, page) {
     SubjectInfo.SearchBind(keyword, page);
-    $.SimpleAjaxPost("", true, "{keyword:" + $.Serialize(keyword) + "}")
+    $.SimpleAjaxPost("service/question/subject/GetSearchCount", true, JSON.stringify({Keyword:keyword}))
         .done(function (json) {
-            var result = json.d;
+            var result = json.Count;
+            $(".tabs-num").html(result)
             if (result != 0 && result != null) {
                 $("#divSubjectListPage").wPaginate("destroy").wPaginate({
                     theme: "grey",
@@ -115,8 +192,25 @@ SubjectInfo.AllRemoveEvent = function AllRemoveEvent(event) {
 }
 //删除主题事件
 SubjectInfo.DeleteEvent = function DeleteEvent(event) {
-    var subject = event.data.Item;
-    $.Confirm({ content: "您确定要删除**主题么?", width: "auto" }, function () {
+    var id = event.data.ID;
+    // $.Confirm({ content: "您确定要删除**主题么?", width: "auto" }, function () {
 
-    });
+    // });
+    $.SimpleAjaxPost("service/question/subject/Delete", true, JSON.stringify({ID:id}))
+        .done(function (json) {
+            if(json.Result == true){
+                var page = {
+                    pageStart: 1,
+                    pageEnd: SubjectInfo.PageSize * 1
+                };
+                var keyword = {
+                    Keyword: $("#txtSubjectKeyword").val()
+    
+                }
+                SubjectInfo.Search(keyword, page);
+                // $.Alert("保存成功",function(){
+                    
+                // })
+            }
+        })
 }
