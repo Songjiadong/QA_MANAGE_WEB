@@ -16,10 +16,6 @@ Home.Init= function init() {
            // Home.MostPraiseUserBind();
            // Home.MostAnswerUserBind();
            // Home.HotPraiseQuestionBind();
-           // Home.HotQuestionBind();
-            //Home.MostQuestionUserBind();
-            //Home.MostPraiseUserBind();
-            //Home.MostAnswerUserBind();
 
             Home.QaStatisticsBind();
             Home.UserVisitStatisticsBind();
@@ -285,7 +281,15 @@ Home.UserVisitStatisticsBind = function user_visit_statistics_bind() {
     qaVisit.setOption(optionVist);
 }
 Home.QaStatisticsBind = function qa_statistics_bind() {
-    var colors = ['#5793f3', '#d14a61', '#675bba', '#61a0a8', '#d48265', '#2f4554', '#91c7ae'];
+    var question_data = ""
+    $.SimpleAjaxPost("service/question/GetQuestionStatisticsInfoList" , true, 
+     JSON.stringify({Year:'2014'})).done(function(json){
+        var result = $.Deserialize(json.List)
+        $.each(result[0], function (index, item) {
+            question_data+=item.Num+",";
+        });
+        alert(question_data)
+        var colors = ['#5793f3', '#d14a61', '#675bba', '#61a0a8', '#d48265', '#2f4554', '#91c7ae'];
     var qaChart = echarts.init($("#divQaStatistics")[0]);
     var optionQa = {
         color: colors,
@@ -361,7 +365,7 @@ Home.QaStatisticsBind = function qa_statistics_bind() {
                 type: 'line',
                 xAxisIndex: 1,
                 smooth: true,
-                data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
+                data: [question_data]
             },
             {
                 name: '回答数量',
@@ -372,5 +376,8 @@ Home.QaStatisticsBind = function qa_statistics_bind() {
         ]
     };
     qaChart.setOption(optionQa);
+    })
+    
+    
     
 }
