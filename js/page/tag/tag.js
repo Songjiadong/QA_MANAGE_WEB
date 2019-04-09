@@ -142,16 +142,18 @@ TagInfo.AllRemoveEvent = function AllRemoveEvent(event) {
     $.Confirm({ content: "您确定要删除所有标签么?", width: "auto" }, function () {
         $.SimpleAjaxPost("service/user/tag/AllRemove", true)
             .done(function (json) {
-                if(json.Result == true){
-                    var page = {
-                        pageStart: 1,
-                        pageEnd: TagInfo.PageSize * 1
-                    };
-                    var keyword = {
-                        Keyword: $("#txtTagKeyword").val()
-        
-                    }
-                    TagInfo.Search(keyword, page); 
+                if (json.Result == true) {
+                    $.Alert("删除成功", function () {
+                        var page = {
+                            pageStart: 1,
+                            pageEnd: TagInfo.PageSize * 1
+                        };
+                        var keyword = {
+                            Keyword: $("#txtTagKeyword").val()
+            
+                        }
+                        TagInfo.Search(keyword, page);
+                    });
                 }
              
         });
@@ -165,16 +167,18 @@ TagInfo.DeleteEvent = function DeleteEvent(event) {
         var id = tagInfos.ID;
         $.SimpleAjaxPost("service/user/tag/Delete", true, JSON.stringify({ ID: id}))
             .done(function (json) {
-                if(json.Result == true){
-                    var page = {
-                        pageStart: 1,
-                        pageEnd: TagInfo.PageSize * 1
-                    };
-                    var keyword = {
-                        Keyword: $("#txtTagKeyword").val()
-        
-                    }
-                    TagInfo.Search(keyword, page); 
+                if (json.Result == true) {
+                    $.Alert("删除成功", function () {
+                        var page = {
+                            pageStart: 1,
+                            pageEnd: TagInfo.PageSize * 1
+                        };
+                        var keyword = {
+                            Keyword: $("#txtTagKeyword").val()
+            
+                        }
+                        TagInfo.Search(keyword, page);
+                    });
                 }
              
         });
