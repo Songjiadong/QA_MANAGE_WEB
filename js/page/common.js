@@ -15,3 +15,32 @@ window.objPub = {
 window.objPub.BrowseEvent = function BrowseEvent(event) {
 
 }
+//windwow滚轮事件
+window.objPub.ScorllEvent = function ScorllEvent(event) {
+    var with_time_axis = event.data.WithTimeAxis;
+    if (with_time_axis == true) {
+        if ($(this).scrollTop() >= 390) {
+            $("#divGoTop").fadeIn(30);
+            $(".filter").css({
+                "top": "30px",
+                "position": "fixed"
+            });
+        } else {
+            $("#divGoTop").fadeOut(30);
+            var from_person = event.data.FromPerson;
+            if (from_person == false) {
+                //moments-list
+                $(".filter").css({
+                    "top": (390 - $(this).scrollTop()) + "px"
+                });
+            }
+            else {
+                //moments-list-person
+                $(".filter").css({
+                    "top": "296px",
+                    "position": "absolute"
+                });
+            }
+        }
+    }
+}

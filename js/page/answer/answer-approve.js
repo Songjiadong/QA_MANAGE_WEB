@@ -6,6 +6,20 @@ AnswerInfo.Approve.Year = new Date().getFullYear().toString();
 AnswerInfo.Approve.Month = (new Date().getMonth() + 1).toString(); 
 AnswerInfo.Approve.SelectedYear = new Date().getFullYear().toString();
 AnswerInfo.Approve.SelectedMonth = (new Date().getMonth() + 1).toString(); 
+//是否能页面加载
+AnswerInfo.Approve.CanPageLoad = false;
+//记录总数
+AnswerInfo.Approve.TotalCount = 0;
+//当前索引
+AnswerInfo.Approve.CurrentIndex = 0;
+AnswerInfo.Approve.OldDocumentHeight = 0;
+//分页垃圾处理
+AnswerInfo.Approve.GC = function GC() {
+    AnswerInfo.Approve.TotalCount = 0;
+    AnswerInfo.Approve.CurrentIndex = 0;
+    AnswerInfo.Approve.CanPageLoad = false;
+    AnswerInfo.Approve.OldDocumentHeight = 0;
+}
 //初始化
 AnswerInfo.Approve.Init = function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/answer/approve-list.html", function (respones, status) {
@@ -18,20 +32,22 @@ AnswerInfo.Approve.Init = function init() {
             });
             //回答审核筛选框初始化
             AnswerInfo.Approve.InitApproveData(); 
-            //设置时间轴显示
+            // //设置时间轴显示
             AnswerInfo.Approve.SetDataList();
             //回答审核默认搜索
             var page = {
                 PageStart: 1,
                 PageEnd: AnswerInfo.Approve.PageSize * 1
             }; 
-            keyword = {
-                Keyword: $("#txtSearch").val(),
-                ApproveStatus:AnswerInfo.ApproveStatus.SimpleApproveWaiting+"",
-                Year:AnswerInfo.Approve.SelectedYear,
-                Month: AnswerInfo.Approve.SelectedMonth  
-            }
-            AnswerInfo.Approve.Search(keyword, page);
+            // keyword = {
+            //     Keyword: $("#txtSearch").val(),
+            //     ApproveStatus:AnswerInfo.ApproveStatus.SimpleApproveWaiting+"",
+            //     Year:AnswerInfo.Approve.SelectedYear,
+            //     Month: AnswerInfo.Approve.SelectedMonth  
+            // }
+            // AnswerInfo.Approve.Search(keyword, page);
+            //滚轮事件
+            $(window).off("scroll").on("scroll", { WithTimeAxis: true ,FromPerson:false},objPub.ScorllEvent);
             //测试设置审批
             $(".refuse").off("click").on("click", {ID:"1",Status:AnswerInfo.ApproveStatus.SimpleApproveRefuse+""},AnswerInfo.Approve.SetApproveEvent)
             //审核筛选框框点击事件
@@ -224,42 +240,77 @@ AnswerInfo.Approve.SearchClickEvent = function SearchClickEvent(event) {
 }
 //初始搜索 和 分页
 AnswerInfo.Approve.Search = function search(keyword, page) {
-    AnswerInfo.Approve.SearchBind(keyword, page);
+    $("html,body").animate({
+        scrollTop: 0
+    });
+    AnswerInfo.Approve.SearchBind(keyword, page,0);
     $.SimpleAjaxPost("service/answer/GetApproveSearchCount", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) {
-            var result = json.Count;
-            if (result !== 0) { 
-                $("#divAnswerListPage").wPaginate("destroy").wPaginate({
-                    theme: "grey",
-                    page: "5,10,20",
-                    total: result,
-                    index: parseInt(page.pageStart) - 1,
-                    limit: AnswerInfo.Approve.PageSize,
-                    ajax: true,
-                    pid: "divAnswerListPage",
-                    url: function (i) {
-                        var page = {
-                            pageStart: i * this.settings.limit + 1,
-                            pageEnd: (i + 1) * this.settings.limit
-                        };
-                        AnswerInfo.Approve.SearchBind(keyword, page);
-                    }
-                });
-            }
-            else { 
-                $("#divAnswerListPage").wPaginate("destroy");
-            }
+        var result = json.Count;
+        AnswerInfo.Approve.TotalCount = result;
+        if (result > AnswerInfo.Approve.PageSize) {
+            AnswerInfo.Approve.CanPageLoad = true;
+            $(document).off("scroll").on("scroll", { DateView: date_view }, AnswerInfo.Approve.ScrollEvent);
+        }
         });
 } 
 //搜索结果绑定
-AnswerInfo.Approve.SearchBind = function search_bind(keyword, page) {
+AnswerInfo.Approve.SearchBind = function search_bind(keyword, page,current_index) {
     $.SimpleAjaxPost("service/answer/ApproveSearch", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) { 
-        var result = json;
+        var result =JSON.parse( json.List);
             console.log(result);
             var temp = "";
         if (result != null) {
             $.each(result, function (index, item) {
-                
+                console.log(item);
+                var Index =parseInt(current_index *AnswerInfo.Approve.PageSize) + index;
+                temp += "<div class='answer-qa'>";
+                temp += "<div class='answer-question'>";
+                temp += "<div class='question-title' id='divQuestionTitle'>" + item.QuestionTitle + "</div>";
+                temp += "<div class='answer-num'>";
+                temp += "<div class='answer-tag' id='divAnswerTag'>回答："+item.AnswerList.length+"</div>";
+                temp += "</div>";
+                temp += "</div>";
+                //回答列表
+                temp += "<div class='answer-list>";
+                $.each(item.AnswerList, function (answerIndex, answerItem) {
+                    console.log(answerItem);
+                    temp += "<div class='answer-item'>";
+                    temp += "<div class='answer-item-user clear-fix'></div>";
+                    temp += "<div class='answer-item-user-info'>";
+                    temp += "<div class='answer-item-user-pic'>";
+                    temp += "<img src='" + answerItem.UserUrl + "'>";
+                    temp += "</div>";
+                    temp += "<div class='answer-item-user-name'>";
+                    temp += "<div>"+answerItem.NickName+"</div>";
+                    temp += "<div> 单位名称</div>";
+                    temp += "</div>";
+                    temp += "</div>";
+                    temp += "<div class='answer-item-user-date'>" + answerItem.PublishTime + "</div>";
+                    //判断答案是否有图片
+                    if (answerItem.FileList.length!=0) {
+                        //有图片
+                        temp += "<div class='aq-item-content clear-fix'>";
+                        temp += "<div class='aq-item-content-img'>";
+                        temp += "<img title='" + answerItem.FileList[0].FileName + "' src='" + answerItem.FileList[0].FilePath + "'>";
+                        temp += "</div>";
+                        temp += "<div class='aq-item-content-text'>" + answerItem.AnswerContent + "</div>";
+                    } else {
+                        //没有图片
+                        temp += "<div class='aq-item-content'>"+answerItem.AnswerContent+"</div>";
+                    }
+                    temp += "<div class='aq-item-options clear-fix'>";
+                    temp += "<div class='ad-item-all'>";
+                    temp += "<a href='javascript:;'>阅读全文</a>";
+                    temp += "</div>";
+                    temp += "<div class='to-ratify'>";
+                    temp += "<a href='javascript:;' id='a'>通过</a>";
+                    temp += "<a href='javascript:;' class='refuse'>拒绝</a>";
+                    temp += "</div>";
+                    temp += "</div>";
+                    temp += "</div>"; 
+                })
             })
+            $("#divAnswerList").empty().append(temp);
         }
     })
 }
@@ -309,4 +360,33 @@ AnswerInfo.Approve.SetApprove = function set_approve(approveInfo) {
             }
         }
     })
+}
+//滚轮事件
+AnswerInfo.Approve.ScrollEvent = function ScrollEvent(event) {
+    var date_view = event.data.DateView;
+    if (($(document).scrollTop() >= $(document).height() - $(window).height()) && AnswerInfo.Approve.OldDocumentHeight != $(document).height()) {
+        if (AnswerInfo.Approve.CanPageLoad == true) {
+            AnswerInfo.Approve.CurrentIndex = AnswerInfo.Approve.CurrentIndex + 1;
+            var page = {
+                pageStart: AnswerInfo.Approve.CurrentIndex * AnswerInfo.Approve.PageSize + 1,
+                pageEnd: (AnswerInfo.Approve.CurrentIndex + 1) * AnswerInfo.Approve.PageSize
+            };
+            AnswerInfo.Approve.SearchBind(date_view, page, AnswerInfo.Approve.CurrentIndex);
+            if (page.pageEnd >= AnswerInfo.Approve.TotalCount) {
+                AnswerInfo.Approve.CanPageLoad = false;
+            }
+            AnswerInfo.Approve.OldDocumentHeight = $(document).height();
+        } else {
+            if (AnswerInfo.Approve.TotalCount == 0) {
+                $(document).off("scroll");
+            } else if (parseInt(AnswerInfo.Approve.TotalCount / AnswerInfo.Approve.PageSize) > objPub.MinTipPage) {
+                $.Alert("这已经是最后一页了哦~");
+                $(document).off("scroll");
+                setTimeout(function () {
+                    $(".dialog-normal").dialog('close');
+                }, 2000);
+            }
+            AnswerInfo.Approve.OldDocumentHeight = 0;
+        }
+    }
 }
