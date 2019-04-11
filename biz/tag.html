@@ -5,7 +5,7 @@
 		<!-- 选项卡，搜索 -->
 		<div class="content-top clear-fix">
 			<div class="tags-info">
-				当前共有标签 <font color="red"><span id="spnTagCount">0</span></font>个
+				当前共有标签 <font color="red"><span id="spnTagCount"> </span></font>个
 			</div>
 			<div class="category-opts">
 				<a href="javascript:void(0);" id="aAddTag">+ 新增标签</a>
@@ -16,7 +16,7 @@
                 <img id="imgTagSearch" class="icon-search" src="images/search.png">
 			</div>
 		</div>
-		<div class="tags-list clear-fix" class="category-list">
+		<div class="tags-list clear-fix category-list">
 			<ul id="ulTagList" >
 				<li>
 					<span>标签1</span>
@@ -79,4 +79,40 @@
             <ul id="ulTagListPage"></ul>
         </div>
 	</div>
+</div>
+<div id="divTagInfoEditDialog">
+	<table class="table-edit">
+			<tbody id="tbDataForm">
+				<tr>
+					<td align="right">
+						Code
+						<span class="necessary-item">*</span>
+					</td>
+					<td>
+						<input value="" id="txtTagCode" type="text" />
+					</td>
+				</tr>
+				<tr>
+					<td align="right">
+						功能代码
+						<span class="necessary-item">*</span>
+					</td>
+					<td>
+						<input value="" id="txtTagName" type="text" />
+					</td>
+				</tr>
+				<tr>
+					<td align="right">
+						附件
+						<span class="necessary-item">*</span>
+					</td>
+					<td>
+						<form method="post" action="" enctype="multipart/form-data" id="fmTagLogoUpload">
+							<input accept=".jpg,.png" name="file" type="file" id="fContractUpload"/>
+						</form>
+						<!-- <input id="btnContractFileUpload"  value="上传附件" type="button" > -->
+					</td>
+				</tr>
+			</tbody>
+		</table>
 </div>
