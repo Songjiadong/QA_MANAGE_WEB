@@ -26,7 +26,7 @@ SubjectInfo.Init = function init() {
                 resizable: false,
                 width: 520,
                 modal: true,
-                title: "新增网络信息",
+                title: "主题编辑",
                 buttons: {
                     "取　消": function () {
                         $(this).dialog("close");
@@ -54,7 +54,7 @@ SubjectInfo.UploadSubjectLogoEvent = function UploadSubjectLogoEvent(event){
             timeout: 600000,
             success: function (data, textStatus) {
                 SubjectInfo.LogoUrl = data.Result
-              
+                $("#divLogoView").html("<img src='"+objPub.BaseUrl+SubjectInfo.LogoUrl+"' width='50' height='50'/>");
             },
             error: function (data, status, e) {
                 console.log("上传失败，错误信息：" + e);
@@ -66,8 +66,13 @@ SubjectInfo.UploadSubjectLogoEvent = function UploadSubjectLogoEvent(event){
 SubjectInfo.AllRemoveEvent = function AllRemoveEvent(event) {
 
 }
+SubjectInfo.GC = function gc(){
+    $("#txtSubjectCode,#txtSubjectName").val("");
+    $("#divLogoView").empty();
+}
 //新增主题事件
 SubjectInfo.AddEvent = function AddEvent(event) {
+    SubjectInfo.GC()
     $("#divSubjectInfoEditDialog").dialog("open");
     $("#divSubjectInfoEditDialog").data("ID","");
     //$("#aSubmitSubjectInfo").off("click").on("click",{ID:""},SubjectInfo.SubmitEvent)
@@ -120,6 +125,7 @@ SubjectInfo.GetDetail = function get_detail(id){
             var result = json.SubjectInfo
             $("#txtSubjectCode").val(result.Code);
             $("#txtSubjectName").val(result.Name);
+            $("#divLogoView").html("<img src='"+objPub.BaseUrl+result.Logo+"' width='50' height='50'/>");
         })
 }
 SubjectInfo.UpdateEvent = function UpdateEvent(event){
@@ -193,24 +199,22 @@ SubjectInfo.AllRemoveEvent = function AllRemoveEvent(event) {
 //删除主题事件
 SubjectInfo.DeleteEvent = function DeleteEvent(event) {
     var id = event.data.ID;
-    // $.Confirm({ content: "您确定要删除**主题么?", width: "auto" }, function () {
-
-    // });
-    $.SimpleAjaxPost("service/question/subject/Delete", true, JSON.stringify({ID:id}))
+    $.Confirm({ content: "您确定要删除该主题么?", width: "auto" }, function () {
+        $.SimpleAjaxPost("service/question/subject/Delete", true, JSON.stringify({ID:id}))
         .done(function (json) {
             if(json.Result == true){
-                var page = {
-                    pageStart: 1,
-                    pageEnd: SubjectInfo.PageSize * 1
-                };
-                var keyword = {
-                    Keyword: $("#txtSubjectKeyword").val()
-    
-                }
-                SubjectInfo.Search(keyword, page);
-                // $.Alert("保存成功",function(){
-                    
-                // })
+                $.Alert("删除成功",function(){
+                    var page = {
+                        pageStart: 1,
+                        pageEnd: SubjectInfo.PageSize * 1
+                    };
+                    var keyword = {
+                        Keyword: $("#txtSubjectKeyword").val()
+        
+                    }
+                    SubjectInfo.Search(keyword, page);
+                })
             }
         })
+    });
 }

@@ -32,8 +32,8 @@
 		<table class="table-edit">
 				<tbody id="tbDataForm">
 					<tr>
-						<td align="right">
-							Code
+						<td align="right" width="100">
+							分类编码
 							<span class="necessary-item">*</span>
 						</td>
 						<td>
@@ -42,7 +42,7 @@
 					</tr>
 					<tr>
 						<td align="right">
-							功能代码
+							分类名称
 							<span class="necessary-item">*</span>
 						</td>
 						<td>
@@ -55,10 +55,12 @@
 							<span class="necessary-item">*</span>
 						</td>
 						<td>
+							<div id="divLogoView" style="width:200px;"></div>
 							<form method="post" action="" enctype="multipart/form-data" id="fmSubjectLogoUpload">
-								<input accept=".jpg,.png" name="file" type="file" id="fContractUpload"/>
+								<input accept=".jpg,.png" name="file" class="file" type="file" id="fSubjectLogo"/>
 							</form>
-							<input id="btnContractFileUpload"  value="上传附件" type="button" >
+							<input id="btnContractFileUpload" class="btn-file-upload" value="上传附件" type="button" />
+							
 						</td>
 					</tr>
 				</tbody>

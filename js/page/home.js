@@ -13,12 +13,12 @@ Home.Init= function init() {
            
             
             //Home.MostQuestionUserBind();
-           // Home.MostPraiseUserBind();
-           // Home.MostAnswerUserBind();
-           // Home.HotPraiseQuestionBind();
+            //Home.MostPraiseUserBind();
+            //Home.MostAnswerUserBind();
+            Home.HotPraiseQuestionBind();
 
             Home.QaStatisticsBind();
-            Home.UserVisitStatisticsBind();
+            //Home.UserVisitStatisticsBind();
             //待审核问题页
             $("#todoQuestion").on('click', function () {
                 $("#liQuestionApprove").addClass("selected").siblings().removeClass("selected");
@@ -286,18 +286,27 @@ Home.QaStatisticsBind = function qa_statistics_bind() {
      JSON.stringify({Year:'2014'})).done(function(json){
         var result = $.Deserialize(json.List)
         $.each(result, function (index, item) {
-            question_data.push(item.January);
-            question_data.push(item.February);
-            question_data.push(item.March);
-            question_data.push(item.April);
-            question_data.push(item.May);
-            question_data.push(item.June);
-            question_data.push(item.July);
-            question_data.push(item.August);
-            question_data.push(item.September);
-            question_data.push(item.October);
-            question_data.push(item.November);
-            question_data.push(item.December);
+            question_data.push(item.Value)
+        //    switch(item.Key){
+        //     case "January" : 
+        //     break;
+        //     case "January" : question_data.push(item.Value)
+        //     break;
+        //     case "January" : question_data.push(item.Value)
+        //     break;
+        //     case "January" : question_data.push(item.Value)
+        //     break;
+        //     case "January" : question_data.push(item.Value)
+        //     break;
+        //     case "January" : question_data.push(item.Value)
+        //     break;
+        //     case "January" : question_data.push(item.Value)
+        //     break;
+        //     case "January" : question_data.push(item.Value)
+        //     break;
+        //     case "January" : question_data.push(item.Value)
+        //     break;
+        //    }
         });
         var colors = ['#5793f3', '#d14a61', '#675bba', '#61a0a8', '#d48265', '#2f4554', '#91c7ae'];
     var qaChart = echarts.init($("#divQaStatistics")[0]);

@@ -1,11 +1,12 @@
 ﻿QuestionInfo.Approve = function () { }
 QuestionInfo.Approve.registerClass("QuestionInfo.Approve");
 QuestionInfo.Approve.PageSize = 10;
-QuestionInfo.Approve.SubjectSltStr="<option value='11'>智能制造</option><option value='12'>工业4.0</option>"
+QuestionInfo.Approve.SubjectSltStr="";
 //问题审批初始化
 QuestionInfo.Approve.Init = function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/question/approve-list.html", function (respones, status) {
         if (status == "success") {
+            QuestionInfo.Approve.GetAllSubjectList();
             //时间轴
             $(".year").off("click").on("click", QuestionInfo.Approve.YearClickEvent);
             $(".content-tabs .content-tabs-item").off("click").on("click", function (event) {
@@ -31,16 +32,8 @@ QuestionInfo.Approve.Init = function init() {
             });
             //拒绝
             
-            var page = {
-                pageStart: 1,
-                pageEnd: QuestionInfo.Approve.PageSize * 1
-            };
-            var keyword = {
-                Keyword: $("#txtSearch").val()
-
-            }
-            QuestionInfo.Approve.Search(keyword, page);
-            QuestionInfo.Approve.GetValidTypeCount();
+            
+            QuestionInfo.Approve.GetApproveStatusCount();
         }
     });
 }
@@ -145,8 +138,8 @@ QuestionInfo.Approve.PassEvent = function PassEvent(event) {
     });
 }
 
-QuestionInfo.Approve.GetValidTypeCount = function get_valid_type_count() {
-    $.SimpleAjaxPost("service/question/GetValidTypeCount", true).done(function(json){
+QuestionInfo.Approve.GetApproveStatusCount = function get_approve_status_count() {
+    $.SimpleAjaxPost("service/question/GetApproveStatusCount", true,JSON.stringify({Year:'2014'})).done(function(json){
         var result = $.Deserialize(json.List);
         if (result != null) {
             $.each(result, function (index, item) {
@@ -203,4 +196,24 @@ QuestionInfo.Approve.Cancel = function cancel(){
             })
         }
      })
+}
+QuestionInfo.Approve.GetAllSubjectList = function get_all_subject_list() {
+    var temp = "";
+    $.SimpleAjaxPost("service/question/subject/GetAllSubjectList" , true).done(function(json){
+        var result = $.Deserialize(json.List)
+        $.each(result, function (index, item) {
+            temp += "<option value='"+item.ID+"'>"+item.Name+"</option>"
+        });
+        QuestionInfo.Approve.SubjectSltStr = temp;
+        var page = {
+            pageStart: 1,
+            pageEnd: QuestionInfo.Approve.PageSize * 1
+        };
+        var keyword = {
+            Keyword: $("#txtSearch").val()
+
+        }
+        QuestionInfo.Approve.Search(keyword, page);
+     })
+    
 }

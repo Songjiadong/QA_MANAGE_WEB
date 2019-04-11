@@ -895,3 +895,42 @@ a.files input {
     width: 90px;
     text-align: right;
 }
+.table-edit tr td{
+	line-height: 1 !important;
+	vertical-align: baseline !important;
+}
+.table-edit input[type='text'] {
+    border: 1px solid #ccc;
+    background-color: #fff;
+    width: 100%;
+    padding: 5px;
+    font-size: 14px;
+    color: #333;
+    margin:5px 0 20px;
+}
+.necessary-item{
+	color:red;
+}
+.file{
+	cursor: pointer;
+    opacity: 0;
+    height: 37px;
+    width: 200px;
+    z-index: 200;
+}
+.btn-file-upload[type="button"] {
+    background-color: #1882f8;
+    border: 0 none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    
+    bottom: 12px;
+    padding: 0 7px;
+    position: absolute;
+    text-align: center;
+    width: 200px;
+    height: 30px;
+    font-size: 16px;
+    font-weight: bold;
+}
