@@ -1,12 +1,12 @@
 ﻿QuestionInfo.Approve = function () { }
 QuestionInfo.Approve.registerClass("QuestionInfo.Approve");
 QuestionInfo.Approve.PageSize = 10;
-QuestionInfo.Approve.SubjectSltStr="<option value='11'>智能制造</option><option value='12'>工业4.0</option>"
+QuestionInfo.Approve.SubjectSltStr="";
 //问题审批初始化
 QuestionInfo.Approve.Init = function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/question/approve-list.html", function (respones, status) {
         if (status == "success") {
-            QuestionInfo.GetAllSubjectList();
+            QuestionInfo.Approve.GetAllSubjectList();
             //时间轴
             $(".year").off("click").on("click", QuestionInfo.Approve.YearClickEvent);
             $(".content-tabs .content-tabs-item").off("click").on("click", function (event) {
@@ -32,15 +32,7 @@ QuestionInfo.Approve.Init = function init() {
             });
             //拒绝
             
-            var page = {
-                pageStart: 1,
-                pageEnd: QuestionInfo.Approve.PageSize * 1
-            };
-            var keyword = {
-                Keyword: $("#txtSearch").val()
-
-            }
-            QuestionInfo.Approve.Search(keyword, page);
+            
             QuestionInfo.Approve.GetApproveStatusCount();
         }
     });
@@ -205,15 +197,23 @@ QuestionInfo.Approve.Cancel = function cancel(){
         }
      })
 }
-QuestionInfo.GetAllSubjectList = function get_all_subject_list() {
+QuestionInfo.Approve.GetAllSubjectList = function get_all_subject_list() {
     var temp = "";
     $.SimpleAjaxPost("service/question/subject/GetAllSubjectList" , true).done(function(json){
         var result = $.Deserialize(json.List)
         $.each(result, function (index, item) {
             temp += "<option value='"+item.ID+"'>"+item.Name+"</option>"
         });
-        alert(temp)
-        QuestionInfo.Approve.SubjectSltStr = temp
+        QuestionInfo.Approve.SubjectSltStr = temp;
+        var page = {
+            pageStart: 1,
+            pageEnd: QuestionInfo.Approve.PageSize * 1
+        };
+        var keyword = {
+            Keyword: $("#txtSearch").val()
+
+        }
+        QuestionInfo.Approve.Search(keyword, page);
      })
     
 }
