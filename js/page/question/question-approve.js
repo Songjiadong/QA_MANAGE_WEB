@@ -6,6 +6,7 @@ QuestionInfo.Approve.SubjectSltStr="<option value='11'>智能制造</option><opt
 QuestionInfo.Approve.Init = function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/question/approve-list.html", function (respones, status) {
         if (status == "success") {
+            QuestionInfo.GetAllSubjectList();
             //时间轴
             $(".year").off("click").on("click", QuestionInfo.Approve.YearClickEvent);
             $(".content-tabs .content-tabs-item").off("click").on("click", function (event) {
@@ -40,7 +41,7 @@ QuestionInfo.Approve.Init = function init() {
 
             }
             QuestionInfo.Approve.Search(keyword, page);
-            QuestionInfo.Approve.GetValidTypeCount();
+            QuestionInfo.Approve.GetApproveStatusCount();
         }
     });
 }
@@ -145,8 +146,8 @@ QuestionInfo.Approve.PassEvent = function PassEvent(event) {
     });
 }
 
-QuestionInfo.Approve.GetValidTypeCount = function get_valid_type_count() {
-    $.SimpleAjaxPost("service/question/GetValidTypeCount", true).done(function(json){
+QuestionInfo.Approve.GetApproveStatusCount = function get_approve_status_count() {
+    $.SimpleAjaxPost("service/question/GetApproveStatusCount", true,JSON.stringify({Year:'2014'})).done(function(json){
         var result = $.Deserialize(json.List);
         if (result != null) {
             $.each(result, function (index, item) {
@@ -203,4 +204,16 @@ QuestionInfo.Approve.Cancel = function cancel(){
             })
         }
      })
+}
+QuestionInfo.GetAllSubjectList = function get_all_subject_list() {
+    var temp = "";
+    $.SimpleAjaxPost("service/question/subject/GetAllSubjectList" , true).done(function(json){
+        var result = $.Deserialize(json.List)
+        $.each(result, function (index, item) {
+            temp += "<option value='"+item.ID+"'>"+item.Name+"</option>"
+        });
+        alert(temp)
+        QuestionInfo.Approve.SubjectSltStr = temp
+     })
+    
 }
