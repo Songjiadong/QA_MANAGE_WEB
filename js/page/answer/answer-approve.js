@@ -322,24 +322,7 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page,current_index
                         //短篇
                         temp += "<div class='aq-item-content'>" + answerItem.AnswerContent + "</div>";
                         temp += "<div class='aq-item-options clear-fix'>"; 
-                    }
-
-
-
-                    // //判断答案是否有图片
-                    // if (answerItem.FileList.length!=0) {
-                    //     //有图片
-                    //     temp += "<div class='aq-item-content clear-fix'>";
-                    //     temp += "<div class='aq-item-content-img'>";
-                    //     temp += "<img title='" + answerItem.FileList[0].FileName + "' src='" + answerItem.FileList[0].FilePath + "'>";
-                    //     temp += "</div>";
-                    //     temp += "<div class='aq-item-content-text'>" + answerItem.AnswerContent + "</div>";
-                    //     temp += "</div>";
-                    // } else {
-                    //     //没有图片
-                    //     temp += "<div class='aq-item-content'>"+answerItem.AnswerContent+"</div>";
-                    // }
-                    
+                    } 
                     temp += "<div class='to-ratify'>";
                     temp += "<a href='javascript:;' id='aAgreeApprove"+Index+answerIndex+"'>通过</a>";
                     temp += "<a href='javascript:;' class='refuse' id='aRefuseApprove"+Index+answerIndex+"'>拒绝</a>";
