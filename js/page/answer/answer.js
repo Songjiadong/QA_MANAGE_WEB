@@ -77,3 +77,16 @@ AnswerInfo.ApproveStatus.GetColor = function get_color(type) {
     }
     return result;
 }
+///消息类别枚举@start///
+AnswerInfo.PublishInfoType = function () {
+    throw Error.notImplemented();
+}
+
+AnswerInfo.PublishInfoType.prototype = {
+    //长篇
+    Long: 1,
+    //短篇
+    Short:0
+}
+
+AnswerInfo.PublishInfoType.registerEnum("AnswerInfo.PublishInfoType");

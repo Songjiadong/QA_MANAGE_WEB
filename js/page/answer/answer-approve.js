@@ -5,7 +5,7 @@ AnswerInfo.Approve.PageSize = 10;
 AnswerInfo.Approve.Year = new Date().getFullYear().toString();
 AnswerInfo.Approve.Month = (new Date().getMonth() + 1).toString(); 
 AnswerInfo.Approve.SelectedYear = new Date().getFullYear().toString();
-AnswerInfo.Approve.SelectedMonth = (new Date().getMonth() + 1).toString(); 
+AnswerInfo.Approve.SelectedMonth = ""; 
 //是否能页面加载
 AnswerInfo.Approve.CanPageLoad = false;
 //记录总数
@@ -63,7 +63,8 @@ AnswerInfo.Approve.Init = function init() {
 //风琴效果
 function listAccrodion() {
     var presentQA = 0;
-    $(".answer-question").on("click", function () {
+    $(document).off("click", ".answer-question");
+    $(document).on("click", ".answer-question", function () {
         if ($(this).parent().index() === presentQA) {
             $(this).siblings(".answer-list").toggle("blind", 300);
         } else {
@@ -95,7 +96,7 @@ AnswerInfo.Approve.InitApproveData = function init_approve_data() {
                     } else if (item.status == "拒绝") {
                         $("#divRejectApprovrNum").html(item.searchCount);
                         alreadyApproveCount += parseInt (item.searchCount);
-                    }
+                    } 
                 }
                 $("#divAlreadyApproveNum").html(alreadyApproveCount);
             }
@@ -136,8 +137,7 @@ AnswerInfo.Approve.SetDataList = function set_data_list() {
         //当前年
         Year: AnswerInfo.Approve.Year,
         Month:AnswerInfo.Approve.Month
-    }
-    console.log(data_view);
+    } 
     $.SimpleAjaxPost("service/answer/GetAnswerYearList",true,JSON.stringify(data_view),function (json) {
             var result = JSON.parse(json.List);
             var temp = "";
@@ -189,8 +189,7 @@ AnswerInfo.Approve.GetMonthListEvent = function GetMonthListEvent(event) {
         ApproveStatus: $("div.content-tabs-item.selected").attr("data"),
         Year: year ,
         Month:AnswerInfo.Approve.Month
-    };
-    console.log(data_view);
+    }; 
     $.SimpleAjaxPost("service/answer/GetAnswerMonthList", true,JSON.stringify(data_view),function (json) {
            var result = JSON.parse(json.List);
            var temp = "";
@@ -256,12 +255,10 @@ AnswerInfo.Approve.Search = function search(keyword, page) {
 //搜索结果绑定
 AnswerInfo.Approve.SearchBind = function search_bind(keyword, page,current_index) {
     $.SimpleAjaxPost("service/answer/ApproveSearch", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) { 
-        var result =JSON.parse( json.List);
-            console.log(result);
+        var result =JSON.parse( json.List); 
             var temp = "";
         if (result != null) {
-            $.each(result, function (index, item) {
-                console.log(item);
+            $.each(result, function (index, item) { 
                 var Index =parseInt(current_index *AnswerInfo.Approve.PageSize) + index;
                 temp += "<div class='answer-qa'>";
                 temp += "<div class='answer-question'>";
@@ -271,52 +268,102 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page,current_index
                 temp += "</div>";
                 temp += "</div>";
                 //回答列表
-                temp += "<div class='answer-list>";
-                $.each(item.AnswerList, function (answerIndex, answerItem) {
-                    console.log(answerItem);
+                temp += "<div class='answer-list'>";
+                $.each(item.AnswerList, function (answerIndex, answerItem) {  
                     temp += "<div class='answer-item'>";
-                    temp += "<div class='answer-item-user clear-fix'></div>";
+                    temp += "<div class='answer-item-user clear-fix'>";
                     temp += "<div class='answer-item-user-info'>";
                     temp += "<div class='answer-item-user-pic'>";
                     temp += "<img src='" + answerItem.UserUrl + "'>";
                     temp += "</div>";
                     temp += "<div class='answer-item-user-name'>";
                     temp += "<div>"+answerItem.NickName+"</div>";
-                    temp += "<div> 单位名称</div>";
+                    temp += "<div> "+answerItem.Remark+"</div>";
                     temp += "</div>";
                     temp += "</div>";
                     temp += "<div class='answer-item-user-date'>" + answerItem.PublishTime + "</div>";
-                    //判断答案是否有图片
-                    if (answerItem.FileList.length!=0) {
-                        //有图片
-                        temp += "<div class='aq-item-content clear-fix'>";
-                        temp += "<div class='aq-item-content-img'>";
-                        temp += "<img title='" + answerItem.FileList[0].FileName + "' src='" + answerItem.FileList[0].FilePath + "'>";
-                        temp += "</div>";
-                        temp += "<div class='aq-item-content-text'>" + answerItem.AnswerContent + "</div>";
-                    } else {
-                        //没有图片
-                        temp += "<div class='aq-item-content'>"+answerItem.AnswerContent+"</div>";
-                    }
-                    temp += "<div class='aq-item-options clear-fix'>";
-                    temp += "<div class='ad-item-all'>";
-                    temp += "<a href='javascript:;'>阅读全文</a>";
                     temp += "</div>";
+                    //判断是短篇还是长篇：短篇直接显示，长篇需要处理
+                    if (answerItem.PublishType == AnswerInfo.PublishInfoType.Long.toString()) {
+                        //长篇
+                        var regexstr = /<img[^>]*>/;   //图片的正则
+                        var arr = regexstr.exec(answerItem.AnswerContent);
+                        var content = AnswerInfo.Approve.DealContent(AnswerInfo.PublishInfoType.Long.toString(),answerItem.AnswerContent ,false);
+                        if (arr.length != 0) {
+                            //有图片
+                            var imgSrc = $($(arr[0])).attr("src"); 
+                            temp += "<div class='aq-item-content clear-fix'>";
+                            temp += "<div class='aq-item-content-img'>";
+                            temp += "<img src='" + imgSrc + "'>";
+                            temp += "</div>"; 
+                            // temp += "<div class='aq-item-content-text'>" + answerItem.AnswerContent + "</div>"; 
+                            temp += "<div class='aq-item-content-text' id='divAnswerContent"+Index+answerIndex+"'>" + content + "</div>";
+                            temp += "</div>";
+                        } else {
+                            temp += "<div class='aq-item-content'>"+content+"</div>";
+                        }
+                        temp += "<div class='aq-item-options clear-fix'>";
+                        temp += "<div class='ad-item-all'>";
+                        temp += "<a href='javascript:;'id='aReadDetail" + Index + answerIndex + "'>阅读全文</a>";
+                        temp += "<a style='display: none' href='javascript:;'id='ahideDetail" + Index + answerIndex + "'>收起全文</a>";
+                        temp += "</div>";  
+                        
+                        $(document).off("click", "#aReadDetail" + Index + answerIndex).on("click", "#aReadDetail" + Index + answerIndex, { Content: answerItem.AnswerContent }, function (event) {
+                            $("#divAnswerContent" + Index + answerIndex).html(event.data.Content); 
+                            $("#aReadDetail" + Index + answerIndex).hide();
+                            $("#ahideDetail" + Index + answerIndex).show();
+                        });
+                        $(document).off("click", "#ahideDetail" + Index + answerIndex).on("click", "#ahideDetail" + Index + answerIndex, { Content: content }, function (event) {
+                            $("#divAnswerContent" + Index + answerIndex).html(event.data.Content); 
+                            $("#ahideDetail" + Index + answerIndex).hide();
+                            $("#aReadDetail" + Index + answerIndex).show();
+                        });
+                    } else {
+                        //短篇
+                        temp += "<div class='aq-item-content'>" + answerItem.AnswerContent + "</div>";
+                        temp += "<div class='aq-item-options clear-fix'>"; 
+                    }
+
+
+
+                    // //判断答案是否有图片
+                    // if (answerItem.FileList.length!=0) {
+                    //     //有图片
+                    //     temp += "<div class='aq-item-content clear-fix'>";
+                    //     temp += "<div class='aq-item-content-img'>";
+                    //     temp += "<img title='" + answerItem.FileList[0].FileName + "' src='" + answerItem.FileList[0].FilePath + "'>";
+                    //     temp += "</div>";
+                    //     temp += "<div class='aq-item-content-text'>" + answerItem.AnswerContent + "</div>";
+                    //     temp += "</div>";
+                    // } else {
+                    //     //没有图片
+                    //     temp += "<div class='aq-item-content'>"+answerItem.AnswerContent+"</div>";
+                    // }
+                    
                     temp += "<div class='to-ratify'>";
-                    temp += "<a href='javascript:;' id='a'>通过</a>";
-                    temp += "<a href='javascript:;' class='refuse'>拒绝</a>";
+                    temp += "<a href='javascript:;' id='aAgreeApprove"+Index+answerIndex+"'>通过</a>";
+                    temp += "<a href='javascript:;' class='refuse' id='aRefuseApprove"+Index+answerIndex+"'>拒绝</a>";
                     temp += "</div>";
                     temp += "</div>";
                     temp += "</div>"; 
+                    
+                    $(document).off("click", "#aAgreeApprove" + Index+answerIndex).on("click", "#aAgreeApprove" + Index+answerIndex, { ID: answerItem.AnswerID, Status: AnswerInfo.ApproveStatus.SimpleApproveAgree }, AnswerInfo.Approve.SetApproveEvent);
+                    $(document).off("click", "#aRefuseApprove" + Index+answerIndex).on("click", "#aRefuseApprove" + Index+answerIndex, { ID: answerItem.AnswerID, Status:AnswerInfo.ApproveStatus.SimpleApproveRefuse}, AnswerInfo.Approve.SetApproveEvent);
                 })
             })
-            $("#divAnswerList").empty().append(temp);
+            if (current_index == 0) {
+                $("#divAnswerList").empty().append(temp);
+            } else {
+                $("#divAnswerList").append(temp);
+            } 
+        } else {
+            $("#divAnswerList").empty().append("<div>暂无数据</div>");
         }
     })
 }
 //阅读全文 
 AnswerInfo.Approve.GoDetailEvent = function GoDetailEvent(event) { 
-
+    var id = event.data.ID;
 }
 //设置审批事件
 AnswerInfo.Approve.SetApproveEvent = function SetApproveEvent(event) { 
@@ -326,7 +373,7 @@ AnswerInfo.Approve.SetApproveEvent = function SetApproveEvent(event) {
         //ID answerID
 	    ID : id,
 	    //ApproveStatus 审批状态
-	    ApproveStatus:status,
+	    ApproveStatus:status+"",
         //Reason 审批备注
         Reason:"",
         //UserID 用户ID
@@ -339,22 +386,23 @@ AnswerInfo.Approve.SetApproveEvent = function SetApproveEvent(event) {
 //设置审批
 AnswerInfo.Approve.SetApprove = function set_approve(approveInfo) { 
     $.SimpleAjaxPost("service/answer/SetApprove", true, JSON.stringify(approveInfo)).done(function (json) { 
-        var result = JSON.parse(json);
-        console.log(result); 
+        var result = json;  
         if (result != null) {
-            if (result==true) {
-                $.Alert("审批成功！");
-                var page = {
-                    PageStart: 1,
-                    PageEnd: AnswerInfo.Approve.PageSize * 1
-                }; 
-                keyword = {
-                    Keyword: $("#txtSearch").val(),
-                    ApproveStatus:AnswerInfo.ApproveStatus.SimpleApproveWaiting+"",
-                    Year:AnswerInfo.Approve.SelectedYear,
-                    Month: AnswerInfo.Approve.SelectedMonth  
-                }
-                AnswerInfo.Approve.Search(keyword,page);
+            if (result.Result==true) {
+                $.Alert("审批成功！", function () {
+                    var page = {
+                        PageStart: 1,
+                        PageEnd: AnswerInfo.Approve.PageSize * 1
+                    }; 
+                    keyword = {
+                        Keyword: $("#txtSearch").val(),
+                        ApproveStatus:AnswerInfo.ApproveStatus.SimpleApproveWaiting+"",
+                        Year:AnswerInfo.Approve.SelectedYear,
+                        Month: AnswerInfo.Approve.SelectedMonth  
+                    }
+                    AnswerInfo.Approve.Search(keyword,page);
+                });
+                
             } else {
                 $.Alert("审批失败~失败原因:"+message);
             }
@@ -389,4 +437,30 @@ AnswerInfo.Approve.ScrollEvent = function ScrollEvent(event) {
             AnswerInfo.Approve.OldDocumentHeight = 0;
         }
     }
+}
+//处理answer的富文本
+AnswerInfo.Approve.DealContent = function deal_content(publishInfoType,detailContent,isDraft) {
+    var result = detailContent;
+            if (publishInfoType == AnswerInfo.PublishInfoType.Short.toString())
+            {
+                return result;
+            }
+            else
+            {
+                //var regexstr = /<[^>]*>/;    //去除所有的标签
+
+                //@"<script[^>]*?>.*?</script >" //去除所有脚本，中间部分也删除
+
+                // string regexstr = @"<img[^>]*>";   //去除图片的正则
+
+                // string regexstr = @"<(?!br).*?>";   //去除所有标签，只剩br
+
+                // string regexstr = @"<table[^>]*?>.*?</table>";   //去除table里面的所有内容
+
+                //string regexstr = @"<(?!img|br|p|/p).*?>";   //去除所有标签，只剩img,br,p 
+                result = result.replace(/<[^>]*>/g,""); 
+                result = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + result.substring(0, result.length > 350 ? 350 : result.length) + (result.length > 350 ? (isDraft ? "..." : "...") : "");
+            }
+
+            return result;
 }

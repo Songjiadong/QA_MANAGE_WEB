@@ -337,8 +337,8 @@ a.btn-view {
 }
 .aq-item-content {
     line-height: 1.6;
-    max-height: 135px;
-    overflow: hidden;
+    /* max-height: 135px;
+    overflow: hidden; */
     margin: 20px 0;
     cursor: default;
 }
@@ -356,8 +356,8 @@ a.btn-view {
 .aq-item-content-text {
     float: right;
     width: calc(100% - 255px);
-    height: 135px;
-    overflow: hidden;
+    height: auto;
+    overflow: auto;
 }
 .aq-item-options {
     margin-bottom: 10px;
