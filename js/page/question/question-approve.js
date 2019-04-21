@@ -128,8 +128,8 @@ QuestionInfo.Approve.PassEvent = function PassEvent(event) {
                        pageEnd: QuestionInfo.Approve.PageSize * 1
                    };
                    var keyword = {
-                       Keyword: $("#txtSearch").val()
-       
+                       Keyword: $("#txtSearch").val(),
+                       YearMonth:"2019-04"
                    }
                    QuestionInfo.Approve.Search(keyword, page);
                })
@@ -139,7 +139,7 @@ QuestionInfo.Approve.PassEvent = function PassEvent(event) {
 }
 
 QuestionInfo.Approve.GetApproveStatusCount = function get_approve_status_count() {
-    $.SimpleAjaxPost("service/question/GetApproveStatusCount", true,JSON.stringify({Year:'2014'})).done(function(json){
+    $.SimpleAjaxPost("service/question/GetApproveStatusCount", true,JSON.stringify({Year:'2019'})).done(function(json){
         var result = $.Deserialize(json.List);
         if (result != null) {
             $.each(result, function (index, item) {
@@ -188,8 +188,8 @@ QuestionInfo.Approve.Cancel = function cancel(){
                     pageEnd: QuestionInfo.Approve.PageSize * 1
                 };
                 var keyword = {
-                    Keyword: $("#txtSearch").val()
-    
+                    Keyword: $("#txtSearch").val(),
+                    YearMonth:"2019-04",
                 }
                 $("#txtApproveReason").val("");
                QuestionInfo.Approve.Search(keyword, page);
@@ -210,7 +210,8 @@ QuestionInfo.Approve.GetAllSubjectList = function get_all_subject_list() {
             pageEnd: QuestionInfo.Approve.PageSize * 1
         };
         var keyword = {
-            Keyword: $("#txtSearch").val()
+            Keyword: $("#txtSearch").val(),
+            YearMonth:"2019-04"
 
         }
         QuestionInfo.Approve.Search(keyword, page);

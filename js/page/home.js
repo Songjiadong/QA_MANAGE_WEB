@@ -52,17 +52,17 @@ Home.YearClickEvent = function YearClickEvent(event) {
 //热赞回答绑定
 Home.HotPraiseQuestionBind = function hot_praise_question_bind() {
     var temp = "";
-    $.SimpleAjaxPost("service/question/GetHotPraiseAnswerList" , true, 
+    $.SimpleAjaxPost("service/answer/GetTopPraiseAnswerList" , true, 
      JSON.stringify({Top:10})).done(function(json){
         var result = $.Deserialize(json.List)
         $.each(result, function (index, item) {
             temp += "<li>"
-            temp += "<div class='qa-hot-answer-title'>"+item.TITLE+"</div>";
-            temp += "<div class='qa-hot-answer-text'>"+item.CONTENT+"</div>";
+            temp += "<div class='qa-hot-answer-title'>"+item.QuestionTitle+"</div>";
+            temp += "<div class='qa-hot-answer-text'>"+item.AnswerContent+"</div>";
             temp += "<div class='aq-item-options clear-fix'>";
             temp += "<div class='ad-item-like'>";
             temp += "<span class='aq-item-like-icon'><img src='images/like-o.png'></span>";
-            temp += "<span class='aq-item-like-text'>赞</span><span class='aq-item-like-num'>"+item.PRAISE_COUNT+"</span>";
+            temp += "<span class='aq-item-like-text'>赞</span><span class='aq-item-like-num'>"+item.PraiseCount+"</span>";
             temp += "</div>";
             temp += "<div class='ad-item-view-all'>";
             temp += "<a id='aBrowseItem" + index + "' href='javascript:void(0);'>查看全文</a>";
