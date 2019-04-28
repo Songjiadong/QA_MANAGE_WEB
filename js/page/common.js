@@ -6,6 +6,7 @@ $.ajaxSetup({
 window.objPub = {
     IsLogin: false,
     BaseUrl: "http://qamanage.megawise.cn/",
+    QaUrl: "http://qa.megawise.cn/",
     WeixinUrl: "http://weixin.miic.com.cn/",
     UserID: $.GetCookie("MegawiseID") == undefined ? "" : $.GetCookie("MegawiseID"),
     UserName: $.GetCookie("MegawiseUserName") == undefined ? "" : decodeURI($.GetCookie("MegawiseUserName")),
@@ -13,7 +14,12 @@ window.objPub = {
 };
 //浏览事件
 window.objPub.BrowseEvent = function BrowseEvent(event) {
-
+    var id=event.data.ID;
+    if(id!=""){
+        var uri = $.EncodeUri("QuestionID=" + id);
+        var url = objPub.QaUrl + "biz/show/show.html?" + uri;
+        window.open(url, "_blank");
+    }
 }
 //windwow滚轮事件
 window.objPub.ScorllEvent = function ScorllEvent(event) {

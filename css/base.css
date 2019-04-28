@@ -267,3 +267,6 @@ nav ul li.selected a {
 .time-filter ul li.selected ul li.selected a:hover {
   color: #1882f8;
 }
+.hander{
+  cursor: pointer;
+}

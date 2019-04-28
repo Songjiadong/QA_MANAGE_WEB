@@ -6,7 +6,14 @@ Home.Init= function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/home.html", function (respones, status) {
         if (status == "success") {
             Home.Year = new Date().getFullYear().toString();
-            Home.Month = (new Date().getMonth() + 1).toString(); 
+            var temp =  (new Date().getMonth() + 1).toString(); 
+            if(temp>9){
+                Home.Month = temp
+            }else{
+                Home.Month = "0"+temp
+            }
+            
+            Home.WaitApproveCountBind()
             $("#divCurrentDate").html(Home.Year+"-"+Home.Month)
             //时间轴
             $(".year").off("click").on("click", Home.YearClickEvent);
@@ -16,13 +23,12 @@ Home.Init= function init() {
 
            
             
-            //Home.MostQuestionUserBind();
-            //Home.MostPraiseUserBind();
-            //Home.MostAnswerUserBind();
-            Home.HotPraiseQuestionBind();
+            Home.MostQuestionUserBind();
+            Home.MostPraiseUserBind();
+            Home.MostAnswerUserBind();
 
             Home.QaStatisticsBind();
-            //Home.UserVisitStatisticsBind();
+            Home.UserVisitStatisticsBind();
             //待审核问题页
             $("#todoQuestion").off("click").on('click', function () {
                 $("#liQuestionApproveList").trigger("click")
@@ -40,6 +46,15 @@ Home.Init= function init() {
         }
     });
 }
+Home.WaitApproveCountBind = function wait_approve_count_bind(){
+    
+    $.SimpleAjaxPost("service/question/GetWaitApproveCountList" , true, 
+     JSON.stringify({YearMonth:Home.Year+"-"+Home.Month })).done(function(json){
+        var result = $.Deserialize(json.List)
+        $("#spQuestionApproveCount").html(result[0].SearchCount);
+        $("#spAnswerApproveCount").html(result[1].SearchCount);
+     })
+}
 //时间周年点击
 Home.YearClickEvent = function YearClickEvent(event) {
     var $presentDot = $(this);
@@ -55,11 +70,11 @@ Home.YearClickEvent = function YearClickEvent(event) {
 Home.HotPraiseQuestionBind = function hot_praise_question_bind() {
     var temp = "";
     $.SimpleAjaxPost("service/answer/GetTopPraiseAnswerList" , true, 
-     JSON.stringify({Top:10})).done(function(json){
+     JSON.stringify({Top:5})).done(function(json){
         var result = $.Deserialize(json.List)
         $.each(result, function (index, item) {
             temp += "<li>"
-            temp += "<div class='qa-hot-answer-title'>"+item.QuestionTitle+"</div>";
+            temp += "<div class='qa-hot-answer-title hander' id='divTitleBrowseItem"+index+"'>"+item.QuestionTitle+"</div>";
             temp += "<div class='qa-hot-answer-text'>"+item.AnswerContent+"</div>";
             temp += "<div class='aq-item-options clear-fix'>";
             temp += "<div class='ad-item-like'>";
@@ -67,12 +82,12 @@ Home.HotPraiseQuestionBind = function hot_praise_question_bind() {
             temp += "<span class='aq-item-like-text'>赞</span><span class='aq-item-like-num'>"+item.PraiseCount+"</span>";
             temp += "</div>";
             temp += "<div class='ad-item-view-all'>";
-            temp += "<a id='aBrowseItem" + index + "' href='javascript:void(0);'>查看全文</a>";
+            temp += "<a id='aBrowseItem" + index + "' href='javascript:void(0);' class='hander'>查看全文</a>";
             temp += "</div>";
             temp += "</div>";
             temp += "</li>";
-            $(document).off("click", "#aBrowseItem" + index);
-            $(document).on("click", "#aBrowseItem" + index, { ID: "" }, objPub.BrowseEvent);
+            $(document).off("click", "#aBrowseItem" + index+",#divTitleBrowseItem"+index);
+            $(document).on("click", "#aBrowseItem" + index+",#divTitleBrowseItem"+index, { ID: item.ID }, objPub.BrowseEvent);
         });
        
         $("#ulHotPraiseQuestionList").empty().append(temp);
@@ -83,13 +98,13 @@ Home.HotQuestionBind = function hot_question_bind() {
     var temp = "";
     var result = [];
      $.SimpleAjaxPost("service/question/GetHotList", true, 
-     JSON.stringify({Top:10})).done(function(json){
+     JSON.stringify({Top:5})).done(function(json){
         var result = $.Deserialize(json.List);
         $.each(result, function (index, item) {
             temp += "<li>";
-            temp += "<div class='qa-hot-num'><img src='images/num/1.png'></div>";
+            temp += "<div class='qa-hot-num'><img src='images/num/"+(index+1)+".png'></div>";
             temp += "<div class='qa-hot-content'>";
-            temp += "<div id='divBrowseItem" + index + "' class='qa-hot-question-title'>"+item.Title+"</div>";
+            temp += "<div id='divBrowseItem" + index + "' class='qa-hot-question-title hander' >"+item.Title+"</div>";
             temp += "<div class='qa-hot-question-opts'>";
             temp += "<div class='ad-item-view'>";
             temp += "<span class='aq-item-like-icon'><img src='images/eye.png'></span>";
@@ -103,7 +118,7 @@ Home.HotQuestionBind = function hot_question_bind() {
             temp += "</div>";
             temp += "</li>";
             $(document).off("click", "#divBrowseItem" + index);
-            $(document).on("click", "#divBrowseItem" + index, { ID: "" }, objPub.BrowseEvent);
+            $(document).on("click", "#divBrowseItem" + index, { ID: item.ID }, objPub.BrowseEvent);
         });
         $("#ulHotQuestionList").empty().append(temp);
      })
