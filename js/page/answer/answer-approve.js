@@ -33,19 +33,19 @@ AnswerInfo.Approve.Init = function init() {
             //回答审核筛选框初始化
             AnswerInfo.Approve.InitApproveData(); 
             // //设置时间轴显示
-            AnswerInfo.Approve.SetDataList();
+          //  AnswerInfo.Approve.SetDataList();
             //回答审核默认搜索
             var page = {
                 PageStart: 1,
                 PageEnd: AnswerInfo.Approve.PageSize * 1
             }; 
-            // keyword = {
-            //     Keyword: $("#txtSearch").val(),
-            //     ApproveStatus:AnswerInfo.ApproveStatus.SimpleApproveWaiting+"",
-            //     Year:AnswerInfo.Approve.SelectedYear,
-            //     Month: AnswerInfo.Approve.SelectedMonth  
-            // }
-            // AnswerInfo.Approve.Search(keyword, page);
+            keyword = {
+                Keyword: $("#txtSearch").val(),
+                ApproveStatus:AnswerInfo.ApproveStatus.SimpleApproveWaiting+"",
+                Year:AnswerInfo.Approve.SelectedYear,
+                Month: AnswerInfo.Approve.SelectedMonth  
+            }
+            AnswerInfo.Approve.Search(keyword, page);
             //滚轮事件
             $(window).off("scroll").on("scroll", { WithTimeAxis: true ,FromPerson:false},objPub.ScorllEvent);
             //测试设置审批
@@ -289,7 +289,7 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page,current_index
                         var regexstr = /<img[^>]*>/;   //图片的正则
                         var arr = regexstr.exec(answerItem.AnswerContent);
                         var content = AnswerInfo.Approve.DealContent(AnswerInfo.PublishInfoType.Long.toString(),answerItem.AnswerContent ,false);
-                        if (arr.length != 0) {
+                        if (arr != null) {
                             //有图片
                             var imgSrc = $($(arr[0])).attr("src"); 
                             temp += "<div class='aq-item-content clear-fix'>";
@@ -340,7 +340,7 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page,current_index
                 $("#divAnswerList").append(temp);
             } 
         } else {
-            $("#divAnswerList").empty().append("<div>暂无数据</div>");
+            $("#divAnswerList").empty().append("<div style='text-align:center;'>暂无待处理的数据</div>");
         }
     })
 }
@@ -351,24 +351,15 @@ AnswerInfo.Approve.GoDetailEvent = function GoDetailEvent(event) {
 //设置审批事件
 AnswerInfo.Approve.SetApproveEvent = function SetApproveEvent(event) { 
     var id = event.data.ID;
-    var status = event.data.Status;
-    var approveInfo = {
-        //ID answerID
-	    ID : id,
-	    //ApproveStatus 审批状态
-	    ApproveStatus:status+"",
-        //Reason 审批备注
-        Reason:"",
-        //UserID 用户ID
-        ApproverID:objPub.UserID,
-        //UserName 用户名
-        ApproverName:objPub.UserName
-    }
-    AnswerInfo.Approve.SetApprove(approveInfo);
-}
-//设置审批
-AnswerInfo.Approve.SetApprove = function set_approve(approveInfo) { 
-    $.SimpleAjaxPost("service/answer/SetApprove", true, JSON.stringify(approveInfo)).done(function (json) { 
+   // var status = event.data.Status;
+    $.SimpleAjaxPost("service/answer/SetApprove", true,
+     JSON.stringify({
+	    ID:id,
+	    ApproveStatus:"0",
+        Reason:"通过",
+        ApproverID:"admin",
+        ApproverName:"admin"
+    })).done(function (json) { 
         var result = json;  
         if (result != null) {
             if (result.Result==true) {
@@ -384,13 +375,17 @@ AnswerInfo.Approve.SetApprove = function set_approve(approveInfo) {
                         Month: AnswerInfo.Approve.SelectedMonth  
                     }
                     AnswerInfo.Approve.Search(keyword,page);
+                    AnswerInfo.Approve.InitApproveData()
                 });
-                
             } else {
                 $.Alert("审批失败~失败原因:"+message);
             }
         }
     })
+}
+//设置审批
+AnswerInfo.Approve.SetApprove = function set_approve(approveInfo) { 
+    
 }
 //滚轮事件
 AnswerInfo.Approve.ScrollEvent = function ScrollEvent(event) {

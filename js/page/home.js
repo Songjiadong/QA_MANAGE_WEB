@@ -1,9 +1,13 @@
 ﻿Home = function () { }
 Home.registerClass("Home");
+Home.Year = "";
+Home.Month = ""; 
 Home.Init= function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/home.html", function (respones, status) {
         if (status == "success") {
-
+            Home.Year = new Date().getFullYear().toString();
+            Home.Month = (new Date().getMonth() + 1).toString(); 
+            $("#divCurrentDate").html(Home.Year+"-"+Home.Month)
             //时间轴
             $(".year").off("click").on("click", Home.YearClickEvent);
             Home.HotQuestionBind();
@@ -20,15 +24,13 @@ Home.Init= function init() {
             Home.QaStatisticsBind();
             //Home.UserVisitStatisticsBind();
             //待审核问题页
-            $("#todoQuestion").on('click', function () {
-                $("#liQuestionApprove").addClass("selected").siblings().removeClass("selected");
-                $(".main-wapper").load("biz/question.html");
+            $("#todoQuestion").off("click").on('click', function () {
+                $("#liQuestionApproveList").trigger("click")
             });
 
             //待审核回答页
-            $("#todoAnswer").on('click', function () {
-                $("#liAnswerApprove").addClass("selected").siblings().removeClass("selected");
-                $(".main-wapper").load("biz/answer.html");
+            $("#todoAnswer").off("click").on('click', function () {
+                $("#liAnswerApproveList").trigger("click")
             });
 
 
