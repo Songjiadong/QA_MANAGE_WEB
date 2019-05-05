@@ -330,8 +330,16 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page,current_index
                     temp += "</div>";
                     temp += "</div>"; 
                     
-                    $(document).off("click", "#aAgreeApprove" + Index+answerIndex).on("click", "#aAgreeApprove" + Index+answerIndex, { ID: answerItem.AnswerID, Status: AnswerInfo.ApproveStatus.SimpleApproveAgree }, AnswerInfo.Approve.SetApproveEvent);
-                    $(document).off("click", "#aRefuseApprove" + Index+answerIndex).on("click", "#aRefuseApprove" + Index+answerIndex, { ID: answerItem.AnswerID, Status:AnswerInfo.ApproveStatus.SimpleApproveRefuse}, AnswerInfo.Approve.SetApproveEvent);
+                    $(document).off("click", "#aAgreeApprove" + Index+answerIndex).on("click", "#aAgreeApprove" + Index+answerIndex, { 
+                        ID: answerItem.AnswerID,
+                        QuestionID:answerItem.QuestionID,
+                        Status: AnswerInfo.ApproveStatus.SimpleApproveAgree 
+                    }, AnswerInfo.Approve.SetApproveEvent);
+                    $(document).off("click", "#aRefuseApprove" + Index+answerIndex).on("click", "#aRefuseApprove" + Index+answerIndex, {
+                         ID: answerItem.AnswerID,
+                         QuestionID:answerItem.QuestionID,
+                         Status:AnswerInfo.ApproveStatus.SimpleApproveRefuse
+                        }, AnswerInfo.Approve.SetApproveEvent);
                 })
             })
             if (current_index == 0) {
@@ -383,10 +391,7 @@ AnswerInfo.Approve.SetApproveEvent = function SetApproveEvent(event) {
         }
     })
 }
-//设置审批
-AnswerInfo.Approve.SetApprove = function set_approve(approveInfo) { 
-    
-}
+
 //滚轮事件
 AnswerInfo.Approve.ScrollEvent = function ScrollEvent(event) {
     var date_view = event.data.DateView;

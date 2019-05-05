@@ -20,9 +20,6 @@ Home.Init= function init() {
             Home.HotQuestionBind();
             Home.HotPraiseQuestionBind();
             //调好的
-
-           
-            
             Home.MostQuestionUserBind();
             Home.MostPraiseUserBind();
             Home.MostAnswerUserBind();
@@ -38,11 +35,6 @@ Home.Init= function init() {
             $("#todoAnswer").off("click").on('click', function () {
                 $("#liAnswerApproveList").trigger("click")
             });
-
-
-           
-
-          
         }
     });
 }
@@ -51,8 +43,15 @@ Home.WaitApproveCountBind = function wait_approve_count_bind(){
     $.SimpleAjaxPost("service/question/GetWaitApproveCountList" , true, 
      JSON.stringify({YearMonth:Home.Year+"-"+Home.Month })).done(function(json){
         var result = $.Deserialize(json.List)
-        $("#spQuestionApproveCount").html(result[0].SearchCount);
-        $("#spAnswerApproveCount").html(result[1].SearchCount);
+        $.each(result, function (index, item) {
+            if(item.Key =="QuestionCount"){
+                $("#spQuestionApproveCount").html(item.Count);
+            }else{
+                $("#spAnswerApproveCount").html(item.Count);
+            }
+        })
+       
+        
      })
 }
 //时间周年点击
@@ -300,7 +299,7 @@ Home.UserVisitStatisticsBind = function user_visit_statistics_bind() {
 Home.QaStatisticsBind = function qa_statistics_bind() {
     var question_data=[]
     $.SimpleAjaxPost("service/question/GetQuestionStatisticsInfoList" , true, 
-     JSON.stringify({Year:'2014'})).done(function(json){
+     JSON.stringify({Year:'2019'})).done(function(json){
         var result = $.Deserialize(json.List)
         $.each(result, function (index, item) {
             question_data.push(item.Value)
@@ -413,7 +412,4 @@ Home.QaStatisticsBind = function qa_statistics_bind() {
     };
     qaChart.setOption(optionQa);
     })
-    
-    
-    
 }
