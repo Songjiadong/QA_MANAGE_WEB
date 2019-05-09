@@ -332,13 +332,19 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page,current_index
                     
                     $(document).off("click", "#aAgreeApprove" + Index+answerIndex).on("click", "#aAgreeApprove" + Index+answerIndex, { 
                         ID: answerItem.AnswerID,
-                        QuestionID:answerItem.QuestionID,
-                        Status: AnswerInfo.ApproveStatus.SimpleApproveAgree 
+                        QuestionID:item.QuestionID,
+                        Title:item.QuestionTitle,
+                        Status: AnswerInfo.ApproveStatus.SimpleApproveAgree,
+                        CreaterID:answerItem.CreaterID,
+                        CreaterName:answerItem.CreaterName
                     }, AnswerInfo.Approve.SetApproveEvent);
                     $(document).off("click", "#aRefuseApprove" + Index+answerIndex).on("click", "#aRefuseApprove" + Index+answerIndex, {
                          ID: answerItem.AnswerID,
-                         QuestionID:answerItem.QuestionID,
-                         Status:AnswerInfo.ApproveStatus.SimpleApproveRefuse
+                         QuestionID:item.QuestionID,
+                         Title:item.QuestionTitle,
+                         Status:AnswerInfo.ApproveStatus.SimpleApproveRefuse,
+                         CreaterID:answerItem.CreaterID,
+                         CreaterName:answerItem.CreaterName
                         }, AnswerInfo.Approve.SetApproveEvent);
                 })
             })
@@ -359,14 +365,21 @@ AnswerInfo.Approve.GoDetailEvent = function GoDetailEvent(event) {
 //设置审批事件
 AnswerInfo.Approve.SetApproveEvent = function SetApproveEvent(event) { 
     var id = event.data.ID;
-   // var status = event.data.Status;
+    var approve_status = event.data.Status.toString();
+    var reason = "";
+    if (event.data.Status == AnswerInfo.ApproveStatus.SimpleApproveAgree){
+        reason = "通过"
+    }else{
+        reason = "拒绝"
+    }
     $.SimpleAjaxPost("service/answer/SetApprove", true,
      JSON.stringify({
 	    ID:id,
-	    ApproveStatus:"0",
-        Reason:"通过",
-        ApproverID:"admin",
-        ApproverName:"admin"
+	    ApproveStatus:approve_status,
+        Reason:reason,
+        Title:event.data.Title,
+        CreaterID:event.data.CreaterID,
+        CreaterName:event.data.CreaterName,
     })).done(function (json) { 
         var result = json;  
         if (result != null) {

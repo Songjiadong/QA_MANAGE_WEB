@@ -4,7 +4,7 @@ body{
 }
 .logo{
     float: left;
-    width: 270px;
+    width: 230px;
     border-right:1px solid #ccc; 
 }
 .login-top{

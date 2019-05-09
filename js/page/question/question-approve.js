@@ -86,8 +86,20 @@ QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
                     temp += "</tr>";
                     $(document).off("click", "#aQuestionPass" + index+",#aQuestionRefuse"+ index+",aQuestionAddTag"+ index);
                     $(document).on("click", "#aQuestionAddTag" + index,  QuestionInfo.Approve.TagOPEvent);
-                    $(document).on("click", "#aQuestionPass" + index, { ID: item.ID,Index:index }, QuestionInfo.Approve.PassEvent);
-                    $(document).on("click", "#aQuestionRefuse" + index, { ID: item.ID,Index:index }, QuestionInfo.Approve.CancelEvent);
+                    $(document).on("click", "#aQuestionPass" + index, { 
+                        ID: item.ID,
+                        Index:index,
+                        Title:item.Title,
+                        CreaterID:item.CreaterID,
+                        CreaterName:item.CreaterName
+                    }, QuestionInfo.Approve.PassEvent);
+                    $(document).on("click", "#aQuestionRefuse" + index, { 
+                        ID: item.ID,
+                        Index:index, 
+                        Title:item.Title,
+                        CreaterID:item.CreaterID,
+                        CreaterName:item.CreaterName
+                        }, QuestionInfo.Approve.CancelEvent);
                     
                 });
                 $("#tbQuestionApproveList").empty().append(temp);
@@ -140,6 +152,9 @@ QuestionInfo.Approve.PassEvent = function PassEvent(event) {
            SubjectID:$("#sltSubjectID"+index).val(),
            SubjectName:$("#sltSubjectID"+index+" option:selected").text(),
            ApproveRemark:"同意",
+           Title:event.data.Title,
+        CreaterID:event.data.CreaterID,
+        CreaterName:event.data.CreaterName,
         })).done(function(json){
            if(json.Result == true){
                $.Alert("保存成功",function(){
@@ -173,12 +188,21 @@ QuestionInfo.Approve.GetApproveStatusCount = function get_approve_status_count()
 }
 
 QuestionInfo.Approve.CancelEvent = function CancelEvent(event){
-    $("#divRefuseDialog").data({"Index":event.data.Index,"ID":event.data.ID})
+    $("#divRefuseDialog").data({
+        "Index":event.data.Index,
+        "ID":event.data.ID,
+        "Title":event.data.Title,
+        "CreaterID":event.data.CreaterID,
+        "CreaterName":event.data.CreaterName
+    })
     $("#divRefuseDialog").dialog("open")
 }
 QuestionInfo.Approve.Cancel = function cancel(){
     var id = $("#divRefuseDialog").data("ID");
     var index = $("#divRefuseDialog").data("Index");
+    var title = $("#divRefuseDialog").data("Title");
+    var creater_id = $("#divRefuseDialog").data("CreaterID");
+    var creater_name = $("#divRefuseDialog").data("CreaterName");
     $.SimpleAjaxPost("service/question/SetApprove", true, 
      JSON.stringify({
         ID:id,
@@ -186,6 +210,9 @@ QuestionInfo.Approve.Cancel = function cancel(){
         SubjectID:"",
         SubjectName:"",
         ApproveRemark:$("#txtApproveReason").val(),
+        Title:title,
+        CreaterID:creater_id,
+        CreaterName:creater_name,
      })).done(function(json){
         if(json.Result == true){
             $.Alert("保存成功",function(){
