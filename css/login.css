@@ -1,0 +1,127 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+.logo{
+    float: left;
+    width: 270px;
+    border-right:1px solid #ccc; 
+}
+.login-top{
+    padding: 68px 114px 50px 112px;
+}
+
+.login-title{
+    float: left;
+    padding-left: 28px;
+    width:150px;
+    height: 60px;
+    line-height: 60px;
+    font-size: 34px;
+    color:#FF6600;
+    font-weight: bold;
+}
+.login-middle{
+    padding-top: 58px;
+    margin-top:44px;
+    height: 362px;
+    background: url("/images/bg-pic.png");
+    background-repeat: no-repeat;
+}
+.login-info-dialog{
+    padding-top: 40px;
+    padding-bottom: 20px;
+    border-radius: 4px;
+    border:1px solid #aaa;
+    margin-left: 62%;
+    width: 296px;
+    background: #fff;
+}
+.login-input-dialog{
+    margin: 20px auto 0 auto;
+    border:1px solid #E5E5E5;
+    border-radius: 4px;
+    width: 250px;
+    height: 36px;
+}
+.login-logo-user{
+    float: left;
+    margin:9px 12px; 
+    width: 18px;
+    height: 18px;
+    background: url('/images/user.png');
+    background-repeat: no-repeat;
+    vertical-align: middle;
+}
+.login-logo-user-o{
+    float: left;
+    margin:9px 12px; 
+    width: 18px;
+    height: 18px;
+    background: url('/images/user-o.png');
+    background-repeat: no-repeat;
+    vertical-align: middle;
+}
+.login-input-user{
+    float: left;
+    margin-top:8px;
+    height: 20px;
+    position: relative;
+}
+.login-input-user input{
+    font-size: 14px;
+    border:0;
+    height:100%;
+    border:0;
+    vertical-align:4%;
+}
+.login-logo-pass-o{
+    float: left;
+    margin:9px 12px; 
+    width: 18px;
+    height: 18px;
+    background: url('/images/key-o.png');
+    background-repeat: no-repeat;
+    vertical-align: middle;
+}
+.login-logo-pass{
+    float: left;
+    margin:9px 12px; 
+    width: 18px;
+    height: 18px;
+    background: url('/images/key.png');
+    background-repeat: no-repeat;
+    vertical-align: middle;
+}
+.login-submit{
+    margin: 20px auto 0 auto;
+    background: #333;
+    border-radius: 3px;
+    color:#fff;
+    text-align: center;
+    width: 254px;
+    height: 36px;
+    line-height: 36px;
+    
+}
+.pointer{
+    cursor:pointer;
+}
+.to-find-password{
+    margin: 10px auto 0 auto; 
+    width: 254px;
+    text-align: right;
+    color: #999;
+    font-size: 12px;
+}
+.error-info {
+	position: absolute;
+	right: 0;
+	top: 0;
+	color: #e26a6c;
+	font-size: 14px;
+	font-family: "微软雅黑";
+	text-align: left;
+	line-height: 1.5;
+    display:none;
+}
