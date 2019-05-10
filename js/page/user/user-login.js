@@ -68,6 +68,7 @@ $(function () {
     })
     $("#txtLoginPass").off("focus").on("focus",function(){
         $(".login-logo-user").css("background","url('/images/user.png') no-repeat")
+        
         $(".login-logo-pass").css("background","url('/images/key-o.png') no-repeat")
     })
     //unicode转中文（cookie用）
