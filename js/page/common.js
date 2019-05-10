@@ -3,8 +3,8 @@
 $.ajaxSetup({
     cache: false
 });
-$.SetCookie("MegawiseID","admin");
-$.SetCookie("MegawiseUserName","admin");
+//$.SetCookie("MegawiseID","admin");
+//$.SetCookie("MegawiseUserName","admin");
 window.objPub = {
     IsLogin: false,
     BaseUrl: "http://qamanage.megawise.cn/",

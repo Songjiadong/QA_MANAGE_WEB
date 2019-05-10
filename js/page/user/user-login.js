@@ -15,6 +15,7 @@ User.Login.WebType.registerEnum("User.Login.WebType");
 ///消息类别枚举@start///
 
 User.Login.LoginEvent = function LoginEvent(event){
+    
     $("#txtUserCodeTip,#txtPasswordTip").hide()
     if ($("#txtLoginUser").val() != ""
        && $("#txtLoginPass").val() != "") {
@@ -49,8 +50,8 @@ User.Login.LoginEvent = function LoginEvent(event){
                     $("#txtUserCodeTip").html("该用户未激活");
                     return false;
                 }else{
-                    $.SetCookie("MegawiseID","admin");
-                    $.SetCookie("MegawiseUserName","admin");
+                    alert($.GetCookie("MegawiseID"))
+                    
                     window.location.href="http://qamanage.megawise.cn";
                     
                 }
@@ -58,6 +59,7 @@ User.Login.LoginEvent = function LoginEvent(event){
         })
     }
 }
+
 $(function () {
     $("#aLogin").off("click").on("click",User.Login.LoginEvent);
     $("#txtLoginUser").off("focus").on("focus",function(){
@@ -68,4 +70,8 @@ $(function () {
         $(".login-logo-user").css("background","url('/images/user.png') no-repeat")
         $(".login-logo-pass").css("background","url('/images/key-o.png') no-repeat")
     })
+    //unicode转中文（cookie用）
+    // var name_code = $.GetCookie("MegawiseName")
+    // str = unescape(name_code.replace(/\u/g, "%u")); 
+    
 });
