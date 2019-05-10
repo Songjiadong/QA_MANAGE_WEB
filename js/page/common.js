@@ -52,3 +52,16 @@ window.objPub.ScorllEvent = function ScorllEvent(event) {
         }
     }
 }
+///消息类别枚举@start///
+window.objPub.ApproveType = function () {
+    throw Error.notImplemented();
+}
+
+window.objPub.ApproveType.prototype = {
+    //长篇
+    Agree: 1,
+    //短篇
+    Refused:2,
+}
+
+window.objPub.ApproveType.registerEnum("window.objPub.ApproveType");

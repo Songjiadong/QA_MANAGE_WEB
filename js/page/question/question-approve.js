@@ -1,6 +1,6 @@
 ﻿QuestionInfo.Approve = function () { }
 QuestionInfo.Approve.registerClass("QuestionInfo.Approve");
-QuestionInfo.Approve.PageSize = 10;
+QuestionInfo.Approve.PageSize = 1;
 QuestionInfo.Approve.SubjectSltStr="";
 QuestionInfo.Approve.TagStr = "";
 //问题审批初始化
@@ -15,10 +15,28 @@ QuestionInfo.Approve.Init = function init() {
                 title: "拒绝操作",
                 buttons: {
                     "取　消": function () {
+                        $("#txtApproveReason").val("");
                         $(this).dialog("close");
                     },
                     "确　定": function () {
                         QuestionInfo.Approve.Cancel()
+                        $(this).dialog("close");
+                    }
+                }
+            });
+            $("#divQuestionPassDialog").dialog({
+                resizable: false,
+                width: 450,
+                modal: true,
+                autoOpen: false,
+                title: "通过操作",
+                buttons: {
+                    "取　消": function () {
+                        QuestionInfo.Approve.GC()
+                        $(this).dialog("close");
+                    },
+                    "确　定": function () {
+                        QuestionInfo.Approve.Pass()
                         $(this).dialog("close");
                     }
                 }
@@ -31,24 +49,30 @@ QuestionInfo.Approve.Init = function init() {
                 $(".content-tabs-item").removeClass("selected");
                 $(this).addClass("selected")
             });
-            $("#divTagDialog").dialog({
-                    resizable: false,
-                    width: 450,
-                    autoOpen: false,
-                    modal: true,
-                    title: "选择标签",
-                    buttons: {
-                        "取　消": function () {
-                            $(this).dialog("close");
-                        },
-                        "确　定": function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-            //拒绝
-            
-            
+            $("#txtSearch").off("keypress").on("keypress",function(){
+                var page = {
+                    pageStart: 1,
+                    pageEnd: QuestionInfo.Approve.PageSize * 1
+                };
+                var keyword = {
+                    Keyword: $("#txtSearch").val(),
+                    YearMonth:"2019-04"
+        
+                }
+                QuestionInfo.Approve.Search(keyword, page);
+            })
+            $("#imgSearch").off("click").on("click",function(){
+                var page = {
+                    pageStart: 1,
+                    pageEnd: QuestionInfo.Approve.PageSize * 1
+                };
+                var keyword = {
+                    Keyword: $("#txtSearch").val(),
+                    YearMonth:"2019-04"
+        
+                }
+                QuestionInfo.Approve.Search(keyword, page);
+            }) 
             QuestionInfo.Approve.GetApproveStatusCount();
         }
     });
@@ -76,8 +100,8 @@ QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
                     temp += "<div class='question-title'>"+item.Title+"</div>";
                     temp += "<div class='question-describe'>"+item.Content+"</div></td>";
                     temp += "<td>"+item.CreaterName+"</td>";
-                    temp += "<td class='q-time'>"+item.CreateTime+"</td>";
-                    temp += "<td><select id='sltSubjectID"+index+"'>"+QuestionInfo.Approve.SubjectSltStr+"</select></td>";
+                    temp += "<td class='q-time'>"+new Date(item.CreateTime).format("yyyy-MM-dd")+"</td>";
+                    // temp += "<td><select id='sltSubjectID"+index+"'>"+QuestionInfo.Approve.SubjectSltStr+"</select></td>";
                     temp += "<td class='q-time'><a href='javascript:;' class='btn-view' id='aQuestionAddTag" + index + "'>5个</a></td>";
                     temp +="<td class='to-ratify'>";
                     temp +="<a id='aQuestionPass" + index + "' href='javascript:void(0);'>通过</a>";
@@ -85,7 +109,7 @@ QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
                     temp +="</td>"
                     temp += "</tr>";
                     $(document).off("click", "#aQuestionPass" + index+",#aQuestionRefuse"+ index+",aQuestionAddTag"+ index);
-                    $(document).on("click", "#aQuestionAddTag" + index,  QuestionInfo.Approve.TagOPEvent);
+                    
                     $(document).on("click", "#aQuestionPass" + index, { 
                         ID: item.ID,
                         Index:index,
@@ -109,9 +133,6 @@ QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
             }
         });
 }
-QuestionInfo.Approve.TagOPEvent = function TagOPEvent(event){
-    $("#divTagDialog").dialog("open");
-}
 QuestionInfo.Approve.Search = function search(keyword, page) {
     QuestionInfo.Approve.SearchBind(keyword, page);
     $.SimpleAjaxPost("service/question/GetApproveSearchCount", true, JSON.stringify({Keyword:keyword}))
@@ -119,45 +140,80 @@ QuestionInfo.Approve.Search = function search(keyword, page) {
             var result = json.Count;
             //$(".tabs-num").html(result)
             if (result != 0 && result != null) {
-                $("#tbQuestionApproveListPage").wPaginate("destroy").wPaginate({
+                $("#divQuestionApproveListPage").wPaginate("destroy").wPaginate({
                     theme: "grey",
                     page: '5,10,20',
                     total: result,
                     index: parseInt(page.pageStart) - 1,
                     limit: QuestionInfo.Approve.PageSize,
                     ajax: true,
-                    pid: "divSubjectListPage",
+                    pid: "divQuestionApproveListPage",
                     url: function (i) {
                         var page = {
                             pageStart: i * this.settings.limit + 1,
                             pageEnd: (i + 1) * this.settings.limit
                         };
-                        SubjectInfo.SearchBind(keyword, page);
+                        QuestionInfo.Approve.SearchBind(keyword, page);
                     }
                 });
             }
             else {
-                $("#tbQuestionApproveListPage").wPaginate("destroy");
+                $("#divQuestionApproveListPage").wPaginate("destroy");
             }
         });
 }
+QuestionInfo.Approve.GC = function gc(){
+    QuestionInfo.Approve.GetAllTagList()
+}
 QuestionInfo.Approve.PassEvent = function PassEvent(event) {
-    var id = event.data.ID;
-    var index = event.data.Index;
+    $("#divQuestionPassDialog").data({
+        "Index":event.data.Index,
+        "ID":event.data.ID,
+        "Title":event.data.Title,
+        "CreaterID":event.data.CreaterID,
+        "CreaterName":event.data.CreaterName
+    })
+    $("#divPassQuestionTitle").html(event.data.Title)
+    $("#divQuestionPassDialog").dialog("open")
+}
+QuestionInfo.Approve.Pass = function pass(){
     $.Confirm({ content: "您确定要通过该问题吗?", width: "auto" }, function () {
+        var id = $("#divQuestionPassDialog").data("ID");
+        var index = $("#divQuestionPassDialog").data("Index");
+        var title = $("#divQuestionPassDialog").data("Title");
+    var creater_id = $("#divQuestionPassDialog").data("CreaterID");
+    var creater_name = $("#divQuestionPassDialog").data("CreaterName");
+    var tag_items = $("#ulAddNewTagList li");
+    var relation = [];
+    $.each(tag_items, function (index, item) {
+        var relation_item = {
+            ID :$.NewGuid(),      
+            QuestionID :id,
+            QuestionName :title,
+            TagID  : $(item).attr("value"),
+            TagName : $(item).children("span").html(),
+            ApproveStatus : objPub.ApproveType.Agree.toString(),   
+            ApproveRemark : "同意",  
+            CreaterID  :creater_id,      
+            CreaterName :creater_name
+        }
+        relation.push(relation_item)
+    })
         $.SimpleAjaxPost("service/question/SetApprove", true, 
         JSON.stringify({
            ID:id,
            ApproveStatus:"0",
-           SubjectID:$("#sltSubjectID"+index).val(),
-           SubjectName:$("#sltSubjectID"+index+" option:selected").text(),
+           SubjectID:$("#sltSubject").val(),
+           SubjectName:$("#sltSubject option:selected").text(),
            ApproveRemark:"同意",
-           Title:event.data.Title,
-        CreaterID:event.data.CreaterID,
-        CreaterName:event.data.CreaterName,
+           QuestionTagRelation:relation,
+           Title:title,
+           CreaterID:creater_id,
+           CreaterName:creater_name,
         })).done(function(json){
            if(json.Result == true){
                $.Alert("保存成功",function(){
+                QuestionInfo.Approve.GetApproveStatusCount();
                    var page = {
                        pageStart: 1,
                        pageEnd: QuestionInfo.Approve.PageSize * 1
@@ -172,7 +228,6 @@ QuestionInfo.Approve.PassEvent = function PassEvent(event) {
         })
     });
 }
-
 QuestionInfo.Approve.GetApproveStatusCount = function get_approve_status_count() {
     $.SimpleAjaxPost("service/question/GetApproveStatusCount", true,JSON.stringify({Year:'2019'})).done(function(json){
         var result = $.Deserialize(json.List);
@@ -216,6 +271,7 @@ QuestionInfo.Approve.Cancel = function cancel(){
      })).done(function(json){
         if(json.Result == true){
             $.Alert("保存成功",function(){
+                QuestionInfo.Approve.GetApproveStatusCount();
                 var page = {
                     pageStart: 1,
                     pageEnd: QuestionInfo.Approve.PageSize * 1
@@ -237,6 +293,7 @@ QuestionInfo.Approve.GetAllSubjectList = function get_all_subject_list() {
         $.each(result, function (index, item) {
             temp += "<option value='"+item.ID+"'>"+item.Name+"</option>"
         });
+        $("#sltSubject").html(temp);
         QuestionInfo.Approve.SubjectSltStr = temp;
         var page = {
             pageStart: 1,
@@ -252,11 +309,12 @@ QuestionInfo.Approve.GetAllSubjectList = function get_all_subject_list() {
     
 }
 QuestionInfo.Approve.GetAllTagList = function get_all_tag_list() {
+    $("#ulAddNewTagList").empty();
     var temp = "";
     $.SimpleAjaxPost("service/user/tag/GetAllTagList" , true).done(function(json){
         var result = $.Deserialize(json.List)
         $.each(result, function (index, item) {
-            temp +="<li id='liAllTagItem"+index+"'><span>"+item.Name+"</span>";
+            temp +="<li id='liAllTagItem"+index+"' ><span>"+item.Name+"</span>";
 			temp +="<div class='tags-del' id='divTagItemAdd"+index+"' title='添加'>";	
 			temp +="<img src='images/add.png'/></div>";
             temp +="</li>";
@@ -271,7 +329,7 @@ QuestionInfo.Approve.AddTagEvent = function AddTagEvent(event){
     var id = event.data.ID;
     var name = event.data.Name;
     var index = event.data.Index;
-    var temp = "<li id='liAddNewTagItem"+index+"'><span>"+name+"</span>";
+    var temp = "<li id='liAddNewTagItem"+index+"' value='"+id+"'><span>"+name+"</span>";
     temp +="<div class='tags-del' id='del"+id+"' title='删除'>";
     temp +="<img src='images/trash.png'>";
     temp +="</div></li>";
@@ -284,12 +342,12 @@ QuestionInfo.Approve.DelTagEvent = function DelTagEvent(event){
     var id = event.data.ID;
     var name = event.data.Name;
     var index = event.data.Index;
-    var temp ="<li id='liAllTagItem"+index+"'><span>"+name+"</span>";
+    var temp ="<li id='liAllTagItem"+index+"' ><span>"+name+"</span>";
     temp +="<div class='tags-del' id='divTagItemAdd"+index+"' title='添加'>";	
     temp +="<img src='images/add.png'/></div>";
     temp +="</li>";
     $("#liAddNewTagItem"+index).remove();
-    $("#ulAllTagList li:eq("+index+")").before(temp);
+    $("#ulAllTagList").append(temp);
     $("#ulAllTagList").off("click", "#divTagItemAdd" + id);
     $("#ulAllTagList").on("click", "#divTagItemAdd" + id,{ ID: id,Name:name,Index:index}, QuestionInfo.Approve.AddTagEvent);
 }

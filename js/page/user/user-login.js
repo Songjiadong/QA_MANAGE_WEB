@@ -56,12 +56,6 @@ User.Login.LoginEvent = function LoginEvent(event){
                 }
             })
         })
-    }else if($("#txtLoginUser").val()==""){
-        //$("#txtUserCodeTip").show();
-        //$("#txtUserCodeTip").html("请输入账号");
-    }else if($("#txtLoginPass").val()==""){
-       // $("#txtPasswordTip").html("请输入密码")
-       // $("#txtPasswordTip").show()
     }
 }
 $(function () {
