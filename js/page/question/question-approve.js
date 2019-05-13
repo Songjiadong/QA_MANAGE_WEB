@@ -1,12 +1,13 @@
 ﻿QuestionInfo.Approve = function () { }
 QuestionInfo.Approve.registerClass("QuestionInfo.Approve");
-QuestionInfo.Approve.PageSize = 1;
+QuestionInfo.Approve.PageSize = 10;
 QuestionInfo.Approve.SubjectSltStr="";
 QuestionInfo.Approve.TagStr = "";
 //问题审批初始化
 QuestionInfo.Approve.Init = function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/question/approve-list.html", function (respones, status) {
         if (status == "success") {
+            QuestionInfo.Approve.YearInit()
             $("#divRefuseDialog").dialog({
                 resizable: false,
                 width: 450,
@@ -44,7 +45,7 @@ QuestionInfo.Approve.Init = function init() {
             QuestionInfo.Approve.GetAllTagList()
             QuestionInfo.Approve.GetAllSubjectList();
             //时间轴
-            $(".year").off("click").on("click", QuestionInfo.Approve.YearClickEvent);
+           
             $(".content-tabs .content-tabs-item").off("click").on("click", function (event) {
                 $(".content-tabs-item").removeClass("selected");
                 $(this).addClass("selected")
@@ -76,6 +77,31 @@ QuestionInfo.Approve.Init = function init() {
             QuestionInfo.Approve.GetApproveStatusCount();
         }
     });
+}
+QuestionInfo.Approve.YearInit = function year_init(){
+    var temp_current_year = parseInt(Home.Year);
+    var temp_current_month = parseInt(new Date().getMonth() + 1)
+    var str = "<li class='swift-edit'><i class='fa fa-edit'></i></li>";
+    str +="<li><a href='javascript:void(0);' class='year'>全部</a></li>"
+    str+="<li class='selected'>";
+    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year)+"</a>";
+    str+="<ul class='month'>";
+    for(var j=1;j<(temp_current_month+1);j++){
+        str+="<li><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+    }
+    str+="</ul>";
+    for(var i=1;i<3;i++){
+    str+="<li >";
+    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year-i)+"</a>";
+    str+="<ul class='month'>";
+    for(var k=1;k<13;k++){
+        str+="<li><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
+    }
+    str+="</ul>";
+    str+="</li>";
+    }
+    $("#ulYearMenu").empty().append(str);
+    $(".year").off("click").on("click", QuestionInfo.Approve.YearClickEvent);
 }
 //时间周年点击
 QuestionInfo.Approve.YearClickEvent = function YearClickEvent(event) {
@@ -129,7 +155,7 @@ QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
                 $("#tbQuestionApproveList").empty().append(temp);
             }
             else {
-                $("#tbQuestionApproveList").empty().append("<tr><td colspan='6' style='text-align:center;'>暂无待处理的数据</td></tr>");
+                $("#tbQuestionApproveList").empty().append("<tr><td colspan='4' style='text-align:center;'>暂无待处理的数据</td></tr>");
             }
         });
 }

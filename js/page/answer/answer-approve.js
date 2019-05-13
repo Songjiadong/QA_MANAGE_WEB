@@ -130,86 +130,41 @@ AnswerInfo.Approve.SearchKeyPressEvent = function SearchKeyPressEvent(event) {
         AnswerInfo.Approve.Search(keyword, page);
     }
 }  
-//设置时间轴显示
-AnswerInfo.Approve.SetDataList = function set_data_list() {
-    var data_view = {
-        ApproveStatus: $("div.content-tabs-item.selected").attr("data"),
-        //当前年
-        Year: AnswerInfo.Approve.Year,
-        Month:AnswerInfo.Approve.Month
-    } 
-    $.SimpleAjaxPost("service/answer/GetAnswerYearList",true,JSON.stringify(data_view),function (json) {
-            var result = JSON.parse(json.List);
-            var temp = "";
-            if (Array.isArray(result) == true) { 
-                //查看全部按钮
-                temp += " <li id='liAll'><a href='javascript:void(0);' id='aAllButton' class='year'>全部</a></li>";
-                $(document).off("click", "#aAllButton").on("click", "#aAllButton", AnswerInfo.Approve.GetAllInfos);
-                //循环加载年份
-               $.each(result, function (index, item) {
-                    temp += "<li id='liYear" + index + "'" + (index == 0 ? " class='selected' " : " ") + " >";
-                    temp += "<a href='javascript:void(0);' class='year'>" + item.YEAR + "</a>";
-                    temp += "<ul class='month' id='ulAnswerInfoListOf" + item.YEAR + "'></ul>";
-                    temp += "</li>";
-                    $(document).off("click", "#liYear" + index).on("click", "#liYear" + index, { Year: item.YEAR }, AnswerInfo.Approve.GetMonthListEvent);
-               });
-               $("#ulDateList").empty().append(temp);
-                //时间轴切换年份
-               $(".year").on("click", function (event) {
-                    var $presentDot = $(event.target);
-                    $presentDot.parent().siblings().find("ul").hide();
-                    $presentDot.parent().addClass("selected").siblings().removeClass("selected");
-               });
-                //搜索参数
-               var page = {
-                    pageStart: 1,
-                    pageEnd: AnswerInfo.Approve.PageSize * 1
-                };
-            if ($("li[id^='liYear']").length > 0) {
-                data_view.Year = $("li[id^='liYear'].selected .year").text();
-                data_view.Month = "";
-            }
-            else {
-                //当前月
-                data_view.Month = AnswerInfo.Approve.Month;
-            }
-            data_view.Keyword = $("#txtSearch").val();
-            data_view.ApproveStatus = $("div.content-tabs-item.selected").attr("data");
-            AnswerInfo.Approve.Search(data_view, page); 
-            }else {
-                $("#ulDateList").empty().append(temp);
-            }
-        })
-
+AnswerInfo.Approve.YearInit = function year_init(){
+    var temp_current_year = parseInt(Home.Year);
+    var temp_current_month = parseInt(new Date().getMonth() + 1)
+    var str = "<li class='swift-edit'><i class='fa fa-edit'></i></li>";
+    str +="<li><a href='javascript:void(0);' class='year'>全部</a></li>"
+    str+="<li class='selected'>";
+    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year)+"</a>";
+    str+="<ul class='month'>";
+    for(var j=1;j<(temp_current_month+1);j++){
+        str+="<li><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+    }
+    str+="</ul>";
+    for(var i=1;i<3;i++){
+    str+="<li >";
+    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year-i)+"</a>";
+    str+="<ul class='month'>";
+    for(var k=1;k<13;k++){
+        str+="<li><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
+    }
+    str+="</ul>";
+    str+="</li>";
+    }
+    $("#ulYearMenu").empty().append(str);
+    $(".year").off("click").on("click", AnswerInfo.Approve.YearClickEvent);
 }
-//获取月份列表
-AnswerInfo.Approve.GetMonthListEvent = function GetMonthListEvent(event) {
-    var year = event.data.Year;
-    var data_view = {
-        ApproveStatus: $("div.content-tabs-item.selected").attr("data"),
-        Year: year ,
-        Month:AnswerInfo.Approve.Month
-    }; 
-    $.SimpleAjaxPost("service/answer/GetAnswerMonthList", true,JSON.stringify(data_view),function (json) {
-           var result = JSON.parse(json.List);
-           var temp = "";
-           if (Array.isArray(result)==true) {
-            $.each(result, function (index, item) {
-                temp += "<li id='liMonth" + year + "-" + item.MONTH + "'><a href='javascript:void(0);'><em class='s-dot'></em>" + item.MONTH + "月</a></li>";
-                $(document).off("click", "#liMonth" + year + "-" + item.MONTH).on("click", "#liMonth" + year + "-" + item.MONTH, { Year: year, Month: item.MONTH }, AnswerInfo.Approve.GetMonthInfoListEvent);
-            }) 
-           }
-           $("#ulAnswerInfoListOf" + year).empty().append(temp).show();
-       });
-    var page = {
-        pageStart: 1,
-        pageEnd: AnswerInfo.Approve.PageSize * 1
-    };
-    
-    data_view.Keyword = $("#txtSearch").val();
-    data_view.ApproveStatus = $("div.content-tabs-item.selected").attr("data");
-    data_view.Month = "";
-    AnswerInfo.Approve.Search(data_view,page);
+//时间周年点击
+AnswerInfo.Approve.YearClickEvent = function YearClickEvent(event) {
+    var $presentDot = $(this);
+    $presentDot.parent().siblings().find("ul").hide();
+    $presentDot.parent().addClass("selected").siblings().removeClass("selected");
+    $presentDot.siblings().show().find("li:eq(0)").addClass("selected").siblings().removeClass("selected");
+    //月份切换
+    $(".month>li").on("click", function () {
+        $(this).addClass("selected").siblings().removeClass("selected");
+    });
 }
 //月份点击获取信息
 AnswerInfo.Approve.GetMonthInfoListEvent = function GetMonthInfoListEvent(event) {

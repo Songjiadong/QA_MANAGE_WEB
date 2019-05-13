@@ -50,9 +50,7 @@ User.Login.LoginEvent = function LoginEvent(event){
                     $("#txtUserCodeTip").html("该用户未激活");
                     return false;
                 }else{
-                    alert($.GetCookie("MegawiseID"))
-                    
-                    window.location.href="http://qamanage.megawise.cn";
+                    window.location.href=objPub.BaseUrl;
                     
                 }
             })
@@ -72,7 +70,8 @@ $(function () {
         $(".login-logo-pass").css("background","url('/images/key-o.png') no-repeat")
     })
     //unicode转中文（cookie用）
-    // var name_code = $.GetCookie("MegawiseName")
-    // str = unescape(name_code.replace(/\u/g, "%u")); 
-    
+    var name_code = $.GetCookie("MegawiseName")
+    alert(name_code)
+    str = unescape(name_code.replace(/\u/g, "%u")); 
+    alert(str)
 });
