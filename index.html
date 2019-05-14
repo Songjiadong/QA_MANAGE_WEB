@@ -14,7 +14,36 @@
 
 <body>
     <div class="wrapper">
-
+        <div class="page-top clear-fix">
+            <div alt="LOGO" class="logo">
+                <img src="images/logo.png" onclick="window.open('index.html')" />
+            </div>
+            
+            <div class="main-opts">
+                <span class="user-opts">
+                    <span class="notice-dot"></span>
+                    <a href="javascript:;" id="aGoMessage">
+                        <img src="images/bell.png" alt="">
+                    </a>
+                </span>
+                <span class="user-opts">
+                    <a href="javascript:;" id="aLoginOut">
+                        <img src="images/power.png" alt="">
+                    </a>
+                </span>
+                <span class="user-login">
+                    <a href="javascript:void(0);" class="top-avatar" id="">
+                        <img src="images/user/boy.png">
+                    </a>
+                </span>
+            </div>
+        
+            <div class="tab">
+                <ul class="clear-fix">
+                    <li class="selected"><a id="aGoIndex" href="index.html">首页</a></li>
+                </ul>
+            </div>
+        </div>
         <!--不包括顶部logo及用户操作-->
         <nav>
             <ul class="clear-fix">
@@ -30,10 +59,6 @@
         <!--主页内容-->
         <main>
             <section id="sctMain" class="main-wapper"></section>
-            <!-- <form method="post" action="" enctype="multipart/form-data" id="fmContractUpload">
-                <input accept=".doc,.docx,.pdf" name="file" type="file" id="fContractUpload"/>
-            </form>
-            <input id="btnContractFileUpload"  value="上传附件" type="button" > -->
         </main>
 
         <!--不包括尾部-->
@@ -64,7 +89,10 @@
     <script src="js/page/question/question.js"></script>
     <script src="js/page/question/question-approve.js"></script>
     <script src="js/page/question/question-recommend.js"></script>
-
+    <!--用户相关  -->
+    <script src="js/page/user/user.js"></script>
+    <script src="js/page/user/user-login.js"></script>
+    
     <script src="js/page/subject/subject.js"></script>
     <script src="js/page/tag/tag.js"></script>
     <script src="js/page/index.js"></script>

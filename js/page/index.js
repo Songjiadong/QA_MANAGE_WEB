@@ -45,7 +45,7 @@
 		$(this).addClass("selected").siblings().removeClass("selected");
 		TagInfo.Init();
 	});
-
+	$("#aLoginOut").off("click").on("click",User.Login.LoginOutEvent)
 });
 
 function UploadContractFileEvent(event){

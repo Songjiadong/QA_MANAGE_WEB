@@ -57,7 +57,13 @@ User.Login.LoginEvent = function LoginEvent(event){
         })
     }
 }
-
+User.Login.LoginOutEvent = function LoginOutEvent(event){
+    $.Confirm({ content: "尊敬的用户" + objPub.UserName + "：您确定要退出登录吗?", width: "auto" }, function () {
+        $.ClearCookie("MegawiseID");
+        $.ClearCookie("MegawiseUserName");
+        window.location.href="http://qamanage.megawise.cn/login.html";
+    });
+}
 $(function () {
     $("#aLogin").off("click").on("click",User.Login.LoginEvent);
     $("#txtLoginUser").off("focus").on("focus",function(){
@@ -70,8 +76,7 @@ $(function () {
         $(".login-logo-pass").css("background","url('/images/key-o.png') no-repeat")
     })
     //unicode转中文（cookie用）
-    var name_code = $.GetCookie("MegawiseName")
-    alert(name_code)
-    str = unescape(name_code.replace(/\u/g, "%u")); 
-    alert(str)
+    // var name_code = $.GetCookie("MegawiseName")
+    // str = unescape(name_code.replace(/\u/g, "%u")); 
+    
 });

@@ -3,13 +3,15 @@
 $.ajaxSetup({
     cache: false
 });
+var temp_user_name = $.GetCookie("MegawiseUserName") == undefined ? "" : decodeURI($.GetCookie("MegawiseUserName"));
+temp_user_name = unescape(temp_user_name.replace(/\u/g, "%u")); 
 window.objPub = {
     IsLogin: false,
     BaseUrl: "http://qamanage.megawise.cn/",
     QaUrl: "http://qa.megawise.cn/",
     WeixinUrl: "http://weixin.miic.com.cn/",
     UserID: $.GetCookie("MegawiseID") == undefined ? "" : $.GetCookie("MegawiseID"),
-    UserName: $.GetCookie("MegawiseUserName") == undefined ? "" : decodeURI($.GetCookie("MegawiseUserName")),
+    UserName: temp_user_name,
     LoginUserInfo: null,
 };
 //浏览事件

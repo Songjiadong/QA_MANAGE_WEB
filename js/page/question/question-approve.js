@@ -85,23 +85,42 @@ QuestionInfo.Approve.YearInit = function year_init(){
     str +="<li><a href='javascript:void(0);' class='year'>全部</a></li>"
     str+="<li class='selected'>";
     str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year)+"</a>";
-    str+="<ul class='month'>";
+    str+="<ul class='month' value='"+(temp_current_year)+"'>";
     for(var j=1;j<(temp_current_month+1);j++){
-        str+="<li><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+        str+="<li value='"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
     }
     str+="</ul>";
     for(var i=1;i<3;i++){
     str+="<li >";
     str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year-i)+"</a>";
-    str+="<ul class='month'>";
-    for(var k=1;k<13;k++){
-        str+="<li><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
-    }
+    str+="<ul class='month' value='"+(temp_current_year-i)+"'>";
+        for(var k=1;k<13;k++){
+            str+="<li value='"+k+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
+        }
     str+="</ul>";
     str+="</li>";
     }
     $("#ulYearMenu").empty().append(str);
     $(".year").off("click").on("click", QuestionInfo.Approve.YearClickEvent);
+    $(".month>li").off("click").on("click", function () {
+        $(this).addClass("selected").siblings().removeClass("selected");
+        var year = $(this).parent().attr("value");
+        var date = $(this).attr("value");
+        if(date>9){
+        }else{
+            date = "0"+date
+        }
+        var page = {
+            pageStart: 1,
+            pageEnd: QuestionInfo.Approve.PageSize * 1
+        };
+        var keyword = {
+            Keyword: $("#txtSearch").val(),
+            YearMonth:year+"-"+date
+
+        }
+        QuestionInfo.Approve.Search(keyword, page);
+    });
 }
 //时间周年点击
 QuestionInfo.Approve.YearClickEvent = function YearClickEvent(event) {
@@ -109,12 +128,8 @@ QuestionInfo.Approve.YearClickEvent = function YearClickEvent(event) {
     $presentDot.parent().siblings().find("ul").hide();
     $presentDot.parent().addClass("selected").siblings().removeClass("selected");
     $presentDot.siblings().show().find("li:eq(0)").addClass("selected").siblings().removeClass("selected");
-    //月份切换
-    $(".month>li").on("click", function () {
-        $(this).addClass("selected").siblings().removeClass("selected");
-    });
+    
 }
-
 QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
     $.SimpleAjaxPost("service/question/ApproveSearch", true, JSON.stringify({Keyword:keyword,Page:page}))
         .done(function (json) {
@@ -127,8 +142,6 @@ QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
                     temp += "<div class='question-describe'>"+item.Content+"</div></td>";
                     temp += "<td>"+item.CreaterName+"</td>";
                     temp += "<td class='q-time'>"+new Date(item.CreateTime).format("yyyy-MM-dd")+"</td>";
-                    // temp += "<td><select id='sltSubjectID"+index+"'>"+QuestionInfo.Approve.SubjectSltStr+"</select></td>";
-                    temp += "<td class='q-time'><a href='javascript:;' class='btn-view' id='aQuestionAddTag" + index + "'>5个</a></td>";
                     temp +="<td class='to-ratify'>";
                     temp +="<a id='aQuestionPass" + index + "' href='javascript:void(0);'>通过</a>";
                     temp +="<a id='aQuestionRefuse" + index + "' href='javascript:void(0);' class='refuse'>拒绝</a>";

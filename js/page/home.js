@@ -12,7 +12,7 @@ Home.Init= function init() {
             }else{
                 Home.Month = "0"+temp
             }
-            
+            Home.YearInit();
             Home.WaitApproveCountBind()
             $("#divCurrentDate").html(Home.Year+"-"+Home.Month)
             //时间轴
@@ -37,6 +37,46 @@ Home.Init= function init() {
             });
         }
     });
+}
+Home.YearInit = function year_init(){
+    var temp_current_year = parseInt(Home.Year);
+    var temp_current_month = parseInt(new Date().getMonth() + 1)
+    var str = "<li class='swift-edit'><i class='fa fa-edit'></i></li>";
+    str +="<li><a href='javascript:void(0);' class='year'>全部</a></li>"
+    str+="<li class='selected'>";
+    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year)+"</a>";
+    str+="<ul class='month' value='"+(temp_current_year)+"'>";
+    for(var j=1;j<(temp_current_month+1);j++){
+        str+="<li value='"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+    }
+    str+="</ul>";
+    for(var i=1;i<3;i++){
+    str+="<li >";
+    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year-i)+"</a>";
+    str+="<ul class='month' value='"+(temp_current_year-i)+"'>";
+        for(var k=1;k<13;k++){
+            str+="<li value='"+k+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
+        }
+    str+="</ul>";
+    str+="</li>";
+    }
+    $("#ulYearMenu").empty().append(str);
+    $(".year").off("click").on("click",Home.YearClickEvent);
+    $(".month>li").off("click").on("click", function () {
+        //$(this).addClass("selected").siblings().removeClass("selected");
+        //var year = $(this).parent().attr("value");
+        //var date = $(this).attr("value");
+
+        Home.QaStatisticsBind();
+    });
+}
+//时间周年点击
+Home.YearClickEvent = function YearClickEvent(event) {
+    var $presentDot = $(this);
+    $presentDot.parent().siblings().find("ul").hide();
+    $presentDot.parent().addClass("selected").siblings().removeClass("selected");
+    $presentDot.siblings().show().find("li:eq(0)").addClass("selected").siblings().removeClass("selected");
+    
 }
 Home.WaitApproveCountBind = function wait_approve_count_bind(){
     
@@ -296,10 +336,10 @@ Home.UserVisitStatisticsBind = function user_visit_statistics_bind() {
     };
     qaVisit.setOption(optionVist);
 }
-Home.QaStatisticsBind = function qa_statistics_bind() {
+Home.QaStatisticsBind = function qa_statistics_bind(year_month) {
     var question_data=[]
     $.SimpleAjaxPost("service/question/GetQuestionStatisticsInfoList" , true, 
-     JSON.stringify({Year:'2019'})).done(function(json){
+     JSON.stringify({Year:year_month})).done(function(json){
         var result = $.Deserialize(json.List)
         $.each(result, function (index, item) {
             question_data.push(item.Value)

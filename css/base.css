@@ -176,7 +176,19 @@ nav ul li.selected a {
 }
 
 
-
+.page-top {
+	width: 1200px;
+	margin: 0 auto;
+	text-align: left;
+	padding-top: 20px;
+	padding-bottom: 15px;
+}
+.logo {
+	float: left;
+}
+.main-opts {
+	float: right;
+}
 
 /* 时间轴 */
 .time-filter {
@@ -269,4 +281,52 @@ nav ul li.selected a {
 }
 .hander{
   cursor: pointer;
+}
+.top-avatar{
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border-radius: 30px;
+  border: 1px solid #dde5eb;
+  overflow: hidden;
+  cursor: pointer;
+  vertical-align: middle;
+  margin-left: 15px;
+  margin-top: -5px;
+}
+.top-avatar img {
+ height: 100%;
+}
+.tab {
+	float: right;
+}
+.tab ul li {
+	float: left;
+	margin-right: 30px;
+}
+.tab ul li a {
+	color: #75bdf9;
+	font-size: 18px;
+	line-height: 2;
+}
+.tab ul li.selected a {
+	color: #000;
+}
+.user-opts {
+position: relative;
+}
+.user-opts a {
+padding-left: 20px;
+vertical-align: -5px;
+}
+.notice-dot {
+position: absolute;
+display: inline-block;
+width: 12px;
+height: 12px;
+background-color: #e60012;
+border: 2px solid #fff;
+border-radius: 50%;
+top: -5px;
+left: 32px;
 }

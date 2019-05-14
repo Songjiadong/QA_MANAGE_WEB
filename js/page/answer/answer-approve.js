@@ -33,7 +33,7 @@ AnswerInfo.Approve.Init = function init() {
             //回答审核筛选框初始化
             AnswerInfo.Approve.InitApproveData(); 
             // //设置时间轴显示
-          //  AnswerInfo.Approve.SetDataList();
+            AnswerInfo.Approve.YearInit();
             //回答审核默认搜索
             var page = {
                 PageStart: 1,
@@ -56,7 +56,7 @@ AnswerInfo.Approve.Init = function init() {
             $("#imgSearch").off("click").on("click", {Page:page},AnswerInfo.Approve.SearchEvent);
             //搜索回车事件
             $("#txtSearch").off("keypress").on("keypress", { Page: page }, AnswerInfo.Approve.SearchKeyPressEvent);
-             
+            
         }
     });
 } 
@@ -137,22 +137,38 @@ AnswerInfo.Approve.YearInit = function year_init(){
     str +="<li><a href='javascript:void(0);' class='year'>全部</a></li>"
     str+="<li class='selected'>";
     str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year)+"</a>";
-    str+="<ul class='month'>";
+    str+="<ul class='month' value='"+(temp_current_year)+"'>";
     for(var j=1;j<(temp_current_month+1);j++){
-        str+="<li><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+        str+="<li value='"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
     }
     str+="</ul>";
     for(var i=1;i<3;i++){
     str+="<li >";
     str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year-i)+"</a>";
-    str+="<ul class='month'>";
-    for(var k=1;k<13;k++){
-        str+="<li><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
-    }
+    str+="<ul class='month' value='"+(temp_current_year-i)+"'>";
+        for(var k=1;k<13;k++){
+            str+="<li value='"+k+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
+        }
     str+="</ul>";
     str+="</li>";
     }
     $("#ulYearMenu").empty().append(str);
+    $(".month>li").off("click").on("click", function () {
+        $(this).addClass("selected").siblings().removeClass("selected");
+        var year = $(this).parent().attr("value");
+        var date = $(this).attr("value");
+        var page = {
+            PageStart: 1,
+            PageEnd: AnswerInfo.Approve.PageSize * 1
+        }; 
+        keyword = {
+            Keyword: $("#txtSearch").val(),
+            ApproveStatus:AnswerInfo.ApproveStatus.SimpleApproveWaiting+"",
+            Year:year,
+            Month: date  
+        }
+        AnswerInfo.Approve.Search(keyword, page);
+    });
     $(".year").off("click").on("click", AnswerInfo.Approve.YearClickEvent);
 }
 //时间周年点击
@@ -161,10 +177,6 @@ AnswerInfo.Approve.YearClickEvent = function YearClickEvent(event) {
     $presentDot.parent().siblings().find("ul").hide();
     $presentDot.parent().addClass("selected").siblings().removeClass("selected");
     $presentDot.siblings().show().find("li:eq(0)").addClass("selected").siblings().removeClass("selected");
-    //月份切换
-    $(".month>li").on("click", function () {
-        $(this).addClass("selected").siblings().removeClass("selected");
-    });
 }
 //月份点击获取信息
 AnswerInfo.Approve.GetMonthInfoListEvent = function GetMonthInfoListEvent(event) {
