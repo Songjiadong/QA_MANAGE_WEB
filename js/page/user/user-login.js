@@ -61,7 +61,7 @@ User.Login.LoginOutEvent = function LoginOutEvent(event){
     $.Confirm({ content: "尊敬的用户" + objPub.UserName + "：您确定要退出登录吗?", width: "auto" }, function () {
         $.ClearCookie("MegawiseID");
         $.ClearCookie("MegawiseUserName");
-        window.location.href="http://qamanage.megawise.cn/login.html";
+        window.location.href=objPub.BaseUrl+"login.html";
     });
 }
 $(function () {
