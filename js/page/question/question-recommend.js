@@ -57,6 +57,10 @@ QuestionInfo.Recommend.Init = function init() {
                 IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
             }
             QuestionInfo.Recommend.Search(keyword, page);
+            QuestionInfo.Recommend.GetRecommendQuestionCount(keyword).done(function(json){
+                var result = json.Count;
+                $("#divRecommendCount").html(result);
+            });
         }
     });
 }
