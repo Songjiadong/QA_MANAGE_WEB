@@ -12,7 +12,18 @@ AnswerInfo.Recommend.Init = function init() {
             $(".year").off("click").on("click", AnswerInfo.Recommend.YearClickEvent);
             $(".content-tabs .content-tabs-item").off("click").on("click", function (event) {
                 $(".content-tabs-item").removeClass("selected");
-                $(this).addClass("selected")
+                $(this).addClass("selected");
+                var page = {
+                    pageStart: 1,
+                    pageEnd: AnswerInfo.Recommend.PageSize * 1
+                }; 
+                keyword = {
+                    Keyword: "",
+                    IsRecommend:AnswerInfo.ApproveStatus.SimpleApproveWaiting+"",
+                    Year:Home.Year,
+                    Month:Home.Month,  
+                }
+                AnswerInfo.Recommend.Search(keyword, page);
             });
                 //风琴效果
                 
@@ -36,17 +47,17 @@ AnswerInfo.Recommend.Init = function init() {
                     });
                 });
                 var page = {
-                    PageStart: 1,
-                    PageEnd: AnswerInfo.Recommend.PageSize * 1
+                    pageStart: 1,
+                    pageEnd: AnswerInfo.Recommend.PageSize * 1
                 }; 
                 keyword = {
                     Keyword: "",
                     IsRecommend:AnswerInfo.ApproveStatus.SimpleApproveWaiting+"",
-                    Year:"2019",//AnswerInfo.Recommend.SelectedYear,
-                    Month:"04"// AnswerInfo.Recommend.SelectedMonth  
+                    Year:Home.Year,
+                    Month:Home.Month,  
                 }
                 AnswerInfo.Recommend.Search(keyword, page);
-                AnswerInfo.Recommend.GetOfficialAnswerCount(keyword, page);
+                AnswerInfo.Recommend.GetOfficialAnswerCount(keyword);
         }
     });
 }
@@ -59,7 +70,12 @@ AnswerInfo.Recommend.YearInit = function year_init(){
     str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year)+"</a>";
     str+="<ul class='month' value='"+(temp_current_year)+"'>";
     for(var j=1;j<(temp_current_month+1);j++){
-        str+="<li value='"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+        if (j == temp_current_month){
+            str+="<li value='"+j+"' class='selected'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+        }else{
+            str+="<li value='"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+        }
+        
     }
     str+="</ul>";
     for(var i=1;i<3;i++){
@@ -94,7 +110,7 @@ AnswerInfo.Recommend.YearInit = function year_init(){
             IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
         }
         AnswerInfo.Recommend.Search(keyword, page);
-        AnswerInfo.Recommend.GetOfficialAnswerCount(year);
+        AnswerInfo.Recommend.GetOfficialAnswerCount(keyword);
     });
 }
 //时间周年点击
@@ -102,7 +118,7 @@ AnswerInfo.Recommend.YearClickEvent = function YearClickEvent(event) {
     var $presentDot = $(this);
     $presentDot.parent().siblings().find("ul").hide();
     $presentDot.parent().addClass("selected").siblings().removeClass("selected");
-    $presentDot.siblings().show().find("li:eq(0)").addClass("selected").siblings().removeClass("selected");
+    $presentDot.siblings().show();
     //月份切换
     $(".month>li").on("click", function () {
         $(this).addClass("selected").siblings().removeClass("selected");
@@ -147,7 +163,7 @@ AnswerInfo.Recommend.SearchBind = function search_bind(keyword, page,current_ind
                 temp += "<div class='answer-tag' id=''>被收藏："+item.CollectCount+"</div>";
                 temp += "</div>";
                 temp +="<div class='recommend-num'>"
-                temp +="已推荐回答<span>"+official_count+"</span>条"
+                temp +="已推荐回答<span id='spHasRecommendedCount"+Index+"'>"+official_count+"</span>条"
                 temp +="</div>"
                 temp += "</div>";
                 //回答列表
@@ -188,14 +204,16 @@ AnswerInfo.Recommend.SearchBind = function search_bind(keyword, page,current_ind
                         temp += "<a href='javascript:;' id='aSetOfficial"+Index+"-"+answerIndex+"'>取消官方推荐</a>";
                         $("#divRecommendList").off("click", "#aSetOfficial" + Index+"-"+answerIndex).on("click", "#aSetOfficial" + Index+"-"+answerIndex, { 
                             ID: answerItem.AnswerID,
-                            Index:Index+"-"+answerIndex,
+                            Index:Index,
+                            AnswerIndex:answerIndex,
                             IsOfficial: objPub.YesNoType.No.toString(),
                         }, AnswerInfo.Recommend.SetOfficialEvent);
                     }else{
                         temp += "<a href='javascript:;' id='aSetOfficial"+Index+"-"+answerIndex+"'>设为官方推荐</a>";
                         $("#divRecommendList").off("click", "#aSetOfficial" + Index+"-"+answerIndex).on("click", "#aSetOfficial" + Index+"-"+answerIndex, { 
                             ID: answerItem.AnswerID,
-                            Index:Index+"-"+answerIndex,
+                            Index:Index,
+                            AnswerIndex:answerIndex,
                             IsOfficial: objPub.YesNoType.Yes.toString(),
                         }, AnswerInfo.Recommend.SetOfficialEvent);
                     }
@@ -205,11 +223,11 @@ AnswerInfo.Recommend.SearchBind = function search_bind(keyword, page,current_ind
                 temp += "</div>"; 
                 temp += "</div>"; 
             })
-            if (current_index == 0) {
+            if(page.pageStart == 1){
                 $("#divRecommendList").empty().append(temp);
-            } else {
+            }else{
                 $("#divRecommendList").append(temp);
-            } 
+            }
             listAccrodion();
         } else {
             $("#divRecommendList").empty().append("<div style='text-align:center;'>暂无待处理的数据</div>");
@@ -220,14 +238,22 @@ AnswerInfo.Recommend.SetOfficialEvent = function SetOfficialEvent(event){
     var id = event.data.ID;
     var is_official = event.data.IsOfficial;
     var index = event.data.Index;
+    var answer_index = event.data.AnswerIndex;
+    var tempCount = parseInt($("#spHasRecommendedCount"+index).html());
+    if(is_official == objPub.YesNoType.Yes.toString()){
+        tempCount = tempCount+1
+    }else{
+        tempCount = tempCount-1
+    }
+    $("#spHasRecommendedCount"+index).html(tempCount);
     var text="";
     var btn_text = ""
     if(is_official ==objPub.YesNoType.Yes.toString()){
         text="已将该回答设为推荐";
-        btn_text="<a href='javascript:;' id='aSetOfficial"+index+"'>取消官方推荐</a>";
+        btn_text="<a href='javascript:;' id='aSetOfficial"+index+"-"+answer_index+"'>取消官方推荐</a>";
     }else{
         text="已取消对该回答的推荐";
-        btn_text="<a href='javascript:;' id='aSetOfficial"+index+"'>设为官方推荐</a>";
+        btn_text="<a href='javascript:;' id='aSetOfficial"+index+"-"+answer_index+"'>设为官方推荐</a>";
     }
     $.SimpleAjaxPost("service/answer/SetOfficial", true, 
     JSON.stringify({
@@ -236,11 +262,12 @@ AnswerInfo.Recommend.SetOfficialEvent = function SetOfficialEvent(event){
     })).done(function(json){
         if(json.Result == true){
             $.Alert(text,function(){
-             $("#aSetOfficial"+index).replaceWith(btn_text);
-             $("#divRecommendList").off("click","#aSetOfficial"+index);
-             $("#divRecommendList").on("click","#aSetOfficial"+index, {
+             $("#aSetOfficial"+index+"-"+answer_index).replaceWith(btn_text);
+             $("#divRecommendList").off("click","#aSetOfficial"+index+"-"+answer_index);
+             $("#divRecommendList").on("click","#aSetOfficial"+index+"-"+answer_index, {
                  ID:id,
                  Index:index,
+                 AnswerIndex:answer_index,
                  IsOfficial:(is_official == objPub.YesNoType.Yes.toString() ? objPub.YesNoType.No.toString():objPub.YesNoType.Yes.toString()),
              },AnswerInfo.Recommend.SetOfficialEvent);
             
@@ -250,8 +277,8 @@ AnswerInfo.Recommend.SetOfficialEvent = function SetOfficialEvent(event){
 }
 
 
-AnswerInfo.Recommend.GetOfficialAnswerCount = function search(keyword, page) {
-    $.SimpleAjaxPost("service/question/recommend/GetOfficialAnswerCount", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) {
+AnswerInfo.Recommend.GetOfficialAnswerCount = function search(keyword) {
+    $.SimpleAjaxPost("service/question/recommend/GetOfficialAnswerCount", true, JSON.stringify({ Keyword: keyword })).done(function (json) {
         var result = json.Count;
         $("#divOfficialCount").html(result);
 

@@ -18,7 +18,19 @@ QuestionInfo.Recommend.Init = function init() {
             $(".year").off("click").on("click", QuestionInfo.Recommend.YearClickEvent);
             $(".content-tabs .content-tabs-item").off("click").on("click", function (event) {
                 $(".content-tabs-item").removeClass("selected");
-                $(this).addClass("selected")
+                $(this).addClass("selected");
+                var page = {
+                    pageStart: 1,
+                    pageEnd: QuestionInfo.Recommend.PageSize * 1
+                };
+                var keyword = {
+                    Keyword: $("#txtSearch").val(),
+                    SubjectID:$("#sltSubjectID").val(),
+                    Year:Home.Year,
+                    Month:Home.Month,
+                    IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
+                }
+                QuestionInfo.Recommend.Search(keyword, page);
             });
 
 			//点击推荐
@@ -40,8 +52,8 @@ QuestionInfo.Recommend.Init = function init() {
             var keyword = {
                 Keyword: $("#txtSearch").val(),
                 SubjectID:$("#sltSubjectID").val(),
-                Year:"2019",
-                Month:"4",
+                Year:Home.Year,
+                Month:Home.Month,
                 IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
             }
             QuestionInfo.Recommend.Search(keyword, page);
@@ -54,7 +66,7 @@ QuestionInfo.Recommend.YearClickEvent = function YearClickEvent(event) {
     var $presentDot = $(this);
     $presentDot.parent().siblings().find("ul").hide();
     $presentDot.parent().addClass("selected").siblings().removeClass("selected");
-    $presentDot.siblings().show().find("li:eq(0)").addClass("selected").siblings().removeClass("selected");
+    $presentDot.siblings().show();
     //月份切换
     $(".month>li").on("click", function () {
         $(this).addClass("selected").siblings().removeClass("selected");
@@ -72,9 +84,9 @@ QuestionInfo.Recommend.SearchBind = function SearchBind(keyword, page,current_in
                     temp+="<div class='recommend-upload'>"
                     temp+="<div class='editor-cover pic-long' id='divCoverImage"+Index+"-"+index+"'>" 
                     if(item.Cover!=undefined){
-                        temp+="<img src='"+objPub.BaseUrl+item.Cover+"' id='imgCover'/>" 
+                        temp+="<img src='"+objPub.BaseUrl+item.Cover+"' id='imgCover"+Index+"-"+index+"'/>" 
                     }else{
-                        temp+="<img src='images/160.png' id='imgCover'/>" 
+                        temp+="<img src='images/160.png' id='imgCover"+Index+"-"+index+"'/>" 
                     }
                           
                     temp+="</div>"   
@@ -116,7 +128,11 @@ QuestionInfo.Recommend.SearchBind = function SearchBind(keyword, page,current_in
                     temp+="</div></div>"
                     $("#divQuestionRecommendList").on("change","#fileCover"+Index+"-"+index, {ID:item.ID,Index:Index+"-"+index},QuestionInfo.Recommend.UploadEvent);
                 });
-                $("#divQuestionRecommendList").append(temp);
+                if(page.pageStart==1){
+                    $("#divQuestionRecommendList").empty().append(temp);
+                }else{
+                    $("#divQuestionRecommendList").append(temp);
+                }
             }
             else {
                 $("#divQuestionRecommendList").empty().append("<tr><td colspan='4' style='text-align:center;'>暂无待处理的数据</td></tr>");
@@ -133,7 +149,11 @@ QuestionInfo.Recommend.YearInit = function year_init(){
     str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year)+"</a>";
     str+="<ul class='month' value='"+(temp_current_year)+"'>";
     for(var j=1;j<(temp_current_month+1);j++){
-        str+="<li value='"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+        if (j == temp_current_month){
+            str+="<li value='"+j+"' class='selected'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+        }else{
+            str+="<li value='"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+        }
     }
     str+="</ul>";
     for(var i=1;i<3;i++){
@@ -150,16 +170,17 @@ QuestionInfo.Recommend.YearInit = function year_init(){
     $(".year").off("click").on("click", QuestionInfo.Recommend.YearClickEvent);
     $(".month>li").off("click").on("click", function () {
         $(this).addClass("selected").siblings().removeClass("selected");
+        
+        var page = {
+            pageStart: 1,
+            pageEnd: QuestionInfo.Recommend.PageSize * 1
+        };
         var year = $(this).parent().attr("value");
         var date = $(this).attr("value");
         if(date>9){
         }else{
             date = "0"+date
         }
-        var page = {
-            pageStart: 1,
-            pageEnd: QuestionInfo.Recommend.PageSize * 1
-        };
         var keyword = {
             Keyword: $("#txtSearch").val(),
             SubjectID:$("#sltSubjectID").val(),
@@ -168,7 +189,7 @@ QuestionInfo.Recommend.YearInit = function year_init(){
             IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
         }
         QuestionInfo.Recommend.Search(keyword, page);
-        QuestionInfo.Recommend.GetRecommendQuestionCount(year);
+        QuestionInfo.Recommend.GetRecommendQuestionCount(keyword);
     });
 }
 
@@ -211,6 +232,11 @@ QuestionInfo.Recommend.SetRecommendEvent = function SetRecommendEvent(event){
     var index = event.data.Index;
     var text=""
     var btn_text = ""
+    var url = $("#imgCover"+index).attr("src");
+    if(url=="images/160.png"){
+        $.Alert("请先上传封面！")
+        return;
+    }
     if(is_recommend ==objPub.YesNoType.Yes.toString()){
         text="已将该问题设为推荐";
         btn_text="<a href='javascript:;' class='selected' id='aSetRecommend"+index+"'>已推荐</a>";
@@ -263,6 +289,19 @@ QuestionInfo.Recommend.ScrollEvent = function ScrollEvent(event) {
                 pageStart: QuestionInfo.Recommend.CurrentIndex * QuestionInfo.Recommend.PageSize + 1,
                 pageEnd: (QuestionInfo.Recommend.CurrentIndex + 1) * QuestionInfo.Recommend.PageSize
             };
+            var year = $(this).parent().attr("value");
+            var date = $(this).attr("value");
+            if(date>9){
+            }else{
+                date = "0"+date
+            }
+            var keyword = {
+                Keyword: $("#txtSearch").val(),
+                SubjectID:$("#sltSubjectID").val(),
+                Year:year,
+                Month:date,
+                IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
+            }
             QuestionInfo.Recommend.SearchBind(date_view, page, QuestionInfo.Recommend.CurrentIndex);
             if (page.pageEnd >= QuestionInfo.Recommend.TotalCount) {
                 QuestionInfo.Recommend.CanPageLoad = false;
@@ -282,8 +321,8 @@ QuestionInfo.Recommend.ScrollEvent = function ScrollEvent(event) {
         }
     }
 }
-QuestionInfo.Recommend.GetRecommendQuestionCount = function search(keyword, page) {
-    $.SimpleAjaxPost("service/question/recommend/GetRecommendQuestionCount", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) {
+QuestionInfo.Recommend.GetRecommendQuestionCount = function get_recommend_question_count(keyword) {
+    $.SimpleAjaxPost("service/question/recommend/GetRecommendQuestionCount", true, JSON.stringify({ Keyword: keyword })).done(function (json) {
         var result = json.Count;
         $("#divRecommendCount").html(result);
 
