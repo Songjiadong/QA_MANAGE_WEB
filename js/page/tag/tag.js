@@ -35,7 +35,7 @@ TagInfo.Init = function init() {
                     }
                 }
             });
-            $("#fmTagLogoUpload").off("change").on("change", TagInfo.UploadTagLogoEvent);
+            $("#fmTagLogoUpload").off("change").on("change", TagInfo.UploadLogoEvent);
         }
     });
 }
@@ -116,7 +116,7 @@ TagInfo.Search = function Search(keyword, page) {
         });
 }
 //上传附件
-TagInfo.UploadTagLogoEvent = function UploadTagLogoEvent(event){
+TagInfo.UploadLogoEvent = function UploadLogoEvent(event){
     var $fm = $("#fmTagLogoUpload");
     var $file = $(event.target).val();
     if ($file != "") {
@@ -138,8 +138,7 @@ TagInfo.UploadTagLogoEvent = function UploadTagLogoEvent(event){
 }
 //新增标签
 TagInfo.AddEvent = function AddEvent(event) {
-    $("#divTagInfoEditDialog").dialog("open");
-    $("#divTagInfoEditDialog").data("ID","");
+    $("#divTagInfoEditDialog").data("ID","").dialog("open");
 
 }
 //删除所有标签事件
