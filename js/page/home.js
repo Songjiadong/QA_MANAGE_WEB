@@ -7,11 +7,6 @@ Home.Init= function init() {
             //时间轴
             $(".year").off("click").on("click", Home.YearClickEvent);
             Home.HotQuestionBind();
-            Home.HotPraiseQuestionBind();
-            //调好的
-
-           
-            
             //Home.MostQuestionUserBind();
             //Home.MostPraiseUserBind();
             //Home.MostAnswerUserBind();
