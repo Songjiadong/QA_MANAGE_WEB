@@ -53,30 +53,4 @@
 	$("#aLoginOut").off("click").on("click",User.Login.LoginOutEvent)
 });
 
-function UploadContractFileEvent(event){
-	var $fm = $("#fmContractUpload");
-    var $file = $(event.target).val();
-    if ($file != "") {
-		//附件上传
-		
-        $fm.ajaxSubmit({
-            url: "http://qamanage.megawise.cn/service/upload",
-            type: "post",
-            dataType: "json",
-            timeout: 600000,
-            success: function (data, textStatus) {
-				alert(data.result)
-                if (data.result == true) {
-                   alert(data.result)
-                } else {
-                   
-                }
-            },
-            error: function (data, status, e) {
-                console.log("上传失败，错误信息：" + e);
-            }
-        });
-    }
-}
-
 
