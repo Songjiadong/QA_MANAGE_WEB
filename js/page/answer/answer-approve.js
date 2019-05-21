@@ -85,9 +85,7 @@ AnswerInfo.Approve.InitApproveData = function init_approve_data() {
             var approveStatistics = JSON.parse(result.List); 
             var alreadyApproveCount = 0;
             if (Array.isArray(approveStatistics) == true) { 
-
-                for (var i = 0; i < approveStatistics.length; i++){ 
-                    var item = approveStatistics[i];
+                $.each(approveStatistics,function(index,item){
                     if (item.status == "等待") {
                         $("#divWaitApproveNum").html(item.searchCount);
                     } else if (item.status == "同意") { 
@@ -97,7 +95,7 @@ AnswerInfo.Approve.InitApproveData = function init_approve_data() {
                         $("#divRejectApprovrNum").html(item.searchCount);
                         alreadyApproveCount += parseInt (item.searchCount);
                     } 
-                }
+                })
                 $("#divAlreadyApproveNum").html(alreadyApproveCount);
             }
         }

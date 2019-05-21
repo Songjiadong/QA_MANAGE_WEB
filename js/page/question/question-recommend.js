@@ -33,7 +33,17 @@ QuestionInfo.Recommend.Init = function init() {
                 QuestionInfo.Recommend.Search(keyword, page);
             });
 
-		
+			//点击推荐
+			$(".recommend-btn>a").off("click").on("click", function (event) {
+				var cStr = $(this).hasClass("selected");
+				if (cStr) {
+					$(this).switchClass("selected", "", 500);
+					$(this).text("未推荐");
+				} else {
+					$(this).switchClass("", "selected", 500);
+					$(this).text("已推荐");
+				}
+            });
             
             var page = {
                 pageStart: 1,
@@ -47,7 +57,10 @@ QuestionInfo.Recommend.Init = function init() {
                 IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
             }
             QuestionInfo.Recommend.Search(keyword, page);
-            QuestionInfo.Recommend.GetRecommendQuestionCount(keyword, page);
+            QuestionInfo.Recommend.GetRecommendQuestionCount(keyword).done(function(json){
+                var result = json.Count;
+                $("#divRecommendCount").html(result);
+            });
         }
     });
 }
@@ -179,7 +192,10 @@ QuestionInfo.Recommend.YearInit = function year_init(){
             IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
         }
         QuestionInfo.Recommend.Search(keyword, page);
-        QuestionInfo.Recommend.GetRecommendQuestionCount(keyword);
+        QuestionInfo.Recommend.GetRecommendQuestionCount(keyword).done(function(json){
+            var result = json.Count;
+            $("#divRecommendCount").html(result);
+        });
     });
 }
 
@@ -312,9 +328,5 @@ QuestionInfo.Recommend.ScrollEvent = function ScrollEvent(event) {
     }
 }
 QuestionInfo.Recommend.GetRecommendQuestionCount = function get_recommend_question_count(keyword) {
-    $.SimpleAjaxPost("service/question/recommend/GetRecommendQuestionCount", true, JSON.stringify({ Keyword: keyword })).done(function (json) {
-        var result = json.Count;
-        $("#divRecommendCount").html(result);
-
-    });
+   return $.SimpleAjaxPost("service/question/recommend/GetRecommendQuestionCount", true, JSON.stringify({ Keyword: keyword }));
 } 
