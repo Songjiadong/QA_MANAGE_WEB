@@ -1,7 +1,5 @@
 ﻿$(document).ready(function () {
 	//返回顶部
-	$.SetCookie("MegawiseID","admin")
-	$.SetCookie("MegawiseUserName","admin")
 	$(window).on("scroll",  function (event) {
 		if ($(this).scrollTop() >= 10) {
 			$("#goTop").fadeIn(30);
