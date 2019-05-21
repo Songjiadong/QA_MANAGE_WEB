@@ -211,7 +211,6 @@ Home.MostAnswerUserBind = function most_answer_user_bind() {
 //最多点赞用户绑定
 Home.MostPraiseUserBind = function most_praise_user_bind() {
     var temp = "";
-    var result = [];
     $.SimpleAjaxPost("service/user/GetActiveUserListByPraise" , true, 
      JSON.stringify({Top:10})).done(function(json){
         var result = $.Deserialize(json.List)
