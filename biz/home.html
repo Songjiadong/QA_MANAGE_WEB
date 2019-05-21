@@ -1,17 +1,17 @@
 ﻿<!-- 头部日期、待审批数字-->
 <div class="home-top">
-	<div class="top-date">2018-09</div>
+	<div class="top-date" id="divCurrentDate"></div>
 	<div class="top-todo clear-fix" id="todoQuestion">
 		<div class="todo-name">问题待审核</div>
 		<div class="todo-num">
-			<span>53</span>
+			<span id="spQuestionApproveCount"></span>
 			<span>项</span>
 		</div>
 	</div>
 	<div class="top-todo clear-fix" id="todoAnswer">
 		<div class="todo-name">回答待审核</div>
 		<div class="todo-num">
-			<span>129</span>
+			<span id="spAnswerApproveCount"></span>
 			<span>项</span>
 		</div>
 	</div>
@@ -44,96 +44,7 @@
 			<div class="qa-hot-title">热点问题</div>
 			<div class="qa-hot-list">
 				<ul id="ulHotQuestionList">
-					<li>
-						<div class="qa-hot-num"><img src="images/num/1.png"></div>
-						<div class="qa-hot-content">
-							<div class="qa-hot-question-title">如何看待 Facebook 2018 年二季度财报公布后盘后竞价大跌 20%？</div>
-							<div class="qa-hot-question-opts">
-								<div class="ad-item-view">
-									<span class="aq-item-like-icon"><img src="images/eye.png"></span>
-									<span class="aq-item-like-text">浏览</span>
-									<span class="aq-item-like-num">12258</span>
-								</div>
-								<div class="ad-item-fav">
-									<span class="aq-item-like-icon"><img src="images/my-fav.png"></span>
-									<span class="aq-item-like-text">收藏</span>
-									<span class="aq-item-like-num">5226</span>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="qa-hot-num"><img src="images/num/2.png"></div>
-						<div class="qa-hot-content">
-							<div class="qa-hot-question-title">如何看待 Facebook 2018 年二季度财报公布后盘后竞价大跌 20%？FB 股价走势会如何？</div>
-							<div class="qa-hot-question-opts">
-								<div class="ad-item-view">
-									<span class="aq-item-like-icon"><img src="images/eye.png"></span>
-									<span class="aq-item-like-text">浏览</span>
-									<span class="aq-item-like-num">12258</span>
-								</div>
-								<div class="ad-item-fav">
-									<span class="aq-item-like-icon"><img src="images/my-fav.png"></span>
-									<span class="aq-item-like-text">收藏</span>
-									<span class="aq-item-like-num">5226</span>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="qa-hot-num"><img src="images/num/3.png"></div>
-						<div class="qa-hot-content">
-							<div class="qa-hot-question-title">运维专家分析“腾讯云与前沿数控的磁盘数据丢失事件”</div>
-							<div class="qa-hot-question-opts">
-								<div class="ad-item-view">
-									<span class="aq-item-like-icon"><img src="images/eye.png"></span>
-									<span class="aq-item-like-text">浏览</span>
-									<span class="aq-item-like-num">12258</span>
-								</div>
-								<div class="ad-item-fav">
-									<span class="aq-item-like-icon"><img src="images/my-fav.png"></span>
-									<span class="aq-item-like-text">收藏</span>
-									<span class="aq-item-like-num">5226</span>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="qa-hot-num"><img src="images/num/4.png"></div>
-						<div class="qa-hot-content">
-							<div class="qa-hot-question-title">FB 股价走势会如何？</div>
-							<div class="qa-hot-question-opts">
-								<div class="ad-item-view">
-									<span class="aq-item-like-icon"><img src="images/eye.png"></span>
-									<span class="aq-item-like-text">浏览</span>
-									<span class="aq-item-like-num">12258</span>
-								</div>
-								<div class="ad-item-fav">
-									<span class="aq-item-like-icon"><img src="images/my-fav.png"></span>
-									<span class="aq-item-like-text">收藏</span>
-									<span class="aq-item-like-num">5226</span>
-								</div>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="qa-hot-num"><img src="images/num/5.png"></div>
-						<div class="qa-hot-content">
-							<div class="qa-hot-question-title">如何看待 Facebook 2018 年二季度财报公布后盘后竞价大跌 20%？</div>
-							<div class="qa-hot-question-opts">
-								<div class="ad-item-view">
-									<span class="aq-item-like-icon"><img src="images/eye.png"></span>
-									<span class="aq-item-like-text">浏览</span>
-									<span class="aq-item-like-num">12258</span>
-								</div>
-								<div class="ad-item-fav">
-									<span class="aq-item-like-icon"><img src="images/my-fav.png"></span>
-									<span class="aq-item-like-text">收藏</span>
-									<span class="aq-item-like-num">5226</span>
-								</div>
-							</div>
-						</div>
-					</li>
+					
 				</ul>
 			</div>
 		</div>
@@ -141,76 +52,7 @@
 			<div class="qa-hot-title">热赞回答</div>
 			<div class="qa-hot-list">
 				<ul id="ulHotPraiseQuestionList">
-					<li>
-						<div class="qa-hot-answer-title">运维专家分析“腾讯云与前沿数控的磁盘数据丢失事件”</div>
-						<div class="qa-hot-answer-text">Facebook 目前最大的问题其实就是广告位用完了。四大app， fb 和instagram 的adload 已经满了，再增加只会减少用户在线时长，whatsapp 和 messager 还没找到很好的盈利手段。如果用户也停止增长，那么未来展望就更不乐观了。几个数字很有意思， 营收同比增长42%， 其中广告价格上涨了20%。 这意味着广告位的增长只有20% （142%/120%）， 广告价格上涨其实并不是什么好事，因为Advertiser 是要看ROI（Return of investment) 去付钱的，简而言之，如果广告效果不变，广告主要花的钱变多了，那广告主还愿意买么？现在各位再来想，假如市场上每个季度新增100个广告主，原来可能谷歌fb 6:4分， 现在fb 广告位满了，广告贵了， 这新增的这100个广告主可能就是谷歌fb 9：1 分了。</div>
-						<div class="aq-item-options clear-fix">
-							<div class="ad-item-like">
-								<span class="aq-item-like-icon"><img src="images/like-o.png"></span>
-								<span class="aq-item-like-text">赞</span>
-								<span class="aq-item-like-num">5226</span>
-							</div>
-							<div class="ad-item-view-all">
-								<a href="javascript:;">查看全文</a>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="qa-hot-answer-title">运维专家分析“腾讯云与前沿数控的磁盘数据丢失事件”</div>
-						<div class="qa-hot-answer-text">Facebook 目前最大的问题其实就是广告位用完了。四大app， fb 和instagram 的adload 已经满了，再增加只会减少用户在线时长，whatsapp 和 messager 还没找到很好的盈利手段。如果用户也停止增长，那么未来展望就更不乐观了。几个数字很有意思， 营收同比增长42%， 其中广告价格上涨了20%。 这意味着广告位的增长只有20% （142%/120%）， 广告价格上涨其实并不是什么好事，因为Advertiser 是要看ROI（Return of investment) 去付钱的，简而言之，如果广告效果不变，广告主要花的钱变多了，那广告主还愿意买么？现在各位再来想，假如市场上每个季度新增100个广告主，原来可能谷歌fb 6:4分， 现在fb 广告位满了，广告贵了， 这新增的这100个广告主可能就是谷歌fb 9：1 分了。</div>
-						<div class="aq-item-options clear-fix">
-							<div class="ad-item-like">
-								<span class="aq-item-like-icon"><img src="images/like-o.png"></span>
-								<span class="aq-item-like-text">赞</span>
-								<span class="aq-item-like-num">5226</span>
-							</div>
-							<div class="ad-item-view-all">
-								<a href="javascript:;">查看全文</a>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="qa-hot-answer-title">运维专家分析“腾讯云与前沿数控的磁盘数据丢失事件”</div>
-						<div class="qa-hot-answer-text">Facebook 目前最大的问题其实就是广告位用完了。四大app， fb 和instagram 的adload 已经满了，再增加只会减少用户在线时长，whatsapp 和 messager 还没找到很好的盈利手段。如果用户也停止增长，那么未来展望就更不乐观了。几个数字很有意思， 营收同比增长42%， 其中广告价格上涨了20%。 这意味着广告位的增长只有20% （142%/120%）， 广告价格上涨其实并不是什么好事，因为Advertiser 是要看ROI（Return of investment) 去付钱的，简而言之，如果广告效果不变，广告主要花的钱变多了，那广告主还愿意买么？现在各位再来想，假如市场上每个季度新增100个广告主，原来可能谷歌fb 6:4分， 现在fb 广告位满了，广告贵了， 这新增的这100个广告主可能就是谷歌fb 9：1 分了。</div>
-						<div class="aq-item-options clear-fix">
-							<div class="ad-item-like">
-								<span class="aq-item-like-icon"><img src="images/like-o.png"></span>
-								<span class="aq-item-like-text">赞</span>
-								<span class="aq-item-like-num">5226</span>
-							</div>
-							<div class="ad-item-view-all">
-								<a href="javascript:;">查看全文</a>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="qa-hot-answer-title">运维专家分析“腾讯云与前沿数控的磁盘数据丢失事件”</div>
-						<div class="qa-hot-answer-text">Facebook 目前最大的问题其实就是广告位用完了。四大app， fb 和instagram 的adload 已经满了，再增加只会减少用户在线时长，whatsapp 和 messager 还没找到很好的盈利手段。如果用户也停止增长，那么未来展望就更不乐观了。几个数字很有意思， 营收同比增长42%， 其中广告价格上涨了20%。 这意味着广告位的增长只有20% （142%/120%）， 广告价格上涨其实并不是什么好事，因为Advertiser 是要看ROI（Return of investment) 去付钱的，简而言之，如果广告效果不变，广告主要花的钱变多了，那广告主还愿意买么？现在各位再来想，假如市场上每个季度新增100个广告主，原来可能谷歌fb 6:4分， 现在fb 广告位满了，广告贵了， 这新增的这100个广告主可能就是谷歌fb 9：1 分了。</div>
-						<div class="aq-item-options clear-fix">
-							<div class="ad-item-like">
-								<span class="aq-item-like-icon"><img src="images/like-o.png"></span>
-								<span class="aq-item-like-text">赞</span>
-								<span class="aq-item-like-num">5226</span>
-							</div>
-							<div class="ad-item-view-all">
-								<a href="javascript:;">查看全文</a>
-							</div>
-						</div>
-					</li>
-					<li>
-						<div class="qa-hot-answer-title">运维专家分析“腾讯云与前沿数控的磁盘数据丢失事件”</div>
-						<div class="qa-hot-answer-text">Facebook 目前最大的问题其实就是广告位用完了。四大app， fb 和instagram 的adload 已经满了，再增加只会减少用户在线时长，whatsapp 和 messager 还没找到很好的盈利手段。如果用户也停止增长，那么未来展望就更不乐观了。几个数字很有意思， 营收同比增长42%， 其中广告价格上涨了20%。 这意味着广告位的增长只有20% （142%/120%）， 广告价格上涨其实并不是什么好事，因为Advertiser 是要看ROI（Return of investment) 去付钱的，简而言之，如果广告效果不变，广告主要花的钱变多了，那广告主还愿意买么？现在各位再来想，假如市场上每个季度新增100个广告主，原来可能谷歌fb 6:4分， 现在fb 广告位满了，广告贵了， 这新增的这100个广告主可能就是谷歌fb 9：1 分了。</div>
-						<div class="aq-item-options clear-fix">
-							<div class="ad-item-like">
-								<span class="aq-item-like-icon"><img src="images/like-o.png"></span>
-								<span class="aq-item-like-text">赞</span>
-								<span class="aq-item-like-num">5226</span>
-							</div>
-							<div class="ad-item-view-all">
-								<a href="javascript:;">查看全文</a>
-							</div>
-						</div>
-					</li>
+					
 				</ul>
 			</div>
 		</div>
@@ -243,42 +85,6 @@
 							</div>
 							<div class="ranking-num">123</div>
 						</li>
-						<li class="clear-fix">
-							<div class="ranking-user">
-								<span class="ranking-user-cover">
-									<img src="images/user/boy.png">
-								</span>
-								<span>李加盟</span>
-							</div>
-							<div class="ranking-num">19</div>
-						</li>
-						<li class="clear-fix">
-							<div class="ranking-user">
-								<span class="ranking-user-cover">
-									<img src="images/user/boy.png">
-								</span>
-								<span>Williammn</span>
-							</div>
-							<div class="ranking-num">3</div>
-						</li>
-						<li class="clear-fix">
-							<div class="ranking-user">
-								<span class="ranking-user-cover">
-									<img src="images/user/boy.png">
-								</span>
-								<span>Olive Christin</span>
-							</div>
-							<div class="ranking-num">19</div>
-						</li>
-						<li class="clear-fix">
-							<div class="ranking-user">
-								<span class="ranking-user-cover">
-									<img src="images/user/boy.png">
-								</span>
-								<span>名字长一点的</span>
-							</div>
-							<div class="ranking-num">3</div>
-						</li>
 					</ul>
 				</div>
 			</div>
@@ -299,42 +105,6 @@
 								<span>张三</span>
 							</div>
 							<div class="ranking-num">123</div>
-						</li>
-						<li class="clear-fix">
-							<div class="ranking-user">
-								<span class="ranking-user-cover">
-									<img src="images/user/boy.png">
-								</span>
-								<span>张三</span>
-							</div>
-							<div class="ranking-num">19</div>
-						</li>
-						<li class="clear-fix">
-							<div class="ranking-user">
-								<span class="ranking-user-cover">
-									<img src="images/user/boy.png">
-								</span>
-								<span>张三</span>
-							</div>
-							<div class="ranking-num">3</div>
-						</li>
-						<li class="clear-fix">
-							<div class="ranking-user">
-								<span class="ranking-user-cover">
-									<img src="images/user/boy.png">
-								</span>
-								<span>张三</span>
-							</div>
-							<div class="ranking-num">19</div>
-						</li>
-						<li class="clear-fix">
-							<div class="ranking-user">
-								<span class="ranking-user-cover">
-									<img src="images/user/boy.png">
-								</span>
-								<span>张三</span>
-							</div>
-							<div class="ranking-num">3</div>
 						</li>
 					</ul>
 				</div>
@@ -357,42 +127,7 @@
 							</div>
 							<div class="ranking-num">123</div>
 						</li>
-						<li class="clear-fix">
-							<div class="ranking-user">
-								<span class="ranking-user-cover">
-									<img src="images/user/boy.png">
-								</span>
-								<span>张三</span>
-							</div>
-							<div class="ranking-num">19</div>
-						</li>
-						<li class="clear-fix">
-							<div class="ranking-user">
-								<span class="ranking-user-cover">
-									<img src="images/user/boy.png">
-								</span>
-								<span>张三</span>
-							</div>
-							<div class="ranking-num">3</div>
-						</li>
-						<li class="clear-fix">
-							<div class="ranking-user">
-								<span class="ranking-user-cover">
-									<img src="images/user/boy.png">
-								</span>
-								<span>张三</span>
-							</div>
-							<div class="ranking-num">19</div>
-						</li>
-						<li class="clear-fix">
-							<div class="ranking-user">
-								<span class="ranking-user-cover">
-									<img src="images/user/boy.png">
-								</span>
-								<span>张三</span>
-							</div>
-							<div class="ranking-num">3</div>
-						</li>
+						
 					</ul>
 				</div>
 			</div>
@@ -407,44 +142,6 @@
 
 <!-- 时间轴 -->
 <div class="time-filter">
-    <ul>
-        <li class="swift-edit">
-            <i class="fa fa-edit"></i>
-        </li>
-        <li>
-            <a href="javascript:void(0);" class="year">全部</a>
-        </li>
-        <li class="selected">
-            <a href="javascript:void(0);" class="year">2018</a>
-            <ul class="month">
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>12月</a></li>
-                <li class="selected"><a href="javascript:void(0);"><em class="s-dot"></em>11月</a></li>
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>10月</a></li>
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>9月</a></li>
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>8月</a></li>
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>7月</a></li>
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>6月</a></li>
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>5月</a></li>
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>4月</a></li>
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>3月</a></li>
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>2月</a></li>
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>1月</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="javascript:void(0);" class="year">2017</a>
-            <ul class="month">
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>12月</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="javascript:void(0);" class="year">2016
-            </a>
-            <ul class="month">
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>5月</a></li>
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>2月</a></li>
-                <li><a href="javascript:void(0);"><em class="s-dot"></em>1月</a></li>
-            </ul>
-        </li>
+    <ul id="ulYearMenu">
     </ul>
 </div>

@@ -3,17 +3,25 @@
 $.ajaxSetup({
     cache: false
 });
+var temp_user_name = $.GetCookie("MegawiseUserName") == undefined ? "" : decodeURI($.GetCookie("MegawiseUserName"));
+temp_user_name = unescape(temp_user_name.replace(/\u/g, "%u")); 
 window.objPub = {
     IsLogin: false,
     BaseUrl: "http://qamanage.megawise.cn/",
+    QaUrl: "http://qa.megawise.cn/",
     WeixinUrl: "http://weixin.miic.com.cn/",
     UserID: $.GetCookie("MegawiseID") == undefined ? "" : $.GetCookie("MegawiseID"),
-    UserName: $.GetCookie("MegawiseUserName") == undefined ? "" : decodeURI($.GetCookie("MegawiseUserName")),
+    UserName: temp_user_name,
     LoginUserInfo: null,
 };
 //浏览事件
 window.objPub.BrowseEvent = function BrowseEvent(event) {
-
+    var id=event.data.ID;
+    if(id!=""){
+        var uri = $.EncodeUri("QuestionID=" + id);
+        var url = objPub.QaUrl + "biz/show/show.html?" + uri;
+        window.open(url, "_blank");
+    }
 }
 //windwow滚轮事件
 window.objPub.ScorllEvent = function ScorllEvent(event) {
@@ -44,3 +52,29 @@ window.objPub.ScorllEvent = function ScorllEvent(event) {
         }
     }
 }
+///消息类别枚举@start///
+window.objPub.ApproveType = function () {
+    throw Error.notImplemented();
+}
+
+window.objPub.ApproveType.prototype = {
+    //长篇
+    Agree: 1,
+    //短篇
+    Refused:2,
+}
+
+window.objPub.ApproveType.registerEnum("window.objPub.ApproveType");
+///是否类别枚举@start///
+window.objPub.YesNoType = function () {
+    throw Error.notImplemented();
+}
+
+window.objPub.YesNoType.prototype = {
+    //长篇
+    Yes: 1,
+    //短篇
+    No:2,
+}
+
+window.objPub.YesNoType.registerEnum("window.objPub.YesNoType");

@@ -714,7 +714,7 @@ function setCookie(name, value, domain) {
             $.cookie(name, value, { path: "/", expires: 1, domain: arguments[2] });
         }
         else {
-            $.cookie(name, value, { path: "/", expires: 1, domain: "miic.com.cn" });
+            $.cookie(name, value, { path: "/", expires: 1, domain: "megawise.cn" });
         }
 
     }
@@ -741,7 +741,7 @@ function clearCookie(name, domain) {
         $.cookie(name, null, { path: "/", domain: arguments[1], expires: -1 });
     }
     else {
-        $.cookie(name, null, { path: "/", domain: "miic.com.cn", expires: -1 });
+        $.cookie(name, null, { path: "/", domain: "megawise.cn", expires: -1 });
     }
 }
 function get_url_param(name) {

@@ -1,37 +1,97 @@
 ﻿Home = function () { }
 Home.registerClass("Home");
+Home.Year = "";
+Home.Month = ""; 
 Home.Init= function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/home.html", function (respones, status) {
         if (status == "success") {
-
+            Home.Year = new Date().getFullYear().toString();
+            var temp =  (new Date().getMonth() + 1).toString(); 
+            if(temp>9){
+                Home.Month = temp
+            }else{
+                Home.Month = "0"+temp
+            }
+            Home.YearInit();
+            Home.WaitApproveCountBind()
+            $("#divCurrentDate").html(Home.Year+"-"+Home.Month)
             //时间轴
             $(".year").off("click").on("click", Home.YearClickEvent);
             Home.HotQuestionBind();
-            //Home.MostQuestionUserBind();
-            //Home.MostPraiseUserBind();
-            //Home.MostAnswerUserBind();
             Home.HotPraiseQuestionBind();
-
+            //调好的
+            Home.MostQuestionUserBind();
+            Home.MostPraiseUserBind();
+            Home.MostAnswerUserBind();
             Home.QaStatisticsBind();
-            //Home.UserVisitStatisticsBind();
+            Home.UserVisitStatisticsBind();
             //待审核问题页
-            $("#todoQuestion").on('click', function () {
-                $("#liQuestionApprove").addClass("selected").siblings().removeClass("selected");
-                $(".main-wapper").load("biz/question.html");
+            $("#todoQuestion").off("click").on('click', function () {
+                $("#liQuestionApproveList").trigger("click")
             });
 
             //待审核回答页
-            $("#todoAnswer").on('click', function () {
-                $("#liAnswerApprove").addClass("selected").siblings().removeClass("selected");
-                $(".main-wapper").load("biz/answer.html");
+            $("#todoAnswer").off("click").on('click', function () {
+                $("#liAnswerApproveList").trigger("click")
             });
-
-
-           
-
-          
         }
     });
+}
+Home.YearInit = function year_init(){
+    var temp_current_year = parseInt(Home.Year);
+    var temp_current_month = parseInt(new Date().getMonth() + 1)
+    var str = "<li class='swift-edit'><i class='fa fa-edit'></i></li>";
+    str +="<li><a href='javascript:void(0);' class='year'>全部</a></li>"
+    str+="<li class='selected'>";
+    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year)+"</a>";
+    str+="<ul class='month' value='"+(temp_current_year)+"'>";
+    for(var j=1;j<(temp_current_month+1);j++){
+        str+="<li value='"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+    }
+    str+="</ul>";
+    for(var i=1;i<3;i++){
+    str+="<li >";
+    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year-i)+"</a>";
+    str+="<ul class='month' value='"+(temp_current_year-i)+"'>";
+        for(var k=1;k<13;k++){
+            str+="<li value='"+k+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
+        }
+    str+="</ul>";
+    str+="</li>";
+    }
+    $("#ulYearMenu").empty().append(str);
+    $(".year").off("click").on("click",Home.YearClickEvent);
+    $(".month>li").off("click").on("click", function () {
+        //$(this).addClass("selected").siblings().removeClass("selected");
+        //var year = $(this).parent().attr("value");
+        //var date = $(this).attr("value");
+
+        Home.QaStatisticsBind();
+    });
+}
+//时间周年点击
+Home.YearClickEvent = function YearClickEvent(event) {
+    var $presentDot = $(this);
+    $presentDot.parent().siblings().find("ul").hide();
+    $presentDot.parent().addClass("selected").siblings().removeClass("selected");
+    $presentDot.siblings().show().find("li:eq(0)").addClass("selected").siblings().removeClass("selected");
+    
+}
+Home.WaitApproveCountBind = function wait_approve_count_bind(){
+    
+    $.SimpleAjaxPost("service/question/GetWaitApproveCountList" , true, 
+     JSON.stringify({YearMonth:Home.Year+"-"+Home.Month })).done(function(json){
+        var result = $.Deserialize(json.List)
+        $.each(result, function (index, item) {
+            if(item.Key =="QuestionCount"){
+                $("#spQuestionApproveCount").html(item.Count);
+            }else{
+                $("#spAnswerApproveCount").html(item.Count);
+            }
+        })
+       
+        
+     })
 }
 //时间周年点击
 Home.YearClickEvent = function YearClickEvent(event) {
@@ -47,25 +107,25 @@ Home.YearClickEvent = function YearClickEvent(event) {
 //热赞回答绑定
 Home.HotPraiseQuestionBind = function hot_praise_question_bind() {
     var temp = "";
-    $.SimpleAjaxPost("service/question/GetHotPraiseAnswerList" , true, 
-     JSON.stringify({Top:10})).done(function(json){
+    $.SimpleAjaxPost("service/answer/GetTopPraiseAnswerList" , true, 
+     JSON.stringify({Top:5})).done(function(json){
         var result = $.Deserialize(json.List)
         $.each(result, function (index, item) {
             temp += "<li>"
-            temp += "<div class='qa-hot-answer-title'>"+item.TITLE+"</div>";
-            temp += "<div class='qa-hot-answer-text'>"+item.CONTENT+"</div>";
+            temp += "<div class='qa-hot-answer-title hander' id='divTitleBrowseItem"+index+"'>"+item.QuestionTitle+"</div>";
+            temp += "<div class='qa-hot-answer-text'>"+item.AnswerContent+"</div>";
             temp += "<div class='aq-item-options clear-fix'>";
             temp += "<div class='ad-item-like'>";
             temp += "<span class='aq-item-like-icon'><img src='images/like-o.png'></span>";
-            temp += "<span class='aq-item-like-text'>赞</span><span class='aq-item-like-num'>"+item.PRAISE_COUNT+"</span>";
+            temp += "<span class='aq-item-like-text'>赞</span><span class='aq-item-like-num'>"+item.PraiseCount+"</span>";
             temp += "</div>";
             temp += "<div class='ad-item-view-all'>";
-            temp += "<a id='aBrowseItem" + index + "' href='javascript:void(0);'>查看全文</a>";
+            temp += "<a id='aBrowseItem" + index + "' href='javascript:void(0);' class='hander'>查看全文</a>";
             temp += "</div>";
             temp += "</div>";
             temp += "</li>";
-            $(document).off("click", "#aBrowseItem" + index);
-            $(document).on("click", "#aBrowseItem" + index, { ID: "" }, objPub.BrowseEvent);
+            $(document).off("click", "#aBrowseItem" + index+",#divTitleBrowseItem"+index);
+            $(document).on("click", "#aBrowseItem" + index+",#divTitleBrowseItem"+index, { ID: item.ID }, objPub.BrowseEvent);
         });
        
         $("#ulHotPraiseQuestionList").empty().append(temp);
@@ -76,13 +136,13 @@ Home.HotQuestionBind = function hot_question_bind() {
     var temp = "";
     var result = [];
      $.SimpleAjaxPost("service/question/GetHotList", true, 
-     JSON.stringify({Top:10})).done(function(json){
+     JSON.stringify({Top:5})).done(function(json){
         var result = $.Deserialize(json.List);
         $.each(result, function (index, item) {
             temp += "<li>";
-            temp += "<div class='qa-hot-num'><img src='images/num/1.png'></div>";
+            temp += "<div class='qa-hot-num'><img src='images/num/"+(index+1)+".png'></div>";
             temp += "<div class='qa-hot-content'>";
-            temp += "<div id='divBrowseItem" + index + "' class='qa-hot-question-title'>"+item.Title+"</div>";
+            temp += "<div id='divBrowseItem" + index + "' class='qa-hot-question-title hander' >"+item.Title+"</div>";
             temp += "<div class='qa-hot-question-opts'>";
             temp += "<div class='ad-item-view'>";
             temp += "<span class='aq-item-like-icon'><img src='images/eye.png'></span>";
@@ -96,7 +156,7 @@ Home.HotQuestionBind = function hot_question_bind() {
             temp += "</div>";
             temp += "</li>";
             $(document).off("click", "#divBrowseItem" + index);
-            $(document).on("click", "#divBrowseItem" + index, { ID: "" }, objPub.BrowseEvent);
+            $(document).on("click", "#divBrowseItem" + index, { ID: item.ID }, objPub.BrowseEvent);
         });
         $("#ulHotQuestionList").empty().append(temp);
      })
@@ -275,10 +335,10 @@ Home.UserVisitStatisticsBind = function user_visit_statistics_bind() {
     };
     qaVisit.setOption(optionVist);
 }
-Home.QaStatisticsBind = function qa_statistics_bind() {
+Home.QaStatisticsBind = function qa_statistics_bind(year_month) {
     var question_data=[]
     $.SimpleAjaxPost("service/question/GetQuestionStatisticsInfoList" , true, 
-     JSON.stringify({Year:'2014'})).done(function(json){
+     JSON.stringify({Year:year_month})).done(function(json){
         var result = $.Deserialize(json.List)
         $.each(result, function (index, item) {
             question_data.push(item.Value)
@@ -391,7 +451,4 @@ Home.QaStatisticsBind = function qa_statistics_bind() {
     };
     qaChart.setOption(optionQa);
     })
-    
-    
-    
 }

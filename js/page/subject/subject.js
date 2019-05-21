@@ -142,7 +142,7 @@ SubjectInfo.SearchBind = function SearchBind(keyword, page) {
             if (result != null) {
                 $.each(result, function (index, item) {
                     temp += "<div class='category-item clear-fix'>";
-                    temp += "<div class='category-name'>"+item.NAME+"</div>";
+                    temp += "<div class='category-name'>"+item.Name+"</div>";
                     temp += "<div class='category-item-opts'>";
                     temp +="<a id='divSubjectItemUpd" + index + "' href='javascript:void(0);'>修改</a>";
                     temp +="<a id='divSubjectItemDel" + index + "' href='javascript:void(0);'>删除</a>";
@@ -163,32 +163,32 @@ SubjectInfo.SearchBind = function SearchBind(keyword, page) {
 
 SubjectInfo.Search = function Search(keyword, page) {
     SubjectInfo.SearchBind(keyword, page);
-    $.SimpleAjaxPost("service/question/subject/GetSearchCount", true, JSON.stringify({Keyword:keyword}))
-        .done(function (json) {
-            var result = json.Count;
-            $(".tabs-num").html(result)
-            if (result != 0 && result != null) {
-                $("#divSubjectListPage").wPaginate("destroy").wPaginate({
-                    theme: "grey",
-                    page: '5,10,20',
-                    total: result,
-                    index: parseInt(page.pageStart) - 1,
-                    limit: SubjectInfo.PageSize,
-                    ajax: true,
-                    pid: "divSubjectListPage",
-                    url: function (i) {
-                        var page = {
-                            pageStart: i * this.settings.limit + 1,
-                            pageEnd: (i + 1) * this.settings.limit
-                        };
-                        SubjectInfo.SearchBind(keyword, page);
-                    }
-                });
-            }
-            else {
-                $("#divSubjectListPage").wPaginate("destroy");
-            }
-        });
+    // $.SimpleAjaxPost("service/question/subject/GetSearchCount", true, JSON.stringify({Keyword:keyword}))
+    //     .done(function (json) {
+    //         var result = json.Count;
+    //         $(".tabs-num").html(result)
+    //         if (result != 0 && result != null) {
+    //             $("#divSubjectListPage").wPaginate("destroy").wPaginate({
+    //                 theme: "grey",
+    //                 page: '5,10,20',
+    //                 total: result,
+    //                 index: parseInt(page.pageStart) - 1,
+    //                 limit: SubjectInfo.PageSize,
+    //                 ajax: true,
+    //                 pid: "divSubjectListPage",
+    //                 url: function (i) {
+    //                     var page = {
+    //                         pageStart: i * this.settings.limit + 1,
+    //                         pageEnd: (i + 1) * this.settings.limit
+    //                     };
+    //                     SubjectInfo.SearchBind(keyword, page);
+    //                 }
+    //             });
+    //         }
+    //         else {
+    //             $("#divSubjectListPage").wPaginate("destroy");
+    //         }
+    //     });
 }
 //删除所有主题事件
 SubjectInfo.AllRemoveEvent = function AllRemoveEvent(event) {

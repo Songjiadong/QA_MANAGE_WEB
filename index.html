@@ -4,23 +4,54 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>问答管理平台</title>
+    <title>与智云问答管理平台</title>
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/jquery-ui.css">
     <link rel="stylesheet" href="css/wPaginate.css" />
     <link rel="stylesheet" href="css/qa-manage.css">
+    <link rel="shortcut icon" type="image/x-icon" href="/images/megawise.ico" media="screen" />
 </head>
 
 <body>
     <div class="wrapper">
-
+        <div class="page-top clear-fix">
+            <div alt="LOGO" class="logo">
+                <img src="images/logo.png" onclick="window.open('index.html')" />
+            </div>
+            
+            <div class="main-opts">
+                <span class="user-opts">
+                    <span class="notice-dot"></span>
+                    <a href="javascript:;" id="aGoMessage">
+                        <img src="images/bell.png" alt="">
+                    </a>
+                </span>
+                <span class="user-opts">
+                    <a href="javascript:;" id="aLoginOut">
+                        <img src="images/power.png" alt="">
+                    </a>
+                </span>
+                <span class="user-login">
+                    <a href="javascript:void(0);" class="top-avatar" id="">
+                        <img src="images/user/boy.png">
+                    </a>
+                </span>
+            </div>
+        
+            <div class="tab">
+                <ul class="clear-fix">
+                    <li class="selected"><a id="aGoIndex" href="index.html">首页</a></li>
+                </ul>
+            </div>
+        </div>
         <!--不包括顶部logo及用户操作-->
         <nav>
             <ul class="clear-fix">
                 <li id="liHome" class="selected"><a href="index.html">首页</a></li>
                 <li id="liQuestionApproveList"><a href="javascript:void(0);">问题审核</a></li>
                 <li id="liAnswerApproveList"><a href="javascript:void(0);">回答审核</a></li>
-                <li id="liQuestionRecommendList"><a href="javascript:void(0);">问答推荐</a></li>
+                <li id="liQuestionRecommendList"><a href="javascript:void(0);">问题推荐</a></li>
+                <li id="liAnswerRecommendList"><a href="javascript:void(0);">官方回答</a></li>
                 <li id="liSubjectManage"><a href="javascript:void(0);">分类管理</a></li>
                 <li id="liTagManage"><a href="javascript:void(0);">标签管理</a></li>
             </ul>
@@ -29,10 +60,6 @@
         <!--主页内容-->
         <main>
             <section id="sctMain" class="main-wapper"></section>
-            <!-- <form method="post" action="" enctype="multipart/form-data" id="fmContractUpload">
-                <input accept=".doc,.docx,.pdf" name="file" type="file" id="fContractUpload"/>
-            </form>
-            <input id="btnContractFileUpload"  value="上传附件" type="button" > -->
         </main>
 
         <!--不包括尾部-->
@@ -59,11 +86,15 @@
     <script src="js/page/common.js"></script>
     <script src="js/page/answer/answer.js"></script>
     <script src="js/page/answer/answer-approve.js"></script>
-
+    <script src="js/page/answer/answer-recommend.js"></script>
+    
     <script src="js/page/question/question.js"></script>
     <script src="js/page/question/question-approve.js"></script>
     <script src="js/page/question/question-recommend.js"></script>
-
+    <!--用户相关  -->
+    <script src="js/page/user/user.js"></script>
+    <script src="js/page/user/user-login.js"></script>
+    
     <script src="js/page/subject/subject.js"></script>
     <script src="js/page/tag/tag.js"></script>
     <script src="js/page/index.js"></script>

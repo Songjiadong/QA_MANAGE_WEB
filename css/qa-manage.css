@@ -202,7 +202,7 @@ a.btn-view {
 
 /* 标签窗口 */
 .dialog-tags {
-	display: none;
+	
 }
 .dialog-tags .tags-list ul li {
 	position: relative;
@@ -376,9 +376,58 @@ a.btn-view {
 	padding: 5px 15px;
 }
 
-
 /*===============================================================================*/
-/* 问答推荐 */
+/* 问题推荐 */
+/*===============================================================================*/
+.recommend-qlist {
+	padding: 10px 0;
+	border-bottom: 1px dashed #ccc;
+	margin-top: 30px;
+}
+.recommend-qlist:first-child {
+	margin-top: 10px;
+}
+.recommend-upload {
+	float: left;
+	width: 180px;
+}
+.recommend-qcontent {
+	float: right;
+	width: 860px;
+	vertical-align: top;
+}
+.recommend-btn {
+	float: right;
+	width: 100px;
+	text-align: center;
+	margin-top: 20px;
+}
+.recommend-btn a {
+	display: inline-block;
+	border: 1px solid #d21f1f;
+	color: #d21f1f;
+	padding: 5px 15px;
+}
+.recommend-btn a.selected {
+	background-color: #d21f1f;
+	color: #fff;
+}
+.recommend-qcontent .question-title {
+	margin-top: 0;
+	margin-bottom: 10px;
+}
+.recommend-qcontent .question-describe {
+	margin-top: 20px;
+	line-height: 1.5;
+}
+
+.content-search select {
+	width: 120px;
+	padding: 5px;
+	margin-right: 10px;
+}
+/*===============================================================================*/
+/* 回答推荐 */
 /*===============================================================================*/
 .answer-item-opt,
 .answer-item-content {
@@ -389,8 +438,21 @@ a.btn-view {
 .answer-item-opt {
 	width: 70px;
 }
+.recommend-num {
+	position: absolute;
+	right: 20px;
+	top: 40px;
+}
+.recommend-num span {
+	padding: 0 5px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	font-weight: bold;
+	color: #d21f1f;
+}
 .answer-item-content {
-    padding-left: 20px;
+	padding-left: 20px;
+	width:100%;
 }
 .answer-item-like {
     background-color: #dff0fd;
@@ -411,25 +473,31 @@ a.btn-view {
 .answer-item-content .ad-item-all {
 	float: none;
 }
-
-.to-recommend {
-	position: absolute;
-	right: 30px;
-	top: 35px;
+.answer-recommend-date {
+	color: #999;
+	font-size: 12px;
+	padding-top: 32px;
+	margin-left: 30px;
+	display: inline-block;
 }
-.to-recommend a {
+.answer-recommend {
+	display: table-cell;
+	width: 120px;
+	text-align: center;
+	padding-top: 20px;
+	padding-left: 20px;
+}
+.answer-recommend a {
 	display: inline-block;
 	border: 1px solid #d21f1f;
 	color: #d21f1f;
 	padding: 5px 15px;
 }
-.to-recommend a.selected {
+.answer-recommend a.selected {
 	background-color: #d21f1f;
 	color: #fff;
 }
-.recommend-upload {
-	padding: 0 120px;
-}
+
 .editor-cover {
     border: 1px solid #e0e0e0;
     height: 200px;

@@ -1,5 +1,7 @@
 ﻿$(document).ready(function () {
 	//返回顶部
+	$.SetCookie("MegawiseID","admin")
+	$.SetCookie("MegawiseUserName","admin")
 	$(window).on("scroll",  function (event) {
 		if ($(this).scrollTop() >= 10) {
 			$("#goTop").fadeIn(30);
@@ -27,10 +29,15 @@
 	    AnswerInfo.Approve.Init();
 	});
 
-	//问答推荐
 	$("#liQuestionRecommendList").off("click").on("click", function(event){
 		$(this).addClass("selected").siblings().removeClass("selected");
 		QuestionInfo.Recommend.Init();
+	
+	});
+	//问答推荐
+	$("#liAnswerRecommendList").off("click").on("click", function(event){
+		$(this).addClass("selected").siblings().removeClass("selected");
+		AnswerInfo.Recommend.Init();
 	
 	});
 
@@ -45,7 +52,7 @@
 		$(this).addClass("selected").siblings().removeClass("selected");
 		TagInfo.Init();
 	});
-
+	$("#aLoginOut").off("click").on("click",User.Login.LoginOutEvent)
 });
 
 function UploadContractFileEvent(event){
