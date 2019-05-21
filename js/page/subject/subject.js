@@ -153,7 +153,7 @@ SubjectInfo.SearchBind = function SearchBind(keyword, page) {
                     temp += "</div>";
                     $(document).off("click", "#divSubjectItemDel" + index+",#divSubjectItemUpd"+ index);
                     $(document).on("click", "#divSubjectItemUpd" + index, { ID: item.ID }, SubjectInfo.UpdateEvent);
-                    $(document).on("click", "#divSubjectItemDel" + index, { ID: item.ID }, SubjectInfo.DeleteEvent);
+                    $(document).on("click", "#divSubjectItemDel" + index, { ID: item.ID,Name:item.Name }, SubjectInfo.DeleteEvent);
                 });
                 $("#divSubjectList").empty().append(temp);
             }
@@ -202,7 +202,8 @@ SubjectInfo.AllRemoveEvent = function AllRemoveEvent(event) {
 //删除主题事件
 SubjectInfo.DeleteEvent = function DeleteEvent(event) {
     var id = event.data.ID;
-    $.Confirm({ content: "您确定要删除该主题么?", width: "auto" }, function () {
+    var subject_name=event.data.Name;
+    $.Confirm({ content: "您确定要删除"+subject_name+"主题么?", width: "auto" }, function () {
         $.SimpleAjaxPost("service/question/subject/Delete", true, JSON.stringify({ID:id}))
         .done(function (json) {
             if(json.Result == true){
