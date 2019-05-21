@@ -79,15 +79,18 @@ SubjectInfo.AddEvent = function AddEvent(event) {
 }
 SubjectInfo.Submit = function submit(){
     var id = ($("#divSubjectInfoEditDialog").data("ID") == "" ? $.NewGuid() : $("#divSubjectInfoEditDialog").data("ID"))
+    var subject_name=$("#txtSubjectName").val();
     $.SimpleAjaxPost("service/question/subject/Submit", true, 
      JSON.stringify({
         ID:id,
         Code:$("#txtSubjectCode").val(),
-        Name:$("#txtSubjectName").val(),
+        Name:subject_name,
         Logo:SubjectInfo.LogoUrl
      })).done(function(json){
-        if(json.Result == true){
-            $.Alert("保存成功",function(){
+         var result=json.Result;
+        if(result == true){
+            $.Alert("保存"+subject_name+"主题成功",function(){
+                SubjectInfo.GC();
                 var page = {
                     pageStart: 1,
                     pageEnd: SubjectInfo.PageSize * 1
@@ -119,20 +122,20 @@ SubjectInfo.SearchEvent = function SearchEvent(event) {
     }
     SubjectInfo.Search(keyword, page);
 }
-SubjectInfo.GetDetail = function get_detail(id){
-    $.SimpleAjaxPost("service/question/subject/GetInformation", true, JSON.stringify({ID:id}))
-        .done(function (json) {
-            var result = json.SubjectInfo
-            $("#txtSubjectCode").val(result.Code);
-            $("#txtSubjectName").val(result.Name);
-            $("#divLogoView").html("<img src='"+objPub.BaseUrl+result.Logo+"' width='50' height='50'/>");
-        })
+SubjectInfo.GetSubjectDetailInfo = function get_subject_detail(id){
+   return $.SimpleAjaxPost("service/question/subject/GetInformation", true, JSON.stringify({ID:id}));
+       
 }
 SubjectInfo.UpdateEvent = function UpdateEvent(event){
     var id = event.data.ID
     $("#divSubjectInfoEditDialog").dialog("open");
     $("#divSubjectInfoEditDialog").data("ID",id);
-    SubjectInfo.GetDetail(id);
+    SubjectInfo.GetSubjectDetailInfo(id).done(function(json){
+        var result = json.SubjectInfo
+        $("#txtSubjectCode").val(result.Code);
+        $("#txtSubjectName").val(result.Name);
+        $("#divLogoView").html("<img src='"+objPub.BaseUrl+result.Logo+"' width='50' height='50'/>");
+    });
 }
 SubjectInfo.SearchBind = function SearchBind(keyword, page) {
     $.SimpleAjaxPost("service/question/subject/Search", true, JSON.stringify({Keyword:keyword,Page:page}))
