@@ -215,7 +215,7 @@ AnswerInfo.Approve.Search = function search(keyword, page) {
         AnswerInfo.Approve.TotalCount = result;
         if (result > AnswerInfo.Approve.PageSize) {
             AnswerInfo.Approve.CanPageLoad = true;
-            $(document).off("scroll").on("scroll", { DateView: date_view }, AnswerInfo.Approve.ScrollEvent);
+            $(document).off("scroll").on("scroll", { DateView: keyword }, AnswerInfo.Approve.ScrollEvent);
         }
         });
 } 

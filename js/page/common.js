@@ -65,3 +65,16 @@ window.objPub.ApproveType.prototype = {
 }
 
 window.objPub.ApproveType.registerEnum("window.objPub.ApproveType");
+///是否类别枚举@start///
+window.objPub.YesNoType = function () {
+    throw Error.notImplemented();
+}
+
+window.objPub.YesNoType.prototype = {
+    //长篇
+    Yes: 1,
+    //短篇
+    No:2,
+}
+
+window.objPub.YesNoType.registerEnum("window.objPub.YesNoType");
