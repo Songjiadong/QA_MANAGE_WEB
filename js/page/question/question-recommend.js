@@ -33,17 +33,7 @@ QuestionInfo.Recommend.Init = function init() {
                 QuestionInfo.Recommend.Search(keyword, page);
             });
 
-			//点击推荐
-			$(".recommend-btn>a").on("click", function () {
-				var cStr = $(this).hasClass("selected");
-				if (cStr) {
-					$(this).switchClass("selected", "", 500);
-					$(this).text("未推荐");
-				} else {
-					$(this).switchClass("", "selected", 500);
-					$(this).text("已推荐");
-				}
-            });
+		
             
             var page = {
                 pageStart: 1,
