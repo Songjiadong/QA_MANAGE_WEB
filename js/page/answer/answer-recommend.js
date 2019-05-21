@@ -19,7 +19,7 @@ AnswerInfo.Recommend.Init = function init() {
                 }; 
                 keyword = {
                     Keyword: "",
-                    IsRecommend:AnswerInfo.ApproveStatus.SimpleApproveWaiting+"",
+                    IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value"),
                     Year:Home.Year,
                     Month:Home.Month,  
                 }
@@ -52,7 +52,7 @@ AnswerInfo.Recommend.Init = function init() {
                 }; 
                 keyword = {
                     Keyword: "",
-                    IsRecommend:AnswerInfo.ApproveStatus.SimpleApproveWaiting+"",
+                    IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value"),
                     Year:Home.Year,
                     Month:Home.Month,  
                 }
