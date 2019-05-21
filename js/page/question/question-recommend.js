@@ -57,7 +57,6 @@ QuestionInfo.Recommend.Init = function init() {
                 IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
             }
             QuestionInfo.Recommend.Search(keyword, page);
-            QuestionInfo.Recommend.GetRecommendQuestionCount(keyword, page);
         }
     });
 }
@@ -189,7 +188,10 @@ QuestionInfo.Recommend.YearInit = function year_init(){
             IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
         }
         QuestionInfo.Recommend.Search(keyword, page);
-        QuestionInfo.Recommend.GetRecommendQuestionCount(keyword);
+        QuestionInfo.Recommend.GetRecommendQuestionCount(keyword).done(function(json){
+            var result = json.Count;
+            $("#divRecommendCount").html(result);
+        });
     });
 }
 
@@ -322,9 +324,5 @@ QuestionInfo.Recommend.ScrollEvent = function ScrollEvent(event) {
     }
 }
 QuestionInfo.Recommend.GetRecommendQuestionCount = function get_recommend_question_count(keyword) {
-    $.SimpleAjaxPost("service/question/recommend/GetRecommendQuestionCount", true, JSON.stringify({ Keyword: keyword })).done(function (json) {
-        var result = json.Count;
-        $("#divRecommendCount").html(result);
-
-    });
+   return $.SimpleAjaxPost("service/question/recommend/GetRecommendQuestionCount", true, JSON.stringify({ Keyword: keyword }));
 } 
