@@ -41,8 +41,7 @@ TagInfo.Init = function init() {
 }
 //垃圾回收
 TagInfo.GC=function gc(){
-    $("#txtTagCode").val("");
-    $("#txtTagName").val(""); 
+    $("#txtTagCode,#txtTagName").val("");
     TagInfo.LogoUrl = "";
 }
 //搜索回车事件
