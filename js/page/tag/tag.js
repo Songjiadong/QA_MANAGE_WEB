@@ -39,6 +39,12 @@ TagInfo.Init = function init() {
         }
     });
 }
+//垃圾回收
+TagInfo.GC=function gc(){
+    $("#txtTagCode").val("");
+    $("#txtTagName").val(""); 
+    TagInfo.LogoUrl = "";
+}
 //搜索回车事件
 TagInfo.SearchKeyPressEvent = function SearchKeyPressEvent(event) {
     if (event.keyCode == 13) {
@@ -66,7 +72,7 @@ TagInfo.SearchBind = function SearchBind(keyword, page) {
             if (Array.isArray(result)==true) { 
                 $.each(result, function (index, item) {
                     temp+="<li>";
-                    temp+="<span>"+item.NAME+"</span>";
+                    temp+="<span>"+item.Name+"</span>";
                     temp+="<div id='divDeleteTag"+index+"' class='tags-del' title='删除标签'><img src='images/trash.png'></div>";
                     temp += "</li>";
                     $(document).off("click", "#divDeleteTag" + index);
@@ -143,7 +149,7 @@ TagInfo.AllRemoveEvent = function AllRemoveEvent(event) {
         $.SimpleAjaxPost("service/user/tag/AllRemove", true)
             .done(function (json) {
                 if (json.Result == true) {
-                    $.Alert("删除成功", function () {
+                    $.Alert("删除标签成功", function () {
                         var page = {
                             pageStart: 1,
                             pageEnd: TagInfo.PageSize * 1
@@ -161,14 +167,15 @@ TagInfo.AllRemoveEvent = function AllRemoveEvent(event) {
 }
 //删除标签事件
 TagInfo.DeleteEvent = function DeleteEvent(event) {
-    var tagInfos = event.data.Item;
-    var tagName = tagInfos.NAME;
+    var tagInfo = event.data.Item;
+    var tagName = tagInfo.Name;
     $.Confirm({ content: "您确定要删除"+tagName+"标签么?", width: "auto" }, function () {
-        var id = tagInfos.ID;
+        var id = tagInfo.ID;
         $.SimpleAjaxPost("service/user/tag/Delete", true, JSON.stringify({ ID: id}))
             .done(function (json) {
-                if (json.Result == true) {
-                    $.Alert("删除成功", function () {
+                var result=json.Result;
+                if (result == true) {
+                    $.Alert("删除标签"+tagName+"成功", function () {
                         var page = {
                             pageStart: 1,
                             pageEnd: TagInfo.PageSize * 1
@@ -188,19 +195,19 @@ TagInfo.DeleteEvent = function DeleteEvent(event) {
 //提交标签信息
 TagInfo.Submit = function submit() {
     var id = ($("#divTagInfoEditDialog").data("ID") == "" ? $.NewGuid() : $("#divTagInfoEditDialog").data("ID"))
+    var tagName=$("#txtTagName").val();
     $.SimpleAjaxPost("service/user/tag/Submit", true, JSON.stringify({
         ID: id,
         Code:$("#txtTagCode").val(),
-        Name:$("#txtTagName").val(),
+        Name:tagName,
         Logo: TagInfo.LogoUrl,
         CreaterID:objPub.UserID,
         CreaterName:objPub.UserName
     })).done(function (json) {
-        if(json.Result == true){
-            $.Alert("保存成功", function () {
-                $("#txtTagCode").val("");
-                $("#txtTagName").val(""); 
-                TagInfo.LogoUrl = "";
+        var result=json.Result;
+        if(result == true){
+            $.Alert({content:"保存标签"+tagName+"成功",width:"auto"}, function () {
+                TagInfo.GC();
                 var page = {
                     pageStart: 1,
                     pageEnd: TagInfo.PageSize * 1
