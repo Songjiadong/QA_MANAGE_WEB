@@ -34,7 +34,7 @@ QuestionInfo.Recommend.Init = function init() {
             });
 
 			//点击推荐
-			$(".recommend-btn>a").on("click", function () {
+			$(".recommend-btn>a").off("click").on("click", function (event) {
 				var cStr = $(this).hasClass("selected");
 				if (cStr) {
 					$(this).switchClass("selected", "", 500);
