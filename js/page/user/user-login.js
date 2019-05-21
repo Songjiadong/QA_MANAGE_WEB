@@ -31,10 +31,10 @@ User.Login.LoginEvent = function LoginEvent(event){
                 UserCode:    $("#txtLoginUser").val(),
                 PlateSource: User.Login.WebType.User.toString(),
             })).done(function(json){
-                temp = json.Info;
-                check_user_code = temp.CheckUserCode
-                check_password = temp.CheckPassword
-                is_disabled = temp.IsDisabled
+                login_info = json.Info;
+                check_user_code = login_info.CheckUserCode
+                check_password = login_info.CheckPassword
+                is_disabled = login_info.IsDisabled
 
                 if(check_user_code == undefined){
                     $("#txtUserCodeTip").show();
