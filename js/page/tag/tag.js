@@ -117,7 +117,7 @@ TagInfo.UploadTagLogoEvent = function UploadTagLogoEvent(event){
     if ($file != "") {
         //附件上传
         $fm.ajaxSubmit({
-            url: "http://qamanage.megawise.cn/service/user/tag/UploadLogo",
+            url: objPub.BaseUrl+"service/user/tag/UploadLogo",
             type: "post",
             dataType: "json",
             timeout: 600000,

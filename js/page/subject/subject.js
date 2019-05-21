@@ -48,7 +48,7 @@ SubjectInfo.UploadSubjectLogoEvent = function UploadSubjectLogoEvent(event){
     if ($file != "") {
         //附件上传
         $fm.ajaxSubmit({
-            url: "http://qamanage.megawise.cn/service/question/subject/UploadLogo",
+            url: objPub.BaseUrl+"service/question/subject/UploadLogo",
             type: "post",
             dataType: "json",
             timeout: 600000,
