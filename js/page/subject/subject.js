@@ -206,8 +206,9 @@ SubjectInfo.DeleteEvent = function DeleteEvent(event) {
     $.Confirm({ content: "您确定要删除"+subject_name+"主题么?", width: "auto" }, function () {
         $.SimpleAjaxPost("service/question/subject/Delete", true, JSON.stringify({ID:id}))
         .done(function (json) {
-            if(json.Result == true){
-                $.Alert("删除成功",function(){
+            var result=json.Result;
+            if(result == true){
+                $.Alert("删除主题"+subject_name+"成功",function(){
                     var page = {
                         pageStart: 1,
                         pageEnd: SubjectInfo.PageSize * 1
