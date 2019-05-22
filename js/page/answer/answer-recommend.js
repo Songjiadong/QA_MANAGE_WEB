@@ -1,30 +1,24 @@
 AnswerInfo.Recommend = function () { }
 AnswerInfo.Recommend.registerClass("AnswerInfo.Recommend");
 AnswerInfo.Recommend.PageSize = 10;
-//问题推荐初始化
-//回答推荐
+
+//是否能页面加载
+AnswerInfo.Recommend.CanPageLoad = false;
+//记录总数
+AnswerInfo.Recommend.TotalCount = 0;
+//当前索引
+AnswerInfo.Recommend.CurrentIndex = 0;
+AnswerInfo.Recommend.OldDocumentHeight = 0;
+AnswerInfo.Recommend.TempYear=Home.Year;
+AnswerInfo.Recommend.TempMonth=Home.Month;
 
 AnswerInfo.Recommend.Init = function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/question/recommend-answer.html", function (respones, status) {
         if (status == "success") {
                 //时间轴
-                AnswerInfo.Recommend.YearInit()
+            AnswerInfo.Recommend.YearInit()
             $(".year").off("click").on("click", AnswerInfo.Recommend.YearClickEvent);
-            $(".content-tabs .content-tabs-item").off("click").on("click", function (event) {
-                $(".content-tabs-item").removeClass("selected");
-                $(this).addClass("selected");
-                var page = {
-                    pageStart: 1,
-                    pageEnd: AnswerInfo.Recommend.PageSize * 1
-                }; 
-                keyword = {
-                    Keyword: "",
-                    IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value"),
-                    Year:Home.Year,
-                    Month:Home.Month,  
-                }
-                AnswerInfo.Recommend.Search(keyword, page);
-            });
+            $(".content-tabs .content-tabs-item").off("click").on("click", AnswerInfo.Recommend.RecommendTypeSearchEvent);
                 //风琴效果
                 
                 //点击推荐
@@ -61,56 +55,81 @@ AnswerInfo.Recommend.Init = function init() {
         }
     });
 }
+//根据是否推荐筛选
+AnswerInfo.Recommend.RecommendTypeSearchEvent = function RecommendTypeSearchEvent(event){
+    $(".content-tabs-item").removeClass("selected");
+    $(this).addClass("selected");
+    var page = {
+        pageStart: 1,
+        pageEnd: AnswerInfo.Recommend.PageSize * 1
+    };
+    var keyword = {
+        Keyword: $("#txtSearch").val(),
+        SubjectID:$("#sltSubjectID").val(),
+        Year:AnswerInfo.Recommend.TempYear,
+        Month:AnswerInfo.Recommend.TempMonth,
+        IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
+    }
+    AnswerInfo.Recommend.Search(keyword, page);
+}
 AnswerInfo.Recommend.YearInit = function year_init(){
     var temp_current_year = parseInt(Home.Year);
     var temp_current_month = parseInt(new Date().getMonth() + 1)
     var str = "<li class='swift-edit'><i class='fa fa-edit'></i></li>";
     str +="<li><a href='javascript:void(0);' class='year'>全部</a></li>"
     str+="<li class='selected'>";
-    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year)+"</a>";
+    str+="<a href='javascript:void(0);' id='aYear"+temp_current_year+"' class='year'>"+(temp_current_year)+"</a>";
+    $("#ulYearMenu").off("click","#aYear"+temp_current_year).on("click","#aYear"+temp_current_year, AnswerInfo.Recommend.YearClickEvent);
     str+="<ul class='month' value='"+(temp_current_year)+"'>";
     for(var j=1;j<(temp_current_month+1);j++){
         if (j == temp_current_month){
-            str+="<li value='"+j+"' class='selected'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+            str+="<li value='"+j+"' id='liMonth"+temp_current_year+"-"+j+"' class='selected'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
         }else{
-            str+="<li value='"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+            str+="<li value='"+j+"' id='liMonth"+temp_current_year+"-"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
         }
-        
+        $("#ulYearMenu").off("click","#liMonth"+temp_current_year+"-"+j).on("click","#liMonth"+temp_current_year+"-"+j,AnswerInfo.Recommend.SearchEvent);
     }
     str+="</ul>";
     for(var i=1;i<3;i++){
     str+="<li >";
-    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year-i)+"</a>";
+    str+="<a href='javascript:void(0);' id='aYear"+(temp_current_year-i)+"' class='year'>"+(temp_current_year-i)+"</a>";
+    $("#ulYearMenu").off("click","#aYear"+(temp_current_year-i)).on("click","#aYear"+(temp_current_year-i), AnswerInfo.Recommend.YearClickEvent);
     str+="<ul class='month' value='"+(temp_current_year-i)+"'>";
         for(var k=1;k<13;k++){
-            str+="<li value='"+k+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
+            str+="<li value='"+k+"' id='liMonth"+(temp_current_year-i)+"-"+k+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
+            $("#ulYearMenu").off("click","#liMonth"+(temp_current_year-i)+"-"+k).on("click","#liMonth"+(temp_current_year-i)+"-"+k,AnswerInfo.Recommend.SearchEvent);
         }
     str+="</ul>";
     str+="</li>";
     }
     $("#ulYearMenu").empty().append(str);
-    $(".year").off("click").on("click", AnswerInfo.Recommend.YearClickEvent);
-    $(".month>li").off("click").on("click", function () {
-        $(this).addClass("selected").siblings().removeClass("selected");
-        var year = $(this).parent().attr("value");
-        var date = $(this).attr("value");
-        if(date>9){
-        }else{
-            date = "0"+date
-        }
-        var page = {
-            pageStart: 1,
-            pageEnd: AnswerInfo.Recommend.PageSize * 1
-        };
-        var keyword = {
-            Keyword: $("#txtSearch").val(),
-            SubjectID:$("#sltSubjectID").val(),
-            Year:year,
-            Month:date,
-            IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
-        }
-        AnswerInfo.Recommend.Search(keyword, page);
-        AnswerInfo.Recommend.GetOfficialAnswerCount(keyword);
+}
+AnswerInfo.Recommend.SearchEvent = function SearchEvent(event){
+    $(this).addClass("selected").siblings().removeClass("selected");
+        
+    var page = {
+        pageStart: 1,
+        pageEnd: AnswerInfo.Recommend.PageSize * 1
+    };
+    var year = $(this).parent().attr("value");
+    var date = $(this).attr("value");
+    if(date>9){
+    }else{
+        date = "0"+date
+    }
+    AnswerInfo.Recommend.TempYear=year;
+    AnswerInfo.Recommend.TempMonth=date;
+    var keyword = {
+        Keyword: $("#txtSearch").val(),
+        SubjectID:$("#sltSubjectID").val(),
+        Year:year,
+        Month:date,
+        IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
+    }
+    AnswerInfo.Recommend.Search(keyword, page);
+    AnswerInfo.Recommend.GetOfficialAnswerCount(keyword).done(function(json){
+        var result = json.Count;
+        $("#divRecommendCount").html(result);
     });
 }
 //时间周年点击
@@ -132,7 +151,12 @@ AnswerInfo.Recommend.Search = function search(keyword, page) {
     AnswerInfo.Recommend.SearchBind(keyword, page,0);
     $.SimpleAjaxPost("service/question/recommend/GetSearchCount", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) {
         var result = json.Count;
-        $("#divAnswerCount").html(result);
+        if(keyword.IsRecommend == objPub.YesNoType.Yes.toString()){
+            $("#divOfficialCount").html(result);
+        }else{
+            $("#divAnswerCount").html(result);
+        }
+        
         AnswerInfo.Recommend.TotalCount = result;
         if (result > AnswerInfo.Recommend.PageSize) {
             AnswerInfo.Recommend.CanPageLoad = true;
