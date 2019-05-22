@@ -127,10 +127,7 @@ AnswerInfo.Recommend.SearchEvent = function SearchEvent(event){
         IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
     }
     AnswerInfo.Recommend.Search(keyword, page);
-    AnswerInfo.Recommend.GetOfficialAnswerCount(keyword).done(function(json){
-        var result = json.Count;
-        $("#divRecommendCount").html(result);
-    });
+    AnswerInfo.Recommend.GetOfficialAnswerCount(keyword);
 }
 //时间周年点击
 AnswerInfo.Recommend.YearClickEvent = function YearClickEvent(event) {
