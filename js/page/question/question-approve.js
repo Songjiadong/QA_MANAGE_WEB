@@ -1,7 +1,6 @@
 ﻿QuestionInfo.Approve = function () { }
 QuestionInfo.Approve.registerClass("QuestionInfo.Approve");
 QuestionInfo.Approve.PageSize = 10;
-QuestionInfo.Approve.SubjectSltStr="";
 QuestionInfo.Approve.TagStr = "";
 //问题审批初始化
 QuestionInfo.Approve.Init = function init() {
@@ -351,26 +350,18 @@ QuestionInfo.Approve.Cancel = function cancel(){
      })
 }
 QuestionInfo.Approve.GetAllSubjectList = function get_all_subject_list() {
-    var temp = "";
-    $.SimpleAjaxPost("service/question/subject/GetAllSubjectList" , true).done(function(json){
-        var result = $.Deserialize(json.List)
-        $.each(result, function (index, item) {
-            temp += "<option value='"+item.ID+"'>"+item.Name+"</option>"
-        });
-        $("#sltSubject").html(temp);
-        QuestionInfo.Approve.SubjectSltStr = temp;
-        var page = {
-            pageStart: 1,
-            pageEnd: QuestionInfo.Approve.PageSize * 1
-        };
-        var keyword = {
-            Keyword: $("#txtSearch").val(),
-            YearMonth:"2019-04",
-            ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
-        }
-        QuestionInfo.Approve.Search(keyword, page);
-     })
-    
+   
+     $("#sltSubjectID").html(Home.SubjectSltStr);
+     var page = {
+         pageStart: 1,
+         pageEnd: QuestionInfo.Approve.PageSize * 1
+     };
+     var keyword = {
+         Keyword: $("#txtSearch").val(),
+         YearMonth:"2019-04",
+         ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
+     }
+     QuestionInfo.Approve.Search(keyword, page);
 }
 QuestionInfo.Approve.GetAllTagList = function get_all_tag_list() {
     $("#ulAddNewTagList").empty();

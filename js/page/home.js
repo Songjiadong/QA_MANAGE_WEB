@@ -2,9 +2,12 @@
 Home.registerClass("Home");
 Home.Year = "";
 Home.Month = ""; 
+Home.SubjectSltStr ="";
+Home.Top = 5;
 Home.Init= function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/home.html", function (respones, status) {
         if (status == "success") {
+            Home.GetAllSubject()
             Home.Year = new Date().getFullYear().toString();
             var temp =  (new Date().getMonth() + 1).toString(); 
             if(temp>9){
@@ -23,7 +26,7 @@ Home.Init= function init() {
             Home.MostQuestionUserBind();
             Home.MostPraiseUserBind();
             Home.MostAnswerUserBind();
-            Home.QaStatisticsBind();
+            Home.QaStatisticsBind("2019");
             Home.UserVisitStatisticsBind();
             //待审核问题页
             $("#todoQuestion").off("click").on('click', function () {
@@ -44,28 +47,14 @@ Home.YearInit = function year_init(){
     str +="<li><a href='javascript:void(0);' class='year'>全部</a></li>"
     str+="<li class='selected'>";
     str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year)+"</a>";
-    str+="<ul class='month' value='"+(temp_current_year)+"'>";
-    for(var j=1;j<(temp_current_month+1);j++){
-        str+="<li value='"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
-    }
-    str+="</ul>";
     for(var i=1;i<3;i++){
     str+="<li >";
     str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year-i)+"</a>";
-    str+="<ul class='month' value='"+(temp_current_year-i)+"'>";
-        for(var k=1;k<13;k++){
-            str+="<li value='"+k+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
-        }
-    str+="</ul>";
     str+="</li>";
     }
     $("#ulYearMenu").empty().append(str);
     $(".year").off("click").on("click",Home.YearClickEvent);
     $(".month>li").off("click").on("click", function () {
-        //$(this).addClass("selected").siblings().removeClass("selected");
-        //var year = $(this).parent().attr("value");
-        //var date = $(this).attr("value");
-
         Home.QaStatisticsBind();
     });
 }
@@ -108,7 +97,7 @@ Home.YearClickEvent = function YearClickEvent(event) {
 Home.HotPraiseQuestionBind = function hot_praise_question_bind() {
     var temp = "";
     $.SimpleAjaxPost("service/answer/GetTopPraiseAnswerList" , true, 
-     JSON.stringify({Top:5})).done(function(json){
+     JSON.stringify({Top:Home.Top})).done(function(json){
         var result = $.Deserialize(json.List)
         $.each(result, function (index, item) {
             temp += "<li>"
@@ -136,7 +125,7 @@ Home.HotQuestionBind = function hot_question_bind() {
     var temp = "";
     var result = [];
      $.SimpleAjaxPost("service/question/GetHotList", true, 
-     JSON.stringify({Top:5})).done(function(json){
+     JSON.stringify({Top:Home.Top})).done(function(json){
         var result = $.Deserialize(json.List);
         $.each(result, function (index, item) {
             temp += "<li>";
@@ -336,31 +325,16 @@ Home.UserVisitStatisticsBind = function user_visit_statistics_bind() {
 }
 Home.QaStatisticsBind = function qa_statistics_bind(year_month) {
     var question_data=[]
+    var answer_data=[]
     $.SimpleAjaxPost("service/question/GetQuestionStatisticsInfoList" , true, 
      JSON.stringify({Year:year_month})).done(function(json){
-        var result = $.Deserialize(json.List)
-        $.each(result, function (index, item) {
+        var question_result = $.Deserialize(json.ListQuestion)
+        var answer_result = $.Deserialize(json.ListAnswer)
+        $.each(question_result, function (index, item) {
             question_data.push(item.Value)
-        //    switch(item.Key){
-        //     case "January" : 
-        //     break;
-        //     case "January" : question_data.push(item.Value)
-        //     break;
-        //     case "January" : question_data.push(item.Value)
-        //     break;
-        //     case "January" : question_data.push(item.Value)
-        //     break;
-        //     case "January" : question_data.push(item.Value)
-        //     break;
-        //     case "January" : question_data.push(item.Value)
-        //     break;
-        //     case "January" : question_data.push(item.Value)
-        //     break;
-        //     case "January" : question_data.push(item.Value)
-        //     break;
-        //     case "January" : question_data.push(item.Value)
-        //     break;
-        //    }
+        });
+        $.each(answer_result, function (index, item) {
+            answer_data.push(item.Value)
         });
         var colors = ['#5793f3', '#d14a61', '#675bba', '#61a0a8', '#d48265', '#2f4554', '#91c7ae'];
     var qaChart = echarts.init($("#divQaStatistics")[0]);
@@ -444,10 +418,20 @@ Home.QaStatisticsBind = function qa_statistics_bind(year_month) {
                 name: '回答数量',
                 type: 'line',
                 smooth: true,
-                data: [3, 5, 11, 18, 48, 69, 231, 46, 55, 18, 10, 7]
+                data: answer_data
             }
         ]
     };
     qaChart.setOption(optionQa);
+    })
+}
+Home.GetAllSubject = function get_all_subject(){
+    var temp="";
+    $.SimpleAjaxPost("service/question/subject/GetAllSubjectList",true).done(function(json){
+        var result = $.Deserialize(json.List)
+        $.each(result, function (index, item) {
+            temp += "<option value='"+item.ID+"'>"+item.Name+"</option>"
+        });
+        Home.SubjectSltStr = temp;
     })
 }

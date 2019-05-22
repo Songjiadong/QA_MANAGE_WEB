@@ -13,6 +13,7 @@ QuestionInfo.Recommend.OldDocumentHeight = 0;
 QuestionInfo.Recommend.Init = function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/question/recommend-question.html", function (respones, status) {
         if (status == "success") {
+            $("#sltSubjectID").html(Home.SubjectSltStr)
                 //时间轴
                 QuestionInfo.Recommend.YearInit()
             $(".year").off("click").on("click", QuestionInfo.Recommend.YearClickEvent);
@@ -149,14 +150,16 @@ QuestionInfo.Recommend.YearInit = function year_init(){
     var str = "<li class='swift-edit'><i class='fa fa-edit'></i></li>";
     str +="<li><a href='javascript:void(0);' class='year'>全部</a></li>"
     str+="<li class='selected'>";
-    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year)+"</a>";
+    str+="<a href='javascript:void(0);' class='year' id='aYear"+temp_current_year+"'>"+(temp_current_year)+"</a>";
+    $("#ulYearMenu").off("click","#aYear"+temp_current_year).on("click","#aYear"+temp_current_year, QuestionInfo.Recommend.YearClickEvent);
     str+="<ul class='month' value='"+(temp_current_year)+"'>";
     for(var j=1;j<(temp_current_month+1);j++){
         if (j == temp_current_month){
-            str+="<li value='"+j+"' class='selected'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+            str+="<li value='"+j+"' id='liMonth"+temp_current_year+"-"+j+"' class='selected'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
         }else{
-            str+="<li value='"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+            str+="<li value='"+j+"' id='liMonth"+temp_current_year+"-"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
         }
+        $("#ulYearMenu").off("click","#liMonth"+temp_current_year+"-"+j).on("click","#liMonth"+temp_current_year+"-"+j,QuestionInfo.Recommend.SearchEvent);
     }
     str+="</ul>";
     for(var i=1;i<3;i++){
@@ -164,41 +167,41 @@ QuestionInfo.Recommend.YearInit = function year_init(){
     str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year-i)+"</a>";
     str+="<ul class='month' value='"+(temp_current_year-i)+"'>";
         for(var k=1;k<13;k++){
-            str+="<li value='"+k+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
+            str+="<li value='"+k+"' id='liMonth"+(temp_current_year-i)+"-"+k+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
         }
     str+="</ul>";
     str+="</li>";
     }
     $("#ulYearMenu").empty().append(str);
-    $(".year").off("click").on("click", QuestionInfo.Recommend.YearClickEvent);
-    $(".month>li").off("click").on("click", function () {
-        $(this).addClass("selected").siblings().removeClass("selected");
+    
+    $(".month>li").off("click").on("click",QuestionInfo.Recommend.SearchEvent);
+}
+QuestionInfo.Recommend.SearchEvent = function SearchEvent(event){
+    $(this).addClass("selected").siblings().removeClass("selected");
         
-        var page = {
-            pageStart: 1,
-            pageEnd: QuestionInfo.Recommend.PageSize * 1
-        };
-        var year = $(this).parent().attr("value");
-        var date = $(this).attr("value");
-        if(date>9){
-        }else{
-            date = "0"+date
-        }
-        var keyword = {
-            Keyword: $("#txtSearch").val(),
-            SubjectID:$("#sltSubjectID").val(),
-            Year:year,
-            Month:date,
-            IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
-        }
-        QuestionInfo.Recommend.Search(keyword, page);
-        QuestionInfo.Recommend.GetRecommendQuestionCount(keyword).done(function(json){
-            var result = json.Count;
-            $("#divRecommendCount").html(result);
-        });
+    var page = {
+        pageStart: 1,
+        pageEnd: QuestionInfo.Recommend.PageSize * 1
+    };
+    var year = $(this).parent().attr("value");
+    var date = $(this).attr("value");
+    if(date>9){
+    }else{
+        date = "0"+date
+    }
+    var keyword = {
+        Keyword: $("#txtSearch").val(),
+        SubjectID:$("#sltSubjectID").val(),
+        Year:year,
+        Month:date,
+        IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
+    }
+    QuestionInfo.Recommend.Search(keyword, page);
+    QuestionInfo.Recommend.GetRecommendQuestionCount(keyword).done(function(json){
+        var result = json.Count;
+        $("#divRecommendCount").html(result);
     });
 }
-
 QuestionInfo.Recommend.UploadEvent = function UploadEvent(event){
     var id = event.data.ID;
     var index = event.data.Index;
@@ -207,7 +210,7 @@ QuestionInfo.Recommend.UploadEvent = function UploadEvent(event){
     if ($file != "") {
         //附件上传
         $fm.ajaxSubmit({
-            url: "http://qamanage.megawise.cn/service/question/recommend/UploadLogo",
+            url: objPub.BaseUrl+"service/question/recommend/UploadLogo",
             type: "post",
             dataType: "json",
             timeout: 600000,
