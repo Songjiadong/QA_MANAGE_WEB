@@ -9,43 +9,17 @@ QuestionInfo.Recommend.TotalCount = 0;
 //当前索引
 QuestionInfo.Recommend.CurrentIndex = 0;
 QuestionInfo.Recommend.OldDocumentHeight = 0;
+QuestionInfo.Recommend.TempYear=Home.Year;
+QuestionInfo.Recommend.TempMonth=Home.Month;
 //问题推荐初始化
 QuestionInfo.Recommend.Init = function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/question/recommend-question.html", function (respones, status) {
         if (status == "success") {
             $("#sltSubjectID").html(Home.SubjectSltStr)
                 //时间轴
-                QuestionInfo.Recommend.YearInit()
-            $(".year").off("click").on("click", QuestionInfo.Recommend.YearClickEvent);
-            $(".content-tabs .content-tabs-item").off("click").on("click", function (event) {
-                $(".content-tabs-item").removeClass("selected");
-                $(this).addClass("selected");
-                var page = {
-                    pageStart: 1,
-                    pageEnd: QuestionInfo.Recommend.PageSize * 1
-                };
-                var keyword = {
-                    Keyword: $("#txtSearch").val(),
-                    SubjectID:$("#sltSubjectID").val(),
-                    Year:Home.Year,
-                    Month:Home.Month,
-                    IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
-                }
-                QuestionInfo.Recommend.Search(keyword, page);
-            });
+                QuestionInfo.Recommend.YearInit();
+            $(".content-tabs .content-tabs-item").off("click").on("click", QuestionInfo.Recommend.RecommendTypeSearchEvent);
 
-			//点击推荐
-			$(".recommend-btn>a").off("click").on("click", function (event) {
-				var cStr = $(this).hasClass("selected");
-				if (cStr) {
-					$(this).switchClass("selected", "", 500);
-					$(this).text("未推荐");
-				} else {
-					$(this).switchClass("", "selected", 500);
-					$(this).text("已推荐");
-				}
-            });
-            
             var page = {
                 pageStart: 1,
                 pageEnd: QuestionInfo.Recommend.PageSize * 1
@@ -64,6 +38,24 @@ QuestionInfo.Recommend.Init = function init() {
             });
         }
     });
+}
+
+//根据是否推荐筛选
+QuestionInfo.Recommend.RecommendTypeSearchEvent = function RecommendTypeSearchEvent(event){
+    $(".content-tabs-item").removeClass("selected");
+    $(this).addClass("selected");
+    var page = {
+        pageStart: 1,
+        pageEnd: QuestionInfo.Recommend.PageSize * 1
+    };
+    var keyword = {
+        Keyword: $("#txtSearch").val(),
+        SubjectID:$("#sltSubjectID").val(),
+        Year:QuestionInfo.Recommend.TempYear,
+        Month:QuestionInfo.Recommend.TempMonth,
+        IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
+    }
+    QuestionInfo.Recommend.Search(keyword, page);
 }
 //时间周年点击
 QuestionInfo.Recommend.YearClickEvent = function YearClickEvent(event) {
@@ -164,17 +156,18 @@ QuestionInfo.Recommend.YearInit = function year_init(){
     str+="</ul>";
     for(var i=1;i<3;i++){
     str+="<li >";
-    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year-i)+"</a>";
+    str+="<a href='javascript:void(0);' id='aYear"+(temp_current_year-i)+"' class='year'>"+(temp_current_year-i)+"</a>";
+    $("#ulYearMenu").off("click","#aYear"+(temp_current_year-i)).on("click","#aYear"+(temp_current_year-i), QuestionInfo.Recommend.YearClickEvent);
     str+="<ul class='month' value='"+(temp_current_year-i)+"'>";
         for(var k=1;k<13;k++){
             str+="<li value='"+k+"' id='liMonth"+(temp_current_year-i)+"-"+k+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
+            $("#ulYearMenu").off("click","#liMonth"+(temp_current_year-i)+"-"+k).on("click","#liMonth"+(temp_current_year-i)+"-"+k,QuestionInfo.Recommend.SearchEvent);
         }
     str+="</ul>";
     str+="</li>";
     }
     $("#ulYearMenu").empty().append(str);
     
-    $(".month>li").off("click").on("click",QuestionInfo.Recommend.SearchEvent);
 }
 QuestionInfo.Recommend.SearchEvent = function SearchEvent(event){
     $(this).addClass("selected").siblings().removeClass("selected");
@@ -189,6 +182,8 @@ QuestionInfo.Recommend.SearchEvent = function SearchEvent(event){
     }else{
         date = "0"+date
     }
+    QuestionInfo.Recommend.TempYear=year;
+    QuestionInfo.Recommend.TempMonth=date;
     var keyword = {
         Keyword: $("#txtSearch").val(),
         SubjectID:$("#sltSubjectID").val(),
@@ -280,7 +275,12 @@ QuestionInfo.Recommend.Search = function search(keyword, page) {
     QuestionInfo.Recommend.SearchBind(keyword, page,0);
     $.SimpleAjaxPost("service/question/recommend/GetQuestionSearchCount", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) {
         var result = json.Count;
-        $("#divQuestionCount").html(result);
+        if(keyword.IsRecommend == objPub.YesNoType.Yes.toString()){
+            $("#divRecommendCount").html(result);
+        }else{
+            $("#divQuestionCount").html(result);
+        }
+        
         QuestionInfo.Recommend.TotalCount = result;
         if (result > QuestionInfo.Recommend.PageSize) {
             QuestionInfo.Recommend.CanPageLoad = true;

@@ -428,7 +428,8 @@ Home.QaStatisticsBind = function qa_statistics_bind(year_month) {
 Home.GetAllSubject = function get_all_subject(){
     var temp="";
     $.SimpleAjaxPost("service/question/subject/GetAllSubjectList",true).done(function(json){
-        var result = $.Deserialize(json.List)
+        var result = $.Deserialize(json.List);
+        temp += "<option value=''>请选择</option>"
         $.each(result, function (index, item) {
             temp += "<option value='"+item.ID+"'>"+item.Name+"</option>"
         });
