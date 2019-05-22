@@ -31,10 +31,10 @@ User.Login.LoginEvent = function LoginEvent(event){
                 UserCode:    $("#txtLoginUser").val(),
                 PlateSource: User.Login.WebType.User.toString(),
             })).done(function(json){
-                temp = json.Info;
-                check_user_code = temp.CheckUserCode
-                check_password = temp.CheckPassword
-                is_disabled = temp.IsDisabled
+                login_info = json.Info;
+                check_user_code = login_info.CheckUserCode
+                check_password = login_info.CheckPassword
+                is_disabled = login_info.IsDisabled
 
                 if(check_user_code == undefined){
                     $("#txtUserCodeTip").show();
@@ -61,7 +61,7 @@ User.Login.LoginOutEvent = function LoginOutEvent(event){
     $.Confirm({ content: "尊敬的用户" + objPub.UserName + "：您确定要退出登录吗?", width: "auto" }, function () {
         $.ClearCookie("MegawiseID");
         $.ClearCookie("MegawiseUserName");
-        window.location.href="http://qamanage.megawise.cn/login.html";
+        window.location.href=objPub.BaseUrl+"login.html";
     });
 }
 $(function () {
