@@ -2,6 +2,8 @@
 QuestionInfo.Approve.registerClass("QuestionInfo.Approve");
 QuestionInfo.Approve.PageSize = 10;
 QuestionInfo.Approve.TagStr = "";
+QuestionInfo.Approve.TempYear=Home.Year;
+QuestionInfo.Approve.TempMonth=Home.Month;
 //问题审批初始化
 QuestionInfo.Approve.Init = function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/question/approve-list.html", function (respones, status) {
@@ -47,24 +49,21 @@ QuestionInfo.Approve.Init = function init() {
            
             $(".content-tabs .content-tabs-item").off("click").on("click", function (event) {
                 $(".content-tabs-item").removeClass("selected");
+                
                 $(this).addClass("selected");
-                var year = $("#ulYearMenu").find(".selected").children("a").html();
-                var month = $("#ulYearMenu").find(".selected").children("ul").find(".selected").attr("value");
-                if(month>9){
-                }else{
-                    month = "0"+month
-                }
+                
                 var page = {
                     pageStart: 1,
                     pageEnd: QuestionInfo.Approve.PageSize * 1
                 };
+                
                 var keyword = {
                     Keyword: $("#txtSearch").val(),
-                    YearMonth:year+"-"+month,
+                    YearMonth:QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth,
                     ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
                 }
                QuestionInfo.Approve.Search(keyword, page);
-               QuestionInfo.Approve.GetApproveStatusCount(year);
+               QuestionInfo.Approve.GetApproveStatusCount(QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth);
             });
             $("#txtSearch").off("keypress").on("keypress",function(){
                 var page = {
@@ -78,11 +77,9 @@ QuestionInfo.Approve.Init = function init() {
         
                 }
                 QuestionInfo.Approve.Search(keyword, page);
-                QuestionInfo.Approve.GetApproveStatusCount(year);
+                QuestionInfo.Approve.GetApproveStatusCount(QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth);
             })
             $("#imgSearch").off("click").on("click",function(){
-                var year = $("#ulYearMenu").find(".selected").children("a").html();
-                alert(year)
                 var page = {
                     pageStart: 1,
                     pageEnd: QuestionInfo.Approve.PageSize * 1
@@ -93,7 +90,7 @@ QuestionInfo.Approve.Init = function init() {
                     ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
                 }
                 QuestionInfo.Approve.Search(keyword, page);
-                QuestionInfo.Approve.GetApproveStatusCount(year);
+                QuestionInfo.Approve.GetApproveStatusCount(QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth);
             }) 
             QuestionInfo.Approve.GetApproveStatusCount(Home.Year);
         }
@@ -105,32 +102,42 @@ QuestionInfo.Approve.YearInit = function year_init(){
     var str = "<li class='swift-edit'><i class='fa fa-edit'></i></li>";
     str +="<li><a href='javascript:void(0);' class='year'>全部</a></li>"
     str+="<li class='selected'>";
-    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year)+"</a>";
+    str+="<a href='javascript:void(0);' class='year' id='aYear"+temp_current_year+"'>"+(temp_current_year)+"</a>";
+    $("#ulYearMenu").off("click","#aYear"+temp_current_year).on("click","#aYear"+temp_current_year, QuestionInfo.Approve.YearClickEvent);
     str+="<ul class='month' value='"+(temp_current_year)+"'>";
     for(var j=1;j<(temp_current_month+1);j++){
-        str+="<li value='"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+        if (j == temp_current_month){
+            str+="<li value='"+j+"' id='liMonth"+temp_current_year+"-"+j+"' class='selected'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+        }else{
+            str+="<li value='"+j+"' id='liMonth"+temp_current_year+"-"+j+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
+        }
+        $("#ulYearMenu").off("click","#liMonth"+temp_current_year+"-"+j).on("click","#liMonth"+temp_current_year+"-"+j,QuestionInfo.Approve.SearchEvent);
     }
     str+="</ul>";
     for(var i=1;i<3;i++){
     str+="<li >";
-    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year-i)+"</a>";
+    str+="<a href='javascript:void(0);' id='aYear"+(temp_current_year-i)+"' class='year'>"+(temp_current_year-i)+"</a>";
+    $("#ulYearMenu").off("click","#aYear"+(temp_current_year-i)).on("click","#aYear"+(temp_current_year-i), QuestionInfo.Approve.YearClickEvent);
     str+="<ul class='month' value='"+(temp_current_year-i)+"'>";
         for(var k=1;k<13;k++){
-            str+="<li value='"+k+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
+            str+="<li value='"+k+"' id='liMonth"+(temp_current_year-i)+"-"+k+"'><a href='javascript:void(0);'><em class='s-dot'></em>"+k+"月</a></li>";
+            $("#ulYearMenu").off("click","#liMonth"+(temp_current_year-i)+"-"+k).on("click","#liMonth"+(temp_current_year-i)+"-"+k,QuestionInfo.Approve.SearchEvent);
         }
     str+="</ul>";
     str+="</li>";
     }
     $("#ulYearMenu").empty().append(str);
-    $(".year").off("click").on("click", QuestionInfo.Approve.YearClickEvent);
-    $(".month>li").off("click").on("click", function () {
-        $(this).addClass("selected").siblings().removeClass("selected");
+}
+QuestionInfo.Approve.SearchEvent = function SearchEvent(event){
+    $(this).addClass("selected").siblings().removeClass("selected");
         var year = $(this).parent().attr("value");
         var date = $(this).attr("value");
         if(date>9){
         }else{
             date = "0"+date
         }
+        QuestionInfo.Approve.TempYear=year;
+        QuestionInfo.Approve.TempMonth=date;
         var page = {
             pageStart: 1,
             pageEnd: QuestionInfo.Approve.PageSize * 1
@@ -141,15 +148,14 @@ QuestionInfo.Approve.YearInit = function year_init(){
             ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
         }
         QuestionInfo.Approve.Search(keyword, page);
-        QuestionInfo.Approve.GetApproveStatusCount(year);
-    });
+        QuestionInfo.Approve.GetApproveStatusCount(year+"-"+date);
 }
 //时间周年点击
 QuestionInfo.Approve.YearClickEvent = function YearClickEvent(event) {
     var $presentDot = $(this);
     $presentDot.parent().siblings().find("ul").hide();
     $presentDot.parent().addClass("selected").siblings().removeClass("selected");
-    $presentDot.siblings().show().find("li:eq(0)").addClass("selected").siblings().removeClass("selected");
+    $presentDot.siblings().show();
     
 }
 QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
@@ -274,7 +280,7 @@ QuestionInfo.Approve.Pass = function pass(){
         })).done(function(json){
            if(json.Result == true){
                $.Alert("保存成功",function(){
-                QuestionInfo.Approve.GetApproveStatusCount();
+                QuestionInfo.Approve.GetApproveStatusCount(QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth);
                    var page = {
                        pageStart: 1,
                        pageEnd: QuestionInfo.Approve.PageSize * 1
@@ -290,8 +296,8 @@ QuestionInfo.Approve.Pass = function pass(){
         })
     });
 }
-QuestionInfo.Approve.GetApproveStatusCount = function get_approve_status_count(year) {
-    $.SimpleAjaxPost("service/question/GetApproveStatusCount", true,JSON.stringify({Year:year})).done(function(json){
+QuestionInfo.Approve.GetApproveStatusCount = function get_approve_status_count(yearMonth) {
+    $.SimpleAjaxPost("service/question/GetApproveStatusCount", true,JSON.stringify({YearMonth:yearMonth})).done(function(json){
         var result = $.Deserialize(json.List);
         if (result != null) {
             $.each(result, function (index, item) {
@@ -333,7 +339,7 @@ QuestionInfo.Approve.Cancel = function cancel(){
      })).done(function(json){
         if(json.Result == true){
             $.Alert("保存成功",function(){
-                QuestionInfo.Approve.GetApproveStatusCount();
+                QuestionInfo.Approve.GetApproveStatusCount(QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth);
                 var page = {
                     pageStart: 1,
                     pageEnd: QuestionInfo.Approve.PageSize * 1

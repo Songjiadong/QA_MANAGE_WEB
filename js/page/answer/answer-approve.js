@@ -76,8 +76,8 @@ function listAccrodion() {
 } 
 //初始化回答审核数据
 AnswerInfo.Approve.InitApproveData = function init_approve_data() { 
-    var top = {
-        Top:1
+    var YearMonth = {
+        YearMonth:1
     }
     $.SimpleAjaxPost("service/answer/GetAnswerApproveStatistics", true , JSON.stringify(top),function (json) {
         var result = json; 
