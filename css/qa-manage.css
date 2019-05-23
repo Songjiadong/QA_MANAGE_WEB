@@ -1003,3 +1003,82 @@ a.files input {
     font-size: 16px;
     font-weight: bold;
 }
+.aq-list-title {
+    float: left;
+    color: #000;
+    font-size: 18px;
+    line-height: 1.5;
+}
+.aq-list-sort {
+    float: right;
+}
+.aq-list-sort a {
+    display: inline-block;
+    background-color: transparent;
+    color: #333;
+    font-size: 12px;
+    padding: 7px 10px;
+}
+.aq-list-top {
+    padding: 20px 30px;
+    border-bottom: 1px solid #ccc;
+    background-color: #fff;
+}
+.clear{
+    clear: both;
+}
+.message-list{
+    background-color: #FFF;
+}
+.message-item{
+    text-align: left;
+    padding: 20px 10px 10px 10px;
+    border-bottom: 1px dashed #ccc;
+}
+.message-left{
+    width: 70px;
+    height: 84px;
+    float: left;
+}
+.message-left img{
+    border-radius:50%;
+    width: 70px;
+    height: 70px;
+}
+.message-right{
+    float: right;
+    width: calc(100% - 90px);
+    height: 84px;
+}
+.message-top{
+    margin-top: 10px;
+}
+.message-top > div:first-child{
+    height: 18px;
+    width: 50px;
+    float: left;
+}
+.message-top > div:nth-child(2){
+    float: left;
+    width: calc(100% - 130px);
+    font-size: 14px;
+    color:#aaa;
+}
+.message-top > div:nth-child(3){
+    float: left;
+    width: 70px;
+    font-size: 12px;
+    color:#aaa;
+}
+
+.message-middle{
+    margin-top: 16px;
+    font-size: 16px;
+}
+.message-bottom{
+	text-align: right;
+	cursor: pointer;
+}
+.message-bottom img{
+    vertical-align: -6%;
+}

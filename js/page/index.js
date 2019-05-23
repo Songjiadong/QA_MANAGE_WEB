@@ -50,7 +50,21 @@
 		$(this).addClass("selected").siblings().removeClass("selected");
 		TagInfo.Init();
 	});
+	
+	$.SimpleAjaxPost("service/message/GetMySearchCount", true,JSON.stringify({
+        Keyword:""
+    })).done(function(json){
+		var result = json.Count;
+		if(result>0){
+			$("#spHasUnread").css("display","inline-block")
+		}
+	});
+	$("#aGoMessage").off("click").on("click",function(){
+		Message.List.Init()
+	});
 	$("#aLoginOut").off("click").on("click",User.Login.LoginOutEvent)
+	$.SetCookie("MegawiseID","admin");
+	$.SetCookie("MegawiseUserName","admin");
 });
 
 

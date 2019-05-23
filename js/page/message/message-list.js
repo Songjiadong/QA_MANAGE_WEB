@@ -6,7 +6,7 @@ Message.List.CurrentIndex = 0;
 Message.List.CanPageLoad = false;
 Message.List.OldDocumentHeight = 0;
 Message.List.Init = function init(){
-    $(".main-right").load(objPub.BaseUrl+"biz/main/message/message-list.html", function(response,status){
+    $("#sctMain").load(objPub.BaseUrl+"biz/message/message-list.html", function(response,status){
         if(status=="success"){
             var page = {
                 pageStart: 1,
@@ -17,6 +17,7 @@ Message.List.Init = function init(){
             }
             Message.List.Search(keyword, page);
             $(window).off("scroll").on("scroll", { WithTimeAxis: true ,FromPerson:false},Message.List.ScrollEvent);
+            $("#aSetAllReadType").off("click").on("click",Message.List.SetAllMessageEvent)
         }
     })
 }
@@ -82,7 +83,7 @@ Message.List.SearchBind = function search_bind(keyword, page) {
         var temp = "";
         if ($.isArray(result)==true && result.length>0) {
             $.each(result, function (index, item) {
-                temp+="<div class='message-item'>"
+                temp+="<div class='message-item' id='divMessageItem"+index+"'>"
                 temp+="<div class='message-left'>"
                 if(item.SenderUrl!=""){
                     temp+="<img src='"+item.SenderUrl+"'/>";
@@ -98,13 +99,18 @@ Message.List.SearchBind = function search_bind(keyword, page) {
                 temp+="<div>"+new Date(item.MessageTime).format("yyyy-MM-dd")+"</div>"
                 temp+="<div class='clear'></div>"
                 temp+="</div>"
-                temp+="<div class='message-bottom'>"
+                temp+="<div class='message-middle'>"
                 temp+="<img src='images/my-fav.png'/>"
                 temp+=item.MessageTip
                 temp+="</div>"
+                temp+="<div class='message-bottom'><a id='aMessageSetRead"+index+"'>设置为已阅读</a></div>"
                 temp+="</div>"
                 temp+="<div class='clear'></div>"
                 temp+="</div>"
+                $("#divMessageList").off("click","#aMessageSetRead"+index).on("click","#aMessageSetRead"+index,{
+                    ID:item.ID,
+                    Index:index,
+                },Message.List.SetMessageEvent)
             });
             $("#divMessageList").append(temp);
         }else{
@@ -116,4 +122,29 @@ Message.List.SearchBind = function search_bind(keyword, page) {
         }
 
     });
+}
+
+Message.List.SetMessageEvent = function SetMessageEvent(event){
+    var id = event.data.ID;
+    var index = event.data.Index;
+$.SimpleAjaxPost("service/message/SetReadMessage", true, 
+        JSON.stringify({
+           ID:id,
+           ReadStatus:objPub.ReadType.Read.toString(),
+        })).done(function(json){
+            if(json.Result == true){
+                $.Alert("已阅读",function(){
+                    $("#divMessageItem"+index).remove()
+                })
+            }
+        });
+}
+Message.List.SetAllMessageEvent = function SetAllMessageEvent(event){
+$.SimpleAjaxPost("service/message/SetReadAllMessage", true).done(function(json){
+            if(json.Result == true){
+                $.Alert("已阅读",function(){
+                    $("#divMessageList").remove()
+                })
+            }
+        });
 }

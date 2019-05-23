@@ -31,26 +31,27 @@ User.Login.LoginEvent = function LoginEvent(event){
                 UserCode:    $("#txtLoginUser").val(),
                 PlateSource: User.Login.WebType.User.toString(),
             })).done(function(json){
-                login_info = json.Info;
-                check_user_code = login_info.CheckUserCode
-                check_password = login_info.CheckPassword
-                is_disabled = login_info.IsDisabled
+                var user_login_info = json.Info;
+                var bool_list = $.Deserialize(user_login_info.BoolList.Object)
+                var check_user_code = bool_list.CheckUserCode
+                var check_password = bool_list.CheckPassword
+                var is_disabled = bool_list.IsDisabled
 
-                if(check_user_code == undefined){
+                if(check_user_code == "false"){
                     $("#txtUserCodeTip").show();
                     $("#txtUserCodeTip").html("账号错误");
                     return false;
-                }if(check_password == undefined){
+                }if(check_password == "false"){
                     $("#txtPasswordTip").html("密码错误")
                     $("#txtPasswordTip").show()
                     $("#txtUserCodeTip").hide()
                     return false;
-                }else if( is_disabled== true){
+                }else if(is_disabled== "true"){
                     $("#txtUserCodeTip").show()
                     $("#txtUserCodeTip").html("该用户未激活");
                     return false;
                 }else{
-                    window.location.href=objPub.BaseUrl;
+                    window.location.href=objPub.BaseUrl+"main.html";
                     
                 }
             })
@@ -61,7 +62,7 @@ User.Login.LoginOutEvent = function LoginOutEvent(event){
     $.Confirm({ content: "尊敬的用户" + objPub.UserName + "：您确定要退出登录吗?", width: "auto" }, function () {
         $.ClearCookie("MegawiseID");
         $.ClearCookie("MegawiseUserName");
-        window.location.href=objPub.BaseUrl+"login.html";
+        window.location.href=objPub.BaseUrl+"index.html";
     });
 }
 $(function () {

@@ -321,7 +321,7 @@ vertical-align: -5px;
 }
 .notice-dot {
 position: absolute;
-display: inline-block;
+display: none;
 width: 12px;
 height: 12px;
 background-color: #e60012;

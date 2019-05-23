@@ -76,3 +76,16 @@ window.objPub.YesNoType.prototype = {
 }
 
 window.objPub.YesNoType.registerEnum("window.objPub.YesNoType");
+///阅读类别枚举@start///
+window.objPub.ReadType = function () {
+    throw Error.notImplemented();
+}
+
+window.objPub.ReadType.prototype = {
+    //已读
+    Read: 0,
+    //未读
+    UnRead:1,
+}
+
+window.objPub.ReadType.registerEnum("window.objPub.ReadType");
