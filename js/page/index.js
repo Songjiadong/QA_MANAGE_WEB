@@ -63,8 +63,7 @@
 		Message.List.Init()
 	});
 	$("#aLoginOut").off("click").on("click",User.Login.LoginOutEvent)
-	$.SetCookie("MegawiseID","admin");
-	$.SetCookie("MegawiseUserName","admin");
+	
 });
 
 

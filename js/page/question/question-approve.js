@@ -47,24 +47,7 @@ QuestionInfo.Approve.Init = function init() {
             QuestionInfo.Approve.GetAllSubjectList();
             //时间轴
            
-            $(".content-tabs .content-tabs-item").off("click").on("click", function (event) {
-                $(".content-tabs-item").removeClass("selected");
-                
-                $(this).addClass("selected");
-                
-                var page = {
-                    pageStart: 1,
-                    pageEnd: QuestionInfo.Approve.PageSize * 1
-                };
-                
-                var keyword = {
-                    Keyword: $("#txtSearch").val(),
-                    YearMonth:QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth,
-                    ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
-                }
-               QuestionInfo.Approve.Search(keyword, page);
-               QuestionInfo.Approve.GetApproveStatusCount(QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth);
-            });
+            $(".content-tabs .content-tabs-item").off("click").on("click",QuestionInfo.Approve.ApproveTypeSearchEvent);
             $("#txtSearch").off("keypress").on("keypress",function(){
                 var page = {
                     pageStart: 1,
@@ -127,6 +110,20 @@ QuestionInfo.Approve.YearInit = function year_init(){
     str+="</li>";
     }
     $("#ulYearMenu").empty().append(str);
+}
+QuestionInfo.Approve.ApproveTypeSearchEvent = function ApproveTypeSearchEvent(event){
+    $(".content-tabs-item").removeClass("selected");
+    $(this).addClass("selected");
+    var page = {
+        pageStart: 1,
+        pageEnd: QuestionInfo.Approve.PageSize * 1
+    };
+    var keyword = {
+        Keyword: $("#txtSearch").val(),
+        YearMonth:year+"-"+date,
+        ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
+    }
+    QuestionInfo.Approve.Search(keyword, page);
 }
 QuestionInfo.Approve.SearchEvent = function SearchEvent(event){
     $(this).addClass("selected").siblings().removeClass("selected");
@@ -296,8 +293,8 @@ QuestionInfo.Approve.Pass = function pass(){
         })
     });
 }
-QuestionInfo.Approve.GetApproveStatusCount = function get_approve_status_count(yearMonth) {
-    $.SimpleAjaxPost("service/question/GetApproveStatusCount", true,JSON.stringify({YearMonth:yearMonth})).done(function(json){
+QuestionInfo.Approve.GetApproveStatusCount = function get_approve_status_count(year_month) {
+    $.SimpleAjaxPost("service/question/GetApproveStatusCount", true,JSON.stringify({YearMonth:year_month})).done(function(json){
         var result = $.Deserialize(json.List);
         if (result != null) {
             $.each(result, function (index, item) {
