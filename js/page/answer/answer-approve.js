@@ -26,7 +26,6 @@ AnswerInfo.Approve.Init = function init() {
             //风琴效果
             listAccrodion();
             //回答审核筛选框初始化
-            alert(Home.Year+"-"+Home.Month)
             AnswerInfo.Approve.InitApproveData(Home.Year+"-"+Home.Month); 
             // //设置时间轴显示
             AnswerInfo.Approve.YearInit();
