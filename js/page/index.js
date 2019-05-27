@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+	$.SetCookie("MegawiseID","admin");
 	//返回顶部
 	$(window).on("scroll",  function (event) {
 		if ($(this).scrollTop() >= 10) {
@@ -58,9 +59,6 @@
 		if(result>0){
 			$("#spHasUnread").css("display","inline-block")
 		}
-	});
-	$("#aGoMessage").off("click").on("click",function(){
-		Message.List.Init()
 	});
 	$("#aLoginOut").off("click").on("click",User.Login.LoginOutEvent)
 	

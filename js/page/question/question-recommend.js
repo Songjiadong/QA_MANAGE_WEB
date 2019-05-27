@@ -1,6 +1,6 @@
 ﻿QuestionInfo.Recommend = function () { }
 QuestionInfo.Recommend.registerClass("QuestionInfo.Recommend");
-QuestionInfo.Recommend.PageSize = 10;
+QuestionInfo.Recommend.PageSize = 5;
 QuestionInfo.Recommend.CoverUrl = "";
 //是否能页面加载
 QuestionInfo.Recommend.CanPageLoad = false;

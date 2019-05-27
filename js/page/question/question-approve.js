@@ -55,7 +55,7 @@ QuestionInfo.Approve.Init = function init() {
                 };
                 var keyword = {
                     Keyword: $("#txtSearch").val(),
-                    YearMonth:"2019-04",
+                    YearMonth:QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth,
                     ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
         
                 }
@@ -69,7 +69,7 @@ QuestionInfo.Approve.Init = function init() {
                 };
                 var keyword = {
                     Keyword: $("#txtSearch").val(),
-                    YearMonth:"2019-04",
+                    YearMonth:QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth,
                     ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
                 }
                 QuestionInfo.Approve.Search(keyword, page);
@@ -120,7 +120,7 @@ QuestionInfo.Approve.ApproveTypeSearchEvent = function ApproveTypeSearchEvent(ev
     };
     var keyword = {
         Keyword: $("#txtSearch").val(),
-        YearMonth:year+"-"+date,
+        YearMonth:QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth,
         ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
     }
     QuestionInfo.Approve.Search(keyword, page);

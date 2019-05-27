@@ -1,6 +1,6 @@
 ﻿AnswerInfo.Approve = function () { }
 AnswerInfo.Approve.registerClass("AnswerInfo.Approve");
-AnswerInfo.Approve.PageSize = 10;
+AnswerInfo.Approve.PageSize = 2;
 
 //是否能页面加载
 AnswerInfo.Approve.CanPageLoad = false;

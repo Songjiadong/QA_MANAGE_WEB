@@ -269,6 +269,7 @@ a.btn-view {
 }
 .answer-qa {
 	margin-top: 20px;
+	height:500px;
 }
 .answer-qa:last-child {
 	margin-bottom: 0;
@@ -1014,7 +1015,6 @@ a.files input {
 }
 .aq-list-sort a {
     display: inline-block;
-    background-color: transparent;
     color: #333;
     font-size: 12px;
     padding: 7px 10px;
@@ -1081,4 +1081,9 @@ a.files input {
 }
 .message-bottom img{
     vertical-align: -6%;
+}
+.btn{
+	background: #333;
+    color:#fff !important;
+	cursor:pointer;
 }
