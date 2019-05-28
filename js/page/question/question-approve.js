@@ -75,7 +75,7 @@ QuestionInfo.Approve.Init = function init() {
                 QuestionInfo.Approve.Search(keyword, page);
                 QuestionInfo.Approve.GetApproveStatusCount(QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth);
             }) 
-            QuestionInfo.Approve.GetApproveStatusCount(Home.Year);
+            QuestionInfo.Approve.GetApproveStatusCount(Home.Year+"-"+Home.Month);
         }
     });
 }
@@ -284,7 +284,7 @@ QuestionInfo.Approve.Pass = function pass(){
                    };
                    var keyword = {
                        Keyword: $("#txtSearch").val(),
-                       YearMonth:"2019-04",
+                       YearMonth:QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth,
                        ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
                    }
                    QuestionInfo.Approve.Search(keyword, page);
@@ -343,7 +343,7 @@ QuestionInfo.Approve.Cancel = function cancel(){
                 };
                 var keyword = {
                     Keyword: $("#txtSearch").val(),
-                    YearMonth:"2019-04",
+                    YearMonth:QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth,
                     ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
                 }
                 $("#txtApproveReason").val("");
@@ -361,7 +361,7 @@ QuestionInfo.Approve.GetAllSubjectList = function get_all_subject_list() {
      };
      var keyword = {
          Keyword: $("#txtSearch").val(),
-         YearMonth:"2019-04",
+         YearMonth:Home.Year+"-"+Home.Month,
          ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
      }
      QuestionInfo.Approve.Search(keyword, page);
