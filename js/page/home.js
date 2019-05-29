@@ -3,6 +3,7 @@ Home.registerClass("Home");
 Home.Year = "";
 Home.Month = ""; 
 Home.SubjectSltStr ="";
+Home.SubjectArray =[];
 Home.Top = 5;
 Home.Init= function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/home.html", function (respones, status) {
@@ -26,8 +27,8 @@ Home.Init= function init() {
             Home.MostQuestionUserBind();
             Home.MostPraiseUserBind();
             Home.MostAnswerUserBind();
-            Home.QaStatisticsBind("2019");
-            Home.UserVisitStatisticsBind();
+            Home.QaStatisticsBind(Home.Year);
+            
             //待审核问题页
             $("#todoQuestion").off("click").on('click', function () {
                 $("#liQuestionApproveList").trigger("click")
@@ -240,7 +241,7 @@ Home.UserVisitStatisticsBind = function user_visit_statistics_bind() {
             orient: 'vertical',
             bottom: 30,
             left: 10,
-            data: ['智能制造', '工业4.0', '机械重工', '机器人', '搜索引擎', '智能制造2', '工业4.02', '机械重工2', '机器人2', '搜索引擎2'],
+            data: Home.SubjectArray,
             height: 200,
             itemGap: 30
         },
@@ -253,7 +254,7 @@ Home.UserVisitStatisticsBind = function user_visit_statistics_bind() {
         xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30']
+            data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
         },
         yAxis: {
             type: 'value'
@@ -263,61 +264,61 @@ Home.UserVisitStatisticsBind = function user_visit_statistics_bind() {
                 name: '智能制造',
                 type: 'line',
                 stack: '总量',
-                data: [120, 132, 101, 134, 90, 230, 210, 260, 102, 274, 120, 132, 101, 134, 90, 230, 210, 260, 102, 274, 120, 132, 101, 134, 90, 230, 210, 260, 102, 274]
+                data: [120, 132, 101, 134, 90, 230, 210, 260, 102, 274, 120, 132]
             },
             {
                 name: '工业4.0',
                 type: 'line',
                 stack: '总量',
-                data: [220, 182, 191, 234, 290, 330, 310, 286, 265, 315, 220, 182, 191, 234, 290, 330, 310, 286, 265, 315, 220, 182, 191, 234, 290, 330, 310, 286, 265, 315]
+                data: [220, 182, 191, 234, 290, 330, 310, 286, 265, 315, 220, 182]
             },
             {
-                name: '机械重工',
+                name: '汽车行业',
                 type: 'line',
                 stack: '总量',
-                data: [150, 232, 201, 154, 190, 330, 410, 205, 355, 566, 150, 232, 201, 154, 190, 330, 410, 205, 355, 566, 150, 232, 201, 154, 190, 330, 410, 205, 355, 566]
+                data: [150, 232, 201, 154, 190, 330, 410, 205, 355, 566, 150, 232]
             },
             {
                 name: '机器人',
                 type: 'line',
                 stack: '总量',
-                data: [320, 332, 301, 334, 390, 330, 320, 258, 236, 400, 320, 332, 301, 334, 390, 330, 320, 258, 236, 400, 320, 332, 301, 334, 390, 330, 320, 258, 236, 400]
+                data: [320, 332, 301, 334, 390, 330, 320, 258, 236, 400, 320, 332]
             },
             {
-                name: '搜索引擎',
+                name: 'Go编程',
                 type: 'line',
                 stack: '总量',
-                data: [820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901]
+                data: [820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 820, 932]
             },
             {
-                name: '智能制造2',
+                name: '机器重工',
                 type: 'line',
                 stack: '总量',
-                data: [120, 132, 101, 134, 90, 230, 210, 260, 102, 274, 120, 132, 101, 134, 90, 230, 210, 260, 102, 274, 120, 132, 101, 134, 90, 230, 210, 260, 102, 274]
+                data: [120, 132, 101, 134, 90, 230, 210, 260, 102, 274, 120, 132]
             },
             {
-                name: '工业4.02',
+                name: '数据分析',
                 type: 'line',
                 stack: '总量',
-                data: [220, 182, 191, 234, 290, 330, 310, 286, 265, 315, 220, 182, 191, 234, 290, 330, 310, 286, 265, 315, 220, 182, 191, 234, 290, 330, 310, 286, 265, 315]
+                data: [220, 182, 191, 234, 290, 330, 310, 286, 265, 315, 220, 182]
             },
             {
-                name: '机械重工2',
+                name: '人工智能',
                 type: 'line',
                 stack: '总量',
-                data: [150, 232, 201, 154, 190, 330, 410, 205, 355, 566, 150, 232, 201, 154, 190, 330, 410, 205, 355, 566, 150, 232, 201, 154, 190, 330, 410, 205, 355, 566]
+                data: [150, 232, 201, 154, 190, 330, 410, 205, 355, 566, 150, 232]
             },
             {
-                name: '机器人2',
+                name: '数据采集',
                 type: 'line',
                 stack: '总量',
-                data: [320, 332, 301, 334, 390, 330, 320, 258, 236, 400, 320, 332, 301, 334, 390, 330, 320, 258, 236, 400, 320, 332, 301, 334, 390, 330, 320, 258, 236, 400]
+                data: [320, 332, 301, 334, 390, 330, 320, 258, 236, 400, 320, 332]
             },
             {
-                name: '搜索引擎2',
+                name: '大数据',
                 type: 'line',
                 stack: '总量',
-                data: [820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901]
+                data: [820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 820, 932]
             }
         ]
     };
@@ -431,8 +432,10 @@ Home.GetAllSubject = function get_all_subject(){
         var result = $.Deserialize(json.List);
         temp += "<option value=''>请选择</option>"
         $.each(result, function (index, item) {
-            temp += "<option value='"+item.ID+"'>"+item.Name+"</option>"
+            temp += "<option value='"+item.ID+"'>"+item.Name+"</option>";
+            Home.SubjectArray.push(item.Name);
         });
         Home.SubjectSltStr = temp;
+        Home.UserVisitStatisticsBind();
     })
 }

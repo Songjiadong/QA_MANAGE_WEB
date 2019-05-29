@@ -146,7 +146,7 @@ AnswerInfo.Recommend.Search = function search(keyword, page) {
         scrollTop: 0
     });
     AnswerInfo.Recommend.SearchBind(keyword, page,0);
-    $.SimpleAjaxPost("service/question/recommend/GetSearchCount", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) {
+    $.SimpleAjaxPost("service/answer/GetRecommendSearchCount", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) {
         var result = json.Count;
         if(keyword.IsRecommend == objPub.YesNoType.Yes.toString()){
             $("#divOfficialCount").html(result);
@@ -163,7 +163,7 @@ AnswerInfo.Recommend.Search = function search(keyword, page) {
 } 
 //搜索结果绑定
 AnswerInfo.Recommend.SearchBind = function search_bind(keyword, page,current_index) {
-    $.SimpleAjaxPost("service/question/recommend/Search", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) { 
+    $.SimpleAjaxPost("service/answer/RecommendSearch", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) { 
         var result =JSON.parse(json.List); 
             var temp = "";
         if (result != null) {
@@ -299,7 +299,7 @@ AnswerInfo.Recommend.SetOfficialEvent = function SetOfficialEvent(event){
 
 
 AnswerInfo.Recommend.GetOfficialAnswerCount = function search(keyword) {
-    $.SimpleAjaxPost("service/question/recommend/GetOfficialAnswerCount", true, JSON.stringify({ Keyword: keyword })).done(function (json) {
+    $.SimpleAjaxPost("service/question/GetOfficialAnswerCount", true, JSON.stringify({ Keyword: keyword })).done(function (json) {
         var result = json.Count;
         $("#divOfficialCount").html(result);
 

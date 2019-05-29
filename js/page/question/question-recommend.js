@@ -69,7 +69,7 @@ QuestionInfo.Recommend.YearClickEvent = function YearClickEvent(event) {
     });
 }
 QuestionInfo.Recommend.SearchBind = function SearchBind(keyword, page,current_index) {
-    $.SimpleAjaxPost("service/question/recommend/QuestionSearch", true, JSON.stringify({Keyword:keyword,Page:page}))
+    $.SimpleAjaxPost("service/question/RecommendSearch", true, JSON.stringify({Keyword:keyword,Page:page}))
         .done(function (json) {
             var result = $.Deserialize(json.List);
             var temp = "";
@@ -248,14 +248,13 @@ QuestionInfo.Recommend.SetRecommendEvent = function SetRecommendEvent(event){
         text="已取消对该问题的推荐";
         btn_text="<a href='javascript:;' id='aSetRecommend"+index+"'>未推荐</a>";
     }
-    $.SimpleAjaxPost("service/question/recommend/SetRecommend", true, 
+    $.SimpleAjaxPost("service/question/SetRecommend", true, 
     JSON.stringify({
         ID: id,
 		IsRecommend :is_recommend,
     })).done(function(json){
        if(json.Result == true){
            $.Alert(text,function(){
-            //QuestionInfo.Approve.GetApproveStatusCount();
             $("#aSetRecommend"+index).replaceWith(btn_text);
             $("#divQuestionRecommendList").off("click","#aSetRecommend"+index);
             $("#divQuestionRecommendList").on("click","#aSetRecommend"+index, {
@@ -273,7 +272,7 @@ QuestionInfo.Recommend.Search = function search(keyword, page) {
         scrollTop: 0
     });
     QuestionInfo.Recommend.SearchBind(keyword, page,0);
-    $.SimpleAjaxPost("service/question/recommend/GetQuestionSearchCount", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) {
+    $.SimpleAjaxPost("service/question/GetRecommendSearchCount", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) {
         var result = json.Count;
         if(keyword.IsRecommend == objPub.YesNoType.Yes.toString()){
             $("#divRecommendCount").html(result);
@@ -331,5 +330,5 @@ QuestionInfo.Recommend.ScrollEvent = function ScrollEvent(event) {
     }
 }
 QuestionInfo.Recommend.GetRecommendQuestionCount = function get_recommend_question_count(keyword) {
-   return $.SimpleAjaxPost("service/question/recommend/GetRecommendQuestionCount", true, JSON.stringify({ Keyword: keyword }));
+   return $.SimpleAjaxPost("service/question/GetRecommendQuestionCount", true, JSON.stringify({ Keyword: keyword }));
 } 
