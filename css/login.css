@@ -67,11 +67,13 @@ body{
     margin-top:8px;
     height: 20px;
     position: relative;
+    width:196px;
 }
 .login-input-user input{
     font-size: 14px;
     border:0;
     height:100%;
+    width:100%;
     border:0;
     vertical-align:4%;
 }

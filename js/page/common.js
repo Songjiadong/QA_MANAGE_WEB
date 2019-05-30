@@ -56,10 +56,12 @@ window.objPub.ApproveType = function () {
 }
 
 window.objPub.ApproveType.prototype = {
-    //长篇
-    Agree: 1,
-    //短篇
-    Refused:2,
+    //同意
+    Agree: 0,
+    //拒绝
+    Refused:1,
+    //等待
+    Wait:2,
 }
 
 window.objPub.ApproveType.registerEnum("window.objPub.ApproveType");

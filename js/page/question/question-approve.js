@@ -168,8 +168,11 @@ QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
                     temp += "<td>"+item.CreaterName+"</td>";
                     temp += "<td class='q-time'>"+new Date(item.CreateTime).format("yyyy-MM-dd")+"</td>";
                     temp +="<td class='to-ratify'>";
-                    temp +="<a id='aQuestionPass" + index + "' href='javascript:void(0);'>通过</a>";
-                    temp +="<a id='aQuestionRefuse" + index + "' href='javascript:void(0);' class='refuse'>拒绝</a>";
+                    if(item.ApproveStatus == objPub.ApproveType.Wait.toString()){
+                        temp +="<a id='aQuestionPass" + index + "' href='javascript:void(0);'>通过</a>";
+                        temp +="<a id='aQuestionRefuse" + index + "' href='javascript:void(0);' class='refuse'>拒绝</a>";
+                    }
+                    
                     temp +="</td>"
                     temp += "</tr>";
                     $(document).off("click", "#aQuestionPass" + index+",#aQuestionRefuse"+ index+",aQuestionAddTag"+ index);
@@ -354,7 +357,7 @@ QuestionInfo.Approve.Cancel = function cancel(){
 }
 QuestionInfo.Approve.GetAllSubjectList = function get_all_subject_list() {
    
-     $("#sltSubjectID").html(Home.SubjectSltStr);
+     $("#sltSubject").html(Home.SubjectSltStr);
      var page = {
          pageStart: 1,
          pageEnd: QuestionInfo.Approve.PageSize * 1

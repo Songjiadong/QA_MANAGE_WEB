@@ -19,8 +19,6 @@ Home.Init= function init() {
             Home.YearInit();
             Home.WaitApproveCountBind()
             $("#divCurrentDate").html(Home.Year+"-"+Home.Month)
-            //时间轴
-            $(".year").off("click").on("click", Home.YearClickEvent);
             Home.HotQuestionBind();
             Home.HotPraiseQuestionBind();
             //调好的
@@ -43,21 +41,17 @@ Home.Init= function init() {
 }
 Home.YearInit = function year_init(){
     var temp_current_year = parseInt(Home.Year);
-    var temp_current_month = parseInt(new Date().getMonth() + 1)
     var str = "<li class='swift-edit'><i class='fa fa-edit'></i></li>";
     str +="<li><a href='javascript:void(0);' class='year'>全部</a></li>"
     str+="<li class='selected'>";
-    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year)+"</a>";
+    str+="<a href='javascript:void(0);' class='year' value='"+temp_current_year+"'>"+(temp_current_year)+"</a>";
     for(var i=1;i<3;i++){
     str+="<li >";
-    str+="<a href='javascript:void(0);' class='year'>"+(temp_current_year-i)+"</a>";
+    str+="<a href='javascript:void(0);' class='year' value='"+(temp_current_year-i)+"'>"+(temp_current_year-i)+"</a>";
     str+="</li>";
     }
     $("#ulYearMenu").empty().append(str);
     $(".year").off("click").on("click",Home.YearClickEvent);
-    $(".month>li").off("click").on("click", function () {
-        Home.QaStatisticsBind();
-    });
 }
 //时间周年点击
 Home.YearClickEvent = function YearClickEvent(event) {
@@ -65,7 +59,8 @@ Home.YearClickEvent = function YearClickEvent(event) {
     $presentDot.parent().siblings().find("ul").hide();
     $presentDot.parent().addClass("selected").siblings().removeClass("selected");
     $presentDot.siblings().show().find("li:eq(0)").addClass("selected").siblings().removeClass("selected");
-    
+    var year = $(this).attr("value");
+    Home.UserVisitStatisticsBind(year);
 }
 Home.WaitApproveCountBind = function wait_approve_count_bind(){
     
@@ -82,17 +77,6 @@ Home.WaitApproveCountBind = function wait_approve_count_bind(){
        
         
      })
-}
-//时间周年点击
-Home.YearClickEvent = function YearClickEvent(event) {
-    var $presentDot = $(this);
-    $presentDot.parent().siblings().find("ul").hide();
-    $presentDot.parent().addClass("selected").siblings().removeClass("selected");
-    $presentDot.siblings().show().find("li:eq(0)").addClass("selected").siblings().removeClass("selected");
-    //月份切换
-    $(".month>li").on("click", function () {
-        $(this).addClass("selected").siblings().removeClass("selected");
-    });
 }
 //热赞回答绑定
 Home.HotPraiseQuestionBind = function hot_praise_question_bind() {
@@ -221,8 +205,35 @@ Home.MostPraiseUserBind = function most_praise_user_bind() {
     })
 }
 //用户访问量统计绑定
-Home.UserVisitStatisticsBind = function user_visit_statistics_bind() {
-    var colors = ['#5793f3', '#d14a61', '#675bba', '#61a0a8', '#d48265', '#2f4554', '#91c7ae'];
+Home.UserVisitStatisticsBind = function user_visit_statistics_bind(year) {
+    $.SimpleAjaxPost("service/question/UserVisitStatistics" , true, 
+     JSON.stringify({
+         Year:{Year:year},
+         Top:{Top:10}
+        })).done(function(json){
+            var temp_array=[];
+            var result = $.Deserialize(json.List);
+            $.each(result, function (index, item) {
+
+                temp_array.push({
+                    name: item.SubjectName,
+                    type: 'line',
+                    stack: '总量',
+                    data: [(item.January ==null?0:item.January), 
+                        (item.February ==null?0:item.February),
+                        (item.March ==null?0:item.March), 
+                        (item.April ==null?0:item.April), 
+                        (item.May ==null?0:item.April), 
+                        (item.June ==null?0:item.June), 
+                        (item.July ==null?0:item.July), 
+                        (item.August ==null?0:item.July), 
+                        (item.September ==null?0:item.September), 
+                        (item.Orctober ==null?0:item.Orctober), 
+                        (item.November ==null?0:item.November), 
+                        (item.December ==null?0:item.December)]
+                })
+            })
+            var colors = ['#5793f3', '#d14a61', '#675bba', '#61a0a8', '#d48265', '#2f4554', '#91c7ae'];
     //访问量
     var qaVisit = echarts.init($("#divUserVisitStatisitics")[0]);
     var optionVist = {
@@ -259,70 +270,12 @@ Home.UserVisitStatisticsBind = function user_visit_statistics_bind() {
         yAxis: {
             type: 'value'
         },
-        series: [
-            {
-                name: '智能制造',
-                type: 'line',
-                stack: '总量',
-                data: [120, 132, 101, 134, 90, 230, 210, 260, 102, 274, 120, 132]
-            },
-            {
-                name: '工业4.0',
-                type: 'line',
-                stack: '总量',
-                data: [220, 182, 191, 234, 290, 330, 310, 286, 265, 315, 220, 182]
-            },
-            {
-                name: '汽车行业',
-                type: 'line',
-                stack: '总量',
-                data: [150, 232, 201, 154, 190, 330, 410, 205, 355, 566, 150, 232]
-            },
-            {
-                name: '机器人',
-                type: 'line',
-                stack: '总量',
-                data: [320, 332, 301, 334, 390, 330, 320, 258, 236, 400, 320, 332]
-            },
-            {
-                name: 'Go编程',
-                type: 'line',
-                stack: '总量',
-                data: [820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 820, 932]
-            },
-            {
-                name: '机器重工',
-                type: 'line',
-                stack: '总量',
-                data: [120, 132, 101, 134, 90, 230, 210, 260, 102, 274, 120, 132]
-            },
-            {
-                name: '数据分析',
-                type: 'line',
-                stack: '总量',
-                data: [220, 182, 191, 234, 290, 330, 310, 286, 265, 315, 220, 182]
-            },
-            {
-                name: '人工智能',
-                type: 'line',
-                stack: '总量',
-                data: [150, 232, 201, 154, 190, 330, 410, 205, 355, 566, 150, 232]
-            },
-            {
-                name: '数据采集',
-                type: 'line',
-                stack: '总量',
-                data: [320, 332, 301, 334, 390, 330, 320, 258, 236, 400, 320, 332]
-            },
-            {
-                name: '大数据',
-                type: 'line',
-                stack: '总量',
-                data: [820, 932, 901, 934, 1290, 1330, 1320, 820, 932, 901, 820, 932]
-            }
-        ]
+        series: temp_array
     };
     qaVisit.setOption(optionVist);
+     });
+    
+    
 }
 Home.QaStatisticsBind = function qa_statistics_bind(year_month) {
     var question_data=[]
@@ -436,6 +389,6 @@ Home.GetAllSubject = function get_all_subject(){
             Home.SubjectArray.push(item.Name);
         });
         Home.SubjectSltStr = temp;
-        Home.UserVisitStatisticsBind();
+        Home.UserVisitStatisticsBind(Home.Year);
     })
 }

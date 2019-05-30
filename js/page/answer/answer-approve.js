@@ -1,6 +1,6 @@
 ﻿AnswerInfo.Approve = function () { }
 AnswerInfo.Approve.registerClass("AnswerInfo.Approve");
-AnswerInfo.Approve.PageSize = 2;
+AnswerInfo.Approve.PageSize = 10;
 
 //是否能页面加载
 AnswerInfo.Approve.CanPageLoad = false;
@@ -37,8 +37,8 @@ AnswerInfo.Approve.Init = function init() {
             keyword = {
                 Keyword: $("#txtSearch").val(),
                 ApproveStatus:AnswerInfo.ApproveStatus.SimpleApproveWaiting+"",
-                Year:AnswerInfo.Approve.TempYear,
-                Month: AnswerInfo.Approve.TempMonth  
+                Year:Home.Year,
+                Month: Home.Month  
             }
             AnswerInfo.Approve.Search(keyword, page);
             //滚轮事件
@@ -255,7 +255,7 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page,current_index
                     temp += "<div> "+answerItem.Remark+"</div>";
                     temp += "</div>";
                     temp += "</div>";
-                    temp += "<div class='answer-item-user-date'>" + answerItem.PublishTime + "</div>";
+                    temp += "<div class='answer-item-user-date'>"+new Date(answerItem.CreateTime).format("yyyy-MM-dd")+"</div>";
                     temp += "</div>";
                     //判断是短篇还是长篇：短篇直接显示，长篇需要处理
                     if (answerItem.PublishType == AnswerInfo.PublishInfoType.Long.toString()) {
