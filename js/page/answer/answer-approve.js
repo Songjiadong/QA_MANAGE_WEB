@@ -9,8 +9,8 @@ AnswerInfo.Approve.TotalCount = 0;
 //当前索引
 AnswerInfo.Approve.CurrentIndex = 0;
 AnswerInfo.Approve.OldDocumentHeight = 0;
-AnswerInfo.Approve.TempYear=Home.Year;
-AnswerInfo.Approve.TempMonth=Home.Month;
+AnswerInfo.Approve.TempYear="";
+AnswerInfo.Approve.TempMonth="";
 //分页垃圾处理
 AnswerInfo.Approve.GC = function GC() {
     AnswerInfo.Approve.TotalCount = 0;
@@ -22,7 +22,9 @@ AnswerInfo.Approve.GC = function GC() {
 AnswerInfo.Approve.Init = function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/answer/approve-list.html", function (respones, status) {
         if (status == "success") { 
-            $(".content-tabs .content-tabs-item").off("click").on("click", AnswerInfo.Approve.ApproveTypeSearchEvent);
+            $(".content-tabs-item").off("click").on("click", AnswerInfo.Approve.ApproveTypeSearchEvent);
+            AnswerInfo.Approve.TempYear=Home.Year;
+            AnswerInfo.Approve.TempMonth=Home.Month; 
             //风琴效果
             listAccrodion();
             //回答审核筛选框初始化
@@ -38,15 +40,11 @@ AnswerInfo.Approve.Init = function init() {
                 Keyword: $("#txtSearch").val(),
                 ApproveStatus:AnswerInfo.ApproveStatus.SimpleApproveWaiting+"",
                 Year:Home.Year,
-                Month: Home.Month  
+                Month: Home.Month,
             }
             AnswerInfo.Approve.Search(keyword, page);
             //滚轮事件
-            $(window).off("scroll").on("scroll", { WithTimeAxis: true ,FromPerson:false},objPub.ScorllEvent);
-            //测试设置审批
-            $(".refuse").off("click").on("click", {ID:"1",Status:AnswerInfo.ApproveStatus.SimpleApproveRefuse+""},AnswerInfo.Approve.SetApproveEvent)
-            //审核筛选框框点击事件
-            $(".content-tabs-item").off("click").on("click",{Page:page}, AnswerInfo.Approve.SearchClickEvent);
+          //  $(window).off("scroll").on("scroll", AnswerInfo.Approve.ScrollEvent);
             //搜索点击事件
             $("#imgSearch").off("click").on("click", {Page:page},AnswerInfo.Approve.SearchEvent);
             //搜索回车事件
@@ -55,6 +53,38 @@ AnswerInfo.Approve.Init = function init() {
         }
     });
 } 
+//滚轮事件（历史）
+AnswerInfo.Approve.ScrollEvent = function ScrollEvent(event) {
+    var keyword = {
+        Keyword: ""
+    }
+  
+    if (($(document).scrollTop() >= $(document).height() - $(window).height()) && AnswerInfo.Approve.OldDocumentHeight != $(document).height()) {
+        if (AnswerInfo.Approve.CanPageLoad == true) {
+            AnswerInfo.Approve.CurrentIndex = AnswerInfo.Approve.CurrentIndex + 1;
+            var page = {
+                pageStart: AnswerInfo.Approve.CurrentIndex * AnswerInfo.Approve.PageSize + 1,
+                pageEnd: (AnswerInfo.Approve.CurrentIndex + 1) * AnswerInfo.Approve.PageSize
+            };
+            AnswerInfo.Approve.SearchBind(keyword, page);
+            if (page.pageEnd >= AnswerInfo.Approve.TotalCount) {
+                AnswerInfo.Approve.CanPageLoad = false;
+            }
+            AnswerInfo.Approve.OldDocumentHeight = $(document).height();
+        } else {
+            if (AnswerInfo.Approve.TotalCount == 0) {
+                $(document).off("scroll");
+            } else if (parseInt(AnswerInfo.Approve.TotalCount / AnswerInfo.Approve.PageSize) > objPub.MinTipPage) {
+                $.Alert("这已经是最后一页了哦~");
+                $(document).off("scroll");
+                setTimeout(function () {
+                    $(".dialog-normal").dialog('close');
+                }, 2000);
+            }
+            AnswerInfo.Approve.OldDocumentHeight = 0;
+        }
+    }
+}
 //风琴效果
 function listAccrodion() {
     var presentQA = 0;
@@ -94,27 +124,14 @@ AnswerInfo.Approve.InitApproveData = function init_approve_data(year_month) {
         
     })
 }
-//搜索放大镜点击事件
-AnswerInfo.Approve.SearchEvent = function SearchEvent(event) {
-    var page = event.data.Page;
-    var approveStatusVal =$("div.content-tabs-item.selected").attr("data"); 
-    var keyword = {
-        Keyword: $("#txtSearch").val(),
-        ApproveStatus:approveStatusVal,
-        Year:AnswerInfo.Approve.TempYear,
-        Month: AnswerInfo.Approve.TempMonth 
-    }
-    AnswerInfo.Approve.Search(keyword, page);
-    AnswerInfo.Approve.InitApproveData(AnswerInfo.Approve.TempYear+"-"+AnswerInfo.Approve.TempMonth); 
-}
+
 //搜索框回车事件
 AnswerInfo.Approve.SearchKeyPressEvent = function SearchKeyPressEvent(event) {
     if (event.keyCode === 13) {
         var page = event.data.Page;
-        var approveStatusVal = $("div.content-tabs-item.selected").attr("data");
         var keyword = {
             Keyword: $("#txtSearch").val(),
-            ApproveStatus: approveStatusVal,
+            ApproveStatus: $("#divApproveStatusTab").find(".selected").attr("value"),
             Year: AnswerInfo.Approve.TempYear,
             Month: AnswerInfo.Approve.TempMonth
         }
@@ -129,7 +146,7 @@ AnswerInfo.Approve.YearInit = function year_init(){
     str+="<li class='selected'>";
     str+="<a href='javascript:void(0);' class='year' id='aYear"+temp_current_year+"'>"+(temp_current_year)+"</a>";
     $("#ulYearMenu").off("click","#aYear"+temp_current_year).on("click","#aYear"+temp_current_year, AnswerInfo.Approve.YearClickEvent);
-    str+="<ul class='month' value='"+(temp_current_year)+"'>";
+    str+="<ul class='month' style='display:block;' value='"+(temp_current_year)+"'>";
     for(var j=1;j<(temp_current_month+1);j++){
         if (j == temp_current_month){
             str+="<li value='"+j+"' id='liMonth"+temp_current_year+"-"+j+"' class='selected'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
@@ -157,17 +174,21 @@ AnswerInfo.Approve.SearchEvent = function SearchEvent(event){
     $(this).addClass("selected").siblings().removeClass("selected");
         var year = $(this).parent().attr("value");
         var date = $(this).attr("value");
+        if(date>9){
+        }else{
+            date = "0"+date
+        }
         AnswerInfo.Approve.TempYear=year;
         AnswerInfo.Approve.TempMonth=date;
         var page = {
-            PageStart: 1,
-            PageEnd: AnswerInfo.Approve.PageSize * 1
-        }; 
-        keyword = {
+            pageStart: 1,
+            pageEnd: AnswerInfo.Approve.PageSize * 1
+        };
+        var keyword = {
             Keyword: $("#txtSearch").val(),
-            ApproveStatus:AnswerInfo.ApproveStatus.SimpleApproveWaiting+"",
-            Year:year,
-            Month: date  
+            Year:AnswerInfo.Approve.TempYear,
+            Month:AnswerInfo.Approve.TempMonth,
+            ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value"),
         }
         AnswerInfo.Approve.Search(keyword, page);
         AnswerInfo.Approve.InitApproveData(year+"-"+date);
@@ -184,7 +205,7 @@ AnswerInfo.Approve.SearchClickEvent = function SearchClickEvent(event) {
     $(".content-tabs-item").removeClass("selected");
     $(this).addClass("selected");
     var page = event.data.Page;
-    var approveStatusVal =$("div.content-tabs-item.selected").attr("data"); 
+    var approveStatusVal =$("#divApproveStatusTab").find(".selected").attr("value"); 
     var keyword = {
         Keyword: $("#txtSearch").val(),
         ApproveStatus:approveStatusVal,
@@ -192,7 +213,6 @@ AnswerInfo.Approve.SearchClickEvent = function SearchClickEvent(event) {
         Month: AnswerInfo.Approve.TempMonth 
     }
     AnswerInfo.Approve.Search(keyword, page);
-    AnswerInfo.Approve.InitApproveData(AnswerInfo.Approve.TempYear+"-"+AnswerInfo.Approve.TempMonth); 
 }
 AnswerInfo.Approve.ApproveTypeSearchEvent = function RecommendTypeSearchEvent(event){
     $(".content-tabs-item").removeClass("selected");
@@ -203,10 +223,9 @@ AnswerInfo.Approve.ApproveTypeSearchEvent = function RecommendTypeSearchEvent(ev
     };
     var keyword = {
         Keyword: $("#txtSearch").val(),
-        SubjectID:$("#sltSubjectID").val(),
         Year:AnswerInfo.Approve.TempYear,
         Month:AnswerInfo.Approve.TempMonth,
-        IsRecommend:$("#divApproveStatusTab").find(".selected").attr("value")
+        ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value"),
     }
     AnswerInfo.Approve.Search(keyword, page);
 }
@@ -215,10 +234,9 @@ AnswerInfo.Approve.Search = function search(keyword, page) {
     $("html,body").animate({
         scrollTop: 0
     });
-    AnswerInfo.Approve.SearchBind(keyword, page,0);
-    $.SimpleAjaxPost("service/answer/GetApproveSearchCount", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) {
+    AnswerInfo.Approve.SearchBind(keyword, page);
+    $.SimpleAjaxPost("service/answer/GetApproveSearchCount", true, JSON.stringify({Keyword:keyword,Page:page })).done(function (json) {
         var result = json.Count;
-        $("#divWaitApproveNum").html(result);
         AnswerInfo.Approve.TotalCount = result;
         if (result > AnswerInfo.Approve.PageSize) {
             AnswerInfo.Approve.CanPageLoad = true;
@@ -227,13 +245,13 @@ AnswerInfo.Approve.Search = function search(keyword, page) {
         });
 } 
 //搜索结果绑定
-AnswerInfo.Approve.SearchBind = function search_bind(keyword, page,current_index) {
-    $.SimpleAjaxPost("service/answer/ApproveSearch", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) { 
+AnswerInfo.Approve.SearchBind = function search_bind(keyword, page) {
+    $.SimpleAjaxPost("service/answer/ApproveSearch", true, JSON.stringify({Keyword:keyword,Page:page})).done(function (json) { 
         var result =JSON.parse( json.List); 
             var temp = "";
         if (result != null) {
             $.each(result, function (index, item) { 
-                var Index =parseInt(current_index *AnswerInfo.Approve.PageSize) + index;
+                var Index =parseInt(AnswerInfo.Approve.CurrentIndex *AnswerInfo.Approve.PageSize) + index;
                 temp += "<div class='answer-qa'>";
                 temp += "<div class='answer-question'>";
                 temp += "<div class='question-title' id='divQuestionTitle'>" + item.QuestionTitle + "</div>";
@@ -303,7 +321,7 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page,current_index
                     temp += "</div>";
                     temp += "</div>";
                     temp += "</div>"; 
-                    
+                    temp += "</div>"; 
                     $(document).off("click", "#aAgreeApprove" + Index+answerIndex).on("click", "#aAgreeApprove" + Index+answerIndex, { 
                         ID: answerItem.AnswerID,
                         QuestionID:item.QuestionID,
@@ -322,7 +340,7 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page,current_index
                         }, AnswerInfo.Approve.SetApproveEvent);
                 })
             })
-            if (current_index == 0) {
+            if (page.pageStart == 1) {
                 $("#divAnswerList").empty().append(temp);
             } else {
                 $("#divAnswerList").append(temp);
@@ -379,35 +397,6 @@ AnswerInfo.Approve.SetApproveEvent = function SetApproveEvent(event) {
     })
 }
 
-//滚轮事件
-AnswerInfo.Approve.ScrollEvent = function ScrollEvent(event) {
-    var date_view = event.data.DateView;
-    if (($(document).scrollTop() >= $(document).height() - $(window).height()) && AnswerInfo.Approve.OldDocumentHeight != $(document).height()) {
-        if (AnswerInfo.Approve.CanPageLoad == true) {
-            AnswerInfo.Approve.CurrentIndex = AnswerInfo.Approve.CurrentIndex + 1;
-            var page = {
-                pageStart: AnswerInfo.Approve.CurrentIndex * AnswerInfo.Approve.PageSize + 1,
-                pageEnd: (AnswerInfo.Approve.CurrentIndex + 1) * AnswerInfo.Approve.PageSize
-            };
-            AnswerInfo.Approve.SearchBind(date_view, page, AnswerInfo.Approve.CurrentIndex);
-            if (page.pageEnd >= AnswerInfo.Approve.TotalCount) {
-                AnswerInfo.Approve.CanPageLoad = false;
-            }
-            AnswerInfo.Approve.OldDocumentHeight = $(document).height();
-        } else {
-            if (AnswerInfo.Approve.TotalCount == 0) {
-                $(document).off("scroll");
-            } else if (parseInt(AnswerInfo.Approve.TotalCount / AnswerInfo.Approve.PageSize) > objPub.MinTipPage) {
-                $.Alert("这已经是最后一页了哦~");
-                $(document).off("scroll");
-                setTimeout(function () {
-                    $(".dialog-normal").dialog('close');
-                }, 2000);
-            }
-            AnswerInfo.Approve.OldDocumentHeight = 0;
-        }
-    }
-}
 //处理answer的富文本
 AnswerInfo.Approve.DealContent = function deal_content(publishInfoType,detailContent,isDraft) {
     var result = detailContent;

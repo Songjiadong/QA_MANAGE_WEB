@@ -145,7 +145,7 @@ AnswerInfo.Recommend.Search = function search(keyword, page) {
     $("html,body").animate({
         scrollTop: 0
     });
-    AnswerInfo.Recommend.SearchBind(keyword, page,0);
+    AnswerInfo.Recommend.SearchBind(keyword, page);
     $.SimpleAjaxPost("service/answer/GetRecommendSearchCount", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) {
         var result = json.Count;
         if(keyword.IsRecommend == objPub.YesNoType.Yes.toString()){
@@ -162,13 +162,13 @@ AnswerInfo.Recommend.Search = function search(keyword, page) {
         });
 } 
 //搜索结果绑定
-AnswerInfo.Recommend.SearchBind = function search_bind(keyword, page,current_index) {
+AnswerInfo.Recommend.SearchBind = function search_bind(keyword, page) {
     $.SimpleAjaxPost("service/answer/RecommendSearch", true, JSON.stringify({ Keyword: keyword, Page: page })).done(function (json) { 
         var result =JSON.parse(json.List); 
             var temp = "";
         if (result != null) {
             $.each(result, function (index, item) { 
-                var Index =parseInt(current_index *AnswerInfo.Recommend.PageSize) + index;
+                var Index =parseInt(AnswerInfo.Recommend.CurrentIndex *AnswerInfo.Recommend.PageSize) + index;
                 var official_count = 0;
                 $.each(item.AnswerList, function (officialIndex, officialItem) {  
                     if(officialItem.IsOfficial == objPub.YesNoType.Yes.toString()){

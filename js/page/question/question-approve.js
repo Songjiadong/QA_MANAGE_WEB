@@ -1,14 +1,24 @@
 ﻿QuestionInfo.Approve = function () { }
 QuestionInfo.Approve.registerClass("QuestionInfo.Approve");
-QuestionInfo.Approve.PageSize = 10;
+//是否能页面加载
+QuestionInfo.Approve.CanPageLoad = false;
+//记录总数
+QuestionInfo.Approve.TotalCount = 0;
+//当前索引
+QuestionInfo.Approve.CurrentIndex = 0;
+QuestionInfo.Approve.OldDocumentHeight = 0;
+
+QuestionInfo.Approve.PageSize = 5;
 QuestionInfo.Approve.TagStr = "";
-QuestionInfo.Approve.TempYear=Home.Year;
-QuestionInfo.Approve.TempMonth=Home.Month;
+QuestionInfo.Approve.TempYear="";
+QuestionInfo.Approve.TempMonth="";
 //问题审批初始化
 QuestionInfo.Approve.Init = function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/question/approve-list.html", function (respones, status) {
         if (status == "success") {
-            QuestionInfo.Approve.YearInit()
+            QuestionInfo.Approve.YearInit();
+            QuestionInfo.Approve.TempYear=Home.Year;
+            QuestionInfo.Approve.TempMonth=Home.Month;  
             $("#divRefuseDialog").dialog({
                 resizable: false,
                 width: 450,
@@ -48,36 +58,40 @@ QuestionInfo.Approve.Init = function init() {
             //时间轴
            
             $(".content-tabs .content-tabs-item").off("click").on("click",QuestionInfo.Approve.ApproveTypeSearchEvent);
-            $("#txtSearch").off("keypress").on("keypress",function(){
-                var page = {
-                    pageStart: 1,
-                    pageEnd: QuestionInfo.Approve.PageSize * 1
-                };
-                var keyword = {
-                    Keyword: $("#txtSearch").val(),
-                    YearMonth:QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth,
-                    ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
-        
-                }
-                QuestionInfo.Approve.Search(keyword, page);
-                QuestionInfo.Approve.GetApproveStatusCount(QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth);
-            })
-            $("#imgSearch").off("click").on("click",function(){
-                var page = {
-                    pageStart: 1,
-                    pageEnd: QuestionInfo.Approve.PageSize * 1
-                };
-                var keyword = {
-                    Keyword: $("#txtSearch").val(),
-                    YearMonth:QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth,
-                    ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
-                }
-                QuestionInfo.Approve.Search(keyword, page);
-                QuestionInfo.Approve.GetApproveStatusCount(QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth);
-            }) 
+            $("#txtSearch").off("keypress").on("keypress",QuestionInfo.Approve.KeyPressEvent)
+            $("#imgSearch").off("click").on("click",QuestionInfo.Approve.SearchClickEvent) 
             QuestionInfo.Approve.GetApproveStatusCount(Home.Year+"-"+Home.Month);
         }
     });
+}
+QuestionInfo.Approve.SearchClickEvent = function SearchClickEvent(event){
+    var page = {
+        pageStart: 1,
+        pageEnd: QuestionInfo.Approve.PageSize * 1
+    };
+    var keyword = {
+        Keyword: $("#txtSearch").val(),
+        YearMonth:QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth,
+        ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
+    }
+    QuestionInfo.Approve.Search(keyword, page,0);
+    QuestionInfo.Approve.GetApproveStatusCount(QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth);
+}
+QuestionInfo.Approve.KeyPressEvent = function KeyPressEvent(event){
+    if (event.keyCode == 13) { 
+        var page = {
+            pageStart: 1,
+            pageEnd: QuestionInfo.Approve.PageSize * 1
+        };
+        var keyword = {
+            Keyword: $("#txtSearch").val(),
+            YearMonth:QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth,
+            ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
+
+        }
+        QuestionInfo.Approve.Search(keyword, page);
+        QuestionInfo.Approve.GetApproveStatusCount(QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth);
+    }
 }
 QuestionInfo.Approve.YearInit = function year_init(){
     var temp_current_year = parseInt(Home.Year);
@@ -87,7 +101,7 @@ QuestionInfo.Approve.YearInit = function year_init(){
     str+="<li class='selected'>";
     str+="<a href='javascript:void(0);' class='year' id='aYear"+temp_current_year+"'>"+(temp_current_year)+"</a>";
     $("#ulYearMenu").off("click","#aYear"+temp_current_year).on("click","#aYear"+temp_current_year, QuestionInfo.Approve.YearClickEvent);
-    str+="<ul class='month' value='"+(temp_current_year)+"'>";
+    str+="<ul class='month' style='display:block;' value='"+(temp_current_year)+"'>";
     for(var j=1;j<(temp_current_month+1);j++){
         if (j == temp_current_month){
             str+="<li value='"+j+"' id='liMonth"+temp_current_year+"-"+j+"' class='selected'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";
@@ -162,6 +176,7 @@ QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
             var temp = "";
             if (result != null) {
                 $.each(result, function (index, item) {
+                    var Index =parseInt(QuestionInfo.Approve.CurrentIndex *AnswerInfo.Approve.PageSize) + index;
                     temp += "<tr><td>";
                     temp += "<div class='question-title'>"+item.Title+"</div>";
                     temp += "<div class='question-describe'>"+item.Content+"</div></td>";
@@ -207,27 +222,46 @@ QuestionInfo.Approve.Search = function search(keyword, page) {
             var result = json.Count;
             //$(".tabs-num").html(result)
             if (result != 0 && result != null) {
-                $("#divQuestionApproveListPage").wPaginate("destroy").wPaginate({
-                    theme: "grey",
-                    page: '5,10,20',
-                    total: result,
-                    index: parseInt(page.pageStart) - 1,
-                    limit: QuestionInfo.Approve.PageSize,
-                    ajax: true,
-                    pid: "divQuestionApproveListPage",
-                    url: function (i) {
-                        var page = {
-                            pageStart: i * this.settings.limit + 1,
-                            pageEnd: (i + 1) * this.settings.limit
-                        };
-                        QuestionInfo.Approve.SearchBind(keyword, page);
-                    }
-                });
+                $("#divWaitApproveNum").html(result);
+                QuestionInfo.Approve.TotalCount = result;
+                if (result > QuestionInfo.Approve.PageSize) {
+                    QuestionInfo.Approve.CanPageLoad = true;
+                    $(document).off("scroll").on("scroll", { DateView: keyword }, QuestionInfo.Approve.ScrollEvent);
+                }
             }
             else {
                 $("#divQuestionApproveListPage").wPaginate("destroy");
             }
         });
+}
+//滚轮事件
+QuestionInfo.Approve.ScrollEvent = function ScrollEvent(event) {
+    var date_view = event.data.DateView;
+    if (($(document).scrollTop() >= $(document).height() - $(window).height()) && QuestionInfo.Approve.OldDocumentHeight != $(document).height()) {
+        if (QuestionInfo.Approve.CanPageLoad == true) {
+            QuestionInfo.Approve.CurrentIndex = QuestionInfo.Approve.CurrentIndex + 1;
+            var page = {
+                pageStart: QuestionInfo.Approve.CurrentIndex * QuestionInfo.Approve.PageSize + 1,
+                pageEnd: (QuestionInfo.Approve.CurrentIndex + 1) * QuestionInfo.Approve.PageSize
+            };
+            QuestionInfo.Approve.SearchBind(date_view, page);
+            if (page.pageEnd >= QuestionInfo.Approve.TotalCount) {
+                QuestionInfo.Approve.CanPageLoad = false;
+            }
+            QuestionInfo.Approve.OldDocumentHeight = $(document).height();
+        } else {
+            if (QuestionInfo.Approve.TotalCount == 0) {
+                $(document).off("scroll");
+            } else if (parseInt(QuestionInfo.Approve.TotalCount / QuestionInfo.Approve.PageSize) > objPub.MinTipPage) {
+                $.Alert("这已经是最后一页了哦~");
+                $(document).off("scroll");
+                setTimeout(function () {
+                    $(".dialog-normal").dialog('close');
+                }, 2000);
+            }
+            QuestionInfo.Approve.OldDocumentHeight = 0;
+        }
+    }
 }
 QuestionInfo.Approve.GC = function gc(){
     QuestionInfo.Approve.GetAllTagList()
@@ -269,7 +303,7 @@ QuestionInfo.Approve.Pass = function pass(){
         $.SimpleAjaxPost("service/question/SetApprove", true, 
         JSON.stringify({
            ID:id,
-           ApproveStatus:"0",
+           ApproveStatus:objPub.ApproveType.Agree.toString(),
            SubjectID:$("#sltSubject").val(),
            SubjectName:$("#sltSubject option:selected").text(),
            ApproveRemark:"同意",
@@ -320,6 +354,9 @@ QuestionInfo.Approve.CancelEvent = function CancelEvent(event){
     })
     $("#divRefuseDialog").dialog("open")
 }
+QuestionInfo.Approve.SetApproveRevoke = function set_approve_revoke(){
+
+}
 QuestionInfo.Approve.Cancel = function cancel(){
     var id = $("#divRefuseDialog").data("ID");
     var index = $("#divRefuseDialog").data("Index");
@@ -329,7 +366,7 @@ QuestionInfo.Approve.Cancel = function cancel(){
     $.SimpleAjaxPost("service/question/SetApprove", true, 
      JSON.stringify({
         ID:id,
-        ApproveStatus:"1",
+        ApproveStatus:objPub.ApproveType.Refused.toString(),
         SubjectID:"",
         SubjectName:"",
         ApproveRemark:$("#txtApproveReason").val(),

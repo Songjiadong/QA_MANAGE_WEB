@@ -91,7 +91,7 @@ TagInfo.Search = function Search(keyword, page) {
     $.SimpleAjaxPost("service/user/tag/GetManageSearchCount", true, JSON.stringify({ Keyword: keyword, Page: page }))
         .done(function (json) {
             var result = json.Count;
-            alert(result);
+
             $("#spnTagCount").html(result);
             if (result != 0 && result != null) {
                 $("#ulTagListPage").wPaginate("destroy").wPaginate({
