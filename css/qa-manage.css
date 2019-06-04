@@ -159,6 +159,7 @@ table tr td:first-child {
 }
 .question-describe {
 	color: #999;
+
 }
 .to-ratify a {
 	display: inline-block;
@@ -303,6 +304,7 @@ a.btn-view {
 	border-bottom: 1px dashed #ccc;
 	margin-top: 50px;
 	padding: 0 5px;
+	height: 500px;
 }
 .answer-item-user-info {
     float: left;

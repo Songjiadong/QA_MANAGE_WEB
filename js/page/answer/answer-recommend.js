@@ -80,7 +80,7 @@ AnswerInfo.Recommend.YearInit = function year_init(){
     str+="<li class='selected'>";
     str+="<a href='javascript:void(0);' id='aYear"+temp_current_year+"' class='year'>"+(temp_current_year)+"</a>";
     $("#ulYearMenu").off("click","#aYear"+temp_current_year).on("click","#aYear"+temp_current_year, AnswerInfo.Recommend.YearClickEvent);
-    str+="<ul class='month' value='"+(temp_current_year)+"'>";
+    str+="<ul class='month' style='display:block;' value='"+(temp_current_year)+"'>";
     for(var j=1;j<(temp_current_month+1);j++){
         if (j == temp_current_month){
             str+="<li value='"+j+"' id='liMonth"+temp_current_year+"-"+j+"' class='selected'><a href='javascript:void(0);'><em class='s-dot'></em>"+j+"月</a></li>";

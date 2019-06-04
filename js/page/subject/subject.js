@@ -131,7 +131,7 @@ SubjectInfo.UpdateEvent = function UpdateEvent(event){
     $("#divSubjectInfoEditDialog").dialog("open");
     $("#divSubjectInfoEditDialog").data("ID",id);
     SubjectInfo.GetSubjectDetailInfo(id).done(function(json){
-        var result = json.SubjectInfo
+        var result = json.Info
         $("#txtSubjectCode").val(result.Code);
         $("#txtSubjectName").val(result.Name);
         $("#divLogoView").html("<img src='"+objPub.BaseUrl+result.Logo+"' width='50' height='50'/>");

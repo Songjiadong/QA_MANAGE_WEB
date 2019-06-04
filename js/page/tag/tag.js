@@ -1,12 +1,14 @@
 ﻿TagInfo = function () { }
 TagInfo.registerClass("TagInfo");
 TagInfo.PageSize = 10;
-TagInfo.LogoUrl="";
 //初始化
 TagInfo.Init = function init() {
     $("#sctMain").load(objPub.BaseUrl+"biz/tag.html", function (respones, status) {
         if (status == "success") {
             $("#aAddTag").off("click").on("click",TagInfo.AddEvent);
+            $("#txtColor").colorpicker({
+                defaultPalette: 'web'
+            });
             $("#aAllReomoveTag").off("click").on("click", TagInfo.AllRemoveEvent);
             var page = {
                 PageStart: 1,
@@ -35,14 +37,12 @@ TagInfo.Init = function init() {
                     }
                 }
             });
-            $("#fmTagLogoUpload").off("change").on("change", TagInfo.UploadLogoEvent);
         }
     });
 }
 //垃圾回收
 TagInfo.GC=function gc(){
     $("#txtTagCode,#txtTagName").val("");
-    TagInfo.LogoUrl = "";
 }
 //搜索回车事件
 TagInfo.SearchKeyPressEvent = function SearchKeyPressEvent(event) {
@@ -116,27 +116,7 @@ TagInfo.Search = function Search(keyword, page) {
             }
         });
 }
-//上传附件
-TagInfo.UploadLogoEvent = function UploadLogoEvent(event){
-    var $fm = $("#fmTagLogoUpload");
-    var $file = $(event.target).val();
-    if ($file != "") {
-        //附件上传
-        $fm.ajaxSubmit({
-            url: objPub.BaseUrl+"service/user/tag/UploadLogo",
-            type: "post",
-            dataType: "json",
-            timeout: 600000,
-            success: function (data, textStatus) {
-                TagInfo.LogoUrl = data.Result 
-              
-            },
-            error: function (data, status, e) {
-                console.log("上传失败，错误信息：" + e);
-            }
-        });
-    }
-}
+
 //新增标签
 TagInfo.AddEvent = function AddEvent(event) {
     $("#divTagInfoEditDialog").data("ID","").dialog("open");
@@ -199,8 +179,7 @@ TagInfo.Submit = function submit() {
         ID: id,
         Code:$("#txtTagCode").val(),
         Name:tagName,
-        Color:"",
-        Logo: TagInfo.LogoUrl,
+        Color:$("#txtColor").val(),
         CreaterID:objPub.UserID,
         CreaterName:objPub.UserName
     })).done(function (json) {

@@ -8,17 +8,19 @@ QuestionInfo.Approve.TotalCount = 0;
 QuestionInfo.Approve.CurrentIndex = 0;
 QuestionInfo.Approve.OldDocumentHeight = 0;
 
-QuestionInfo.Approve.PageSize = 5;
+QuestionInfo.Approve.PageSize = 3;
 QuestionInfo.Approve.TagStr = "";
 QuestionInfo.Approve.TempYear="";
 QuestionInfo.Approve.TempMonth="";
+
 //问题审批初始化
 QuestionInfo.Approve.Init = function init() {
+    QuestionInfo.Approve.TempYear=Home.Year;
+    QuestionInfo.Approve.TempMonth=Home.Month; 
     $("#sctMain").load(objPub.BaseUrl + "biz/question/approve-list.html", function (respones, status) {
         if (status == "success") {
             QuestionInfo.Approve.YearInit();
-            QuestionInfo.Approve.TempYear=Home.Year;
-            QuestionInfo.Approve.TempMonth=Home.Month;  
+            QuestionInfo.Approve.GC();
             $("#divRefuseDialog").dialog({
                 resizable: false,
                 width: 450,
@@ -53,6 +55,7 @@ QuestionInfo.Approve.Init = function init() {
                     }
                 }
             });
+            $(document).off("scroll").on("scroll",  QuestionInfo.Approve.ScrollEvent);
             QuestionInfo.Approve.GetAllTagList()
             QuestionInfo.Approve.GetAllSubjectList();
             //时间轴
@@ -64,7 +67,15 @@ QuestionInfo.Approve.Init = function init() {
         }
     });
 }
+QuestionInfo.Approve.GC = function gc(){
+    QuestionInfo.Approve.CanPageLoad = false;
+    QuestionInfo.Approve.TotalCount = 0;
+    QuestionInfo.Approve.CurrentIndex = 0;  
+    QuestionInfo.Approve.OldDocumentHeight = 0;
+     
+}
 QuestionInfo.Approve.SearchClickEvent = function SearchClickEvent(event){
+    QuestionInfo.Approve.CurrentIndex = 0; 
     var page = {
         pageStart: 1,
         pageEnd: QuestionInfo.Approve.PageSize * 1
@@ -79,6 +90,8 @@ QuestionInfo.Approve.SearchClickEvent = function SearchClickEvent(event){
 }
 QuestionInfo.Approve.KeyPressEvent = function KeyPressEvent(event){
     if (event.keyCode == 13) { 
+        //QuestionInfo.Approve.GC();
+        QuestionInfo.Approve.CurrentIndex = 0;  
         var page = {
             pageStart: 1,
             pageEnd: QuestionInfo.Approve.PageSize * 1
@@ -184,34 +197,43 @@ QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
                     temp += "<td class='q-time'>"+new Date(item.CreateTime).format("yyyy-MM-dd")+"</td>";
                     temp +="<td class='to-ratify'>";
                     if(item.ApproveStatus == objPub.ApproveType.Wait.toString()){
-                        temp +="<a id='aQuestionPass" + index + "' href='javascript:void(0);'>通过</a>";
-                        temp +="<a id='aQuestionRefuse" + index + "' href='javascript:void(0);' class='refuse'>拒绝</a>";
+                        temp +="<a id='aQuestionPass" + Index + "' href='javascript:void(0);'>通过</a>";
+                        temp +="<a id='aQuestionRefuse" + Index + "' href='javascript:void(0);' class='refuse'>拒绝</a>";
+                        $("#tbQuestionApproveList").off("click", "#aQuestionPass" + Index+",#aQuestionRefuse"+ Index+",aQuestionAddTag"+ Index);
+                        $("#tbQuestionApproveList").on("click", "#aQuestionPass" + Index, { 
+                            ID: item.ID,
+                            Index:Index,
+                            Title:item.Title,
+                            CreaterID:item.CreaterID,
+                            CreaterName:item.CreaterName
+                        }, QuestionInfo.Approve.PassEvent);
+                        $(document).on("click", "#aQuestionRefuse" + Index, { 
+                            ID: item.ID,
+                            Index:Index, 
+                            Title:item.Title,
+                            CreaterID:item.CreaterID,
+                            CreaterName:item.CreaterName
+                            }, QuestionInfo.Approve.CancelEvent);
+                    }else{
+                        temp +="<a id='aQuestionRevoke" + Index + "' href='javascript:void(0);' class='refuse'>撤销</a>";
+                        $("#tbQuestionApproveList").off("click","#aQuestionRevoke"+ Index).
+                        on("click","#aQuestionRevoke"+ Index,{ID:item.ID},QuestionInfo.Approve.SetApproveRevokeEvent)
                     }
                     
                     temp +="</td>"
                     temp += "</tr>";
-                    $(document).off("click", "#aQuestionPass" + index+",#aQuestionRefuse"+ index+",aQuestionAddTag"+ index);
-                    
-                    $(document).on("click", "#aQuestionPass" + index, { 
-                        ID: item.ID,
-                        Index:index,
-                        Title:item.Title,
-                        CreaterID:item.CreaterID,
-                        CreaterName:item.CreaterName
-                    }, QuestionInfo.Approve.PassEvent);
-                    $(document).on("click", "#aQuestionRefuse" + index, { 
-                        ID: item.ID,
-                        Index:index, 
-                        Title:item.Title,
-                        CreaterID:item.CreaterID,
-                        CreaterName:item.CreaterName
-                        }, QuestionInfo.Approve.CancelEvent);
-                    
                 });
-                $("#tbQuestionApproveList").empty().append(temp);
+                if(page.pageStart == 1){
+                    $("#tbQuestionApproveList").empty().append(temp);
+                }else{
+                    $("#tbQuestionApproveList").append(temp);
+                }
+                
             }
             else {
-                $("#tbQuestionApproveList").empty().append("<tr><td colspan='4' style='text-align:center;'>暂无待处理的数据</td></tr>");
+                if(page.pageStart == 1){
+                    $("#tbQuestionApproveList").empty().append("<tr><td colspan='4' style='text-align:center;'>暂无待处理的数据</td></tr>");
+                }                
             }
         });
 }
@@ -226,25 +248,29 @@ QuestionInfo.Approve.Search = function search(keyword, page) {
                 QuestionInfo.Approve.TotalCount = result;
                 if (result > QuestionInfo.Approve.PageSize) {
                     QuestionInfo.Approve.CanPageLoad = true;
-                    $(document).off("scroll").on("scroll", { DateView: keyword }, QuestionInfo.Approve.ScrollEvent);
+                    
                 }
             }
-            else {
-                $("#divQuestionApproveListPage").wPaginate("destroy");
-            }
+            
         });
 }
 //滚轮事件
 QuestionInfo.Approve.ScrollEvent = function ScrollEvent(event) {
-    var date_view = event.data.DateView;
     if (($(document).scrollTop() >= $(document).height() - $(window).height()) && QuestionInfo.Approve.OldDocumentHeight != $(document).height()) {
+        
         if (QuestionInfo.Approve.CanPageLoad == true) {
             QuestionInfo.Approve.CurrentIndex = QuestionInfo.Approve.CurrentIndex + 1;
+            
             var page = {
                 pageStart: QuestionInfo.Approve.CurrentIndex * QuestionInfo.Approve.PageSize + 1,
                 pageEnd: (QuestionInfo.Approve.CurrentIndex + 1) * QuestionInfo.Approve.PageSize
             };
-            QuestionInfo.Approve.SearchBind(date_view, page);
+            var keyword = {
+                Keyword: $("#txtSearch").val(),
+                YearMonth:QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth,
+                ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
+            }
+            QuestionInfo.Approve.SearchBind(keyword, page);
             if (page.pageEnd >= QuestionInfo.Approve.TotalCount) {
                 QuestionInfo.Approve.CanPageLoad = false;
             }
@@ -354,8 +380,27 @@ QuestionInfo.Approve.CancelEvent = function CancelEvent(event){
     })
     $("#divRefuseDialog").dialog("open")
 }
-QuestionInfo.Approve.SetApproveRevoke = function set_approve_revoke(){
-
+QuestionInfo.Approve.SetApproveRevokeEvent = function SetApproveRevokeEvent(event){
+    $.Confirm({ content: "您确定要撤销对该问题的操作吗?", width: "auto" }, function () {
+        $.SimpleAjaxPost("service/question/QuestionRevoke", true, JSON.stringify({ID:event.data.ID})).done(function(json){
+            if(json.Result == true){
+                $.Alert("操作成功",function(){
+                    QuestionInfo.Approve.GetApproveStatusCount(QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth);
+                    var page = {
+                        pageStart: 1,
+                        pageEnd: QuestionInfo.Approve.PageSize * 1
+                    };
+                    var keyword = {
+                        Keyword: $("#txtSearch").val(),
+                        YearMonth:QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth,
+                        ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
+                    }
+                    $("#txtApproveReason").val("");
+                   QuestionInfo.Approve.Search(keyword, page);
+                })
+            }
+        });
+    });
 }
 QuestionInfo.Approve.Cancel = function cancel(){
     var id = $("#divRefuseDialog").data("ID");
@@ -375,7 +420,7 @@ QuestionInfo.Approve.Cancel = function cancel(){
         CreaterName:creater_name,
      })).done(function(json){
         if(json.Result == true){
-            $.Alert("保存成功",function(){
+            $.Alert("操作成功",function(){
                 QuestionInfo.Approve.GetApproveStatusCount(QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth);
                 var page = {
                     pageStart: 1,
@@ -393,7 +438,6 @@ QuestionInfo.Approve.Cancel = function cancel(){
      })
 }
 QuestionInfo.Approve.GetAllSubjectList = function get_all_subject_list() {
-   
      $("#sltSubject").html(Home.SubjectSltStr);
      var page = {
          pageStart: 1,

@@ -1,6 +1,6 @@
 ﻿AnswerInfo.Approve = function () { }
 AnswerInfo.Approve.registerClass("AnswerInfo.Approve");
-AnswerInfo.Approve.PageSize = 10;
+AnswerInfo.Approve.PageSize = 3;
 
 //是否能页面加载
 AnswerInfo.Approve.CanPageLoad = false;
@@ -17,6 +17,7 @@ AnswerInfo.Approve.GC = function GC() {
     AnswerInfo.Approve.CurrentIndex = 0;
     AnswerInfo.Approve.CanPageLoad = false;
     AnswerInfo.Approve.OldDocumentHeight = 0;
+    
 }
 //初始化
 AnswerInfo.Approve.Init = function init() {
@@ -24,7 +25,8 @@ AnswerInfo.Approve.Init = function init() {
         if (status == "success") { 
             $(".content-tabs-item").off("click").on("click", AnswerInfo.Approve.ApproveTypeSearchEvent);
             AnswerInfo.Approve.TempYear=Home.Year;
-            AnswerInfo.Approve.TempMonth=Home.Month; 
+            AnswerInfo.Approve.TempMonth=Home.Month;
+            AnswerInfo.Approve.GC()
             //风琴效果
             listAccrodion();
             //回答审核筛选框初始化
@@ -44,7 +46,7 @@ AnswerInfo.Approve.Init = function init() {
             }
             AnswerInfo.Approve.Search(keyword, page);
             //滚轮事件
-          //  $(window).off("scroll").on("scroll", AnswerInfo.Approve.ScrollEvent);
+            $(window).off("scroll").on("scroll", AnswerInfo.Approve.ScrollEvent);
             //搜索点击事件
             $("#imgSearch").off("click").on("click", {Page:page},AnswerInfo.Approve.SearchEvent);
             //搜索回车事件
@@ -55,8 +57,11 @@ AnswerInfo.Approve.Init = function init() {
 } 
 //滚轮事件（历史）
 AnswerInfo.Approve.ScrollEvent = function ScrollEvent(event) {
-    var keyword = {
-        Keyword: ""
+    keyword = {
+        Keyword: $("#txtSearch").val(),
+        ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value"),
+        Year:AnswerInfo.Approve.TempYear,
+        Month: AnswerInfo.Approve.TempMonth,
     }
   
     if (($(document).scrollTop() >= $(document).height() - $(window).height()) && AnswerInfo.Approve.OldDocumentHeight != $(document).height()) {
@@ -128,14 +133,19 @@ AnswerInfo.Approve.InitApproveData = function init_approve_data(year_month) {
 //搜索框回车事件
 AnswerInfo.Approve.SearchKeyPressEvent = function SearchKeyPressEvent(event) {
     if (event.keyCode === 13) {
+        AnswerInfo.Approve.GC();
+        alert(AnswerInfo.Approve.TempMonth)
         var page = event.data.Page;
+        
         var keyword = {
             Keyword: $("#txtSearch").val(),
             ApproveStatus: $("#divApproveStatusTab").find(".selected").attr("value"),
             Year: AnswerInfo.Approve.TempYear,
-            Month: AnswerInfo.Approve.TempMonth
+            Month: AnswerInfo.Approve.TempMonth,
+            
         }
         AnswerInfo.Approve.Search(keyword, page);
+        AnswerInfo.Approve.InitApproveData(AnswerInfo.Approve.TempYear+"-"+AnswerInfo.Approve.TempMonth); 
     }
 }  
 AnswerInfo.Approve.YearInit = function year_init(){
@@ -178,6 +188,7 @@ AnswerInfo.Approve.SearchEvent = function SearchEvent(event){
         }else{
             date = "0"+date
         }
+        AnswerInfo.Approve.GC();
         AnswerInfo.Approve.TempYear=year;
         AnswerInfo.Approve.TempMonth=date;
         var page = {
@@ -240,7 +251,8 @@ AnswerInfo.Approve.Search = function search(keyword, page) {
         AnswerInfo.Approve.TotalCount = result;
         if (result > AnswerInfo.Approve.PageSize) {
             AnswerInfo.Approve.CanPageLoad = true;
-            $(document).off("scroll").on("scroll", { DateView: keyword }, AnswerInfo.Approve.ScrollEvent);
+        }else{
+            AnswerInfo.Approve.CanPageLoad = false;
         }
         });
 } 
@@ -289,26 +301,26 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page) {
                             temp += "<img src='" + imgSrc + "'>";
                             temp += "</div>"; 
                             // temp += "<div class='aq-item-content-text'>" + answerItem.AnswerContent + "</div>"; 
-                            temp += "<div class='aq-item-content-text' id='divAnswerContent"+Index+answerIndex+"'>" + content + "</div>";
+                            temp += "<div class='aq-item-content-text' id='divAnswerContent"+Index+"-"+answerIndex+"'>" + content + "</div>";
                             temp += "</div>";
                         } else {
                             temp += "<div class='aq-item-content'>"+content+"</div>";
                         }
                         temp += "<div class='aq-item-options clear-fix'>";
                         temp += "<div class='ad-item-all'>";
-                        temp += "<a href='javascript:;'id='aReadDetail" + Index + answerIndex + "'>阅读全文</a>";
-                        temp += "<a style='display: none' href='javascript:;'id='ahideDetail" + Index + answerIndex + "'>收起全文</a>";
+                        temp += "<a href='javascript:;'id='aReadDetail" + Index +"-"+ answerIndex + "'>阅读全文</a>";
+                        temp += "<a style='display: none' href='javascript:;'id='ahideDetail" + Index+"-"+ answerIndex + "'>收起全文</a>";
                         temp += "</div>";  
                         
-                        $(document).off("click", "#aReadDetail" + Index + answerIndex).on("click", "#aReadDetail" + Index + answerIndex, { Content: answerItem.AnswerContent }, function (event) {
-                            $("#divAnswerContent" + Index + answerIndex).html(event.data.Content); 
-                            $("#aReadDetail" + Index + answerIndex).hide();
-                            $("#ahideDetail" + Index + answerIndex).show();
+                        $(document).off("click", "#aReadDetail" + Index +"-"+ answerIndex).on("click", "#aReadDetail" + Index+"-" + answerIndex, { Content: answerItem.AnswerContent }, function (event) {
+                            $("#divAnswerContent" + Index +"-"+ answerIndex).html(event.data.Content); 
+                            $("#aReadDetail" + Index +"-" + answerIndex).hide();
+                            $("#ahideDetail" + Index +"-"+ answerIndex).show();
                         });
-                        $(document).off("click", "#ahideDetail" + Index + answerIndex).on("click", "#ahideDetail" + Index + answerIndex, { Content: content }, function (event) {
-                            $("#divAnswerContent" + Index + answerIndex).html(event.data.Content); 
-                            $("#ahideDetail" + Index + answerIndex).hide();
-                            $("#aReadDetail" + Index + answerIndex).show();
+                        $(document).off("click", "#ahideDetail" + Index +"-"+ answerIndex).on("click", "#ahideDetail" + Index +"-"+ answerIndex, { Content: content }, function (event) {
+                            $("#divAnswerContent" + Index +"-"+ answerIndex).html(event.data.Content); 
+                            $("#ahideDetail" + Index +"-"+ answerIndex).hide();
+                            $("#aReadDetail" + Index +"-"+ answerIndex).show();
                         });
                     } else {
                         //短篇
@@ -316,39 +328,78 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page) {
                         temp += "<div class='aq-item-options clear-fix'>"; 
                     } 
                     temp += "<div class='to-ratify'>";
-                    temp += "<a href='javascript:;' id='aAgreeApprove"+Index+answerIndex+"'>通过</a>";
-                    temp += "<a href='javascript:;' class='refuse' id='aRefuseApprove"+Index+answerIndex+"'>拒绝</a>";
-                    temp += "</div>";
-                    temp += "</div>";
-                    temp += "</div>"; 
-                    temp += "</div>"; 
-                    $(document).off("click", "#aAgreeApprove" + Index+answerIndex).on("click", "#aAgreeApprove" + Index+answerIndex, { 
-                        ID: answerItem.AnswerID,
-                        QuestionID:item.QuestionID,
-                        Title:item.QuestionTitle,
-                        Status: AnswerInfo.ApproveStatus.SimpleApproveAgree,
-                        CreaterID:answerItem.CreaterID,
-                        CreaterName:answerItem.CreaterName
-                    }, AnswerInfo.Approve.SetApproveEvent);
-                    $(document).off("click", "#aRefuseApprove" + Index+answerIndex).on("click", "#aRefuseApprove" + Index+answerIndex, {
-                         ID: answerItem.AnswerID,
-                         QuestionID:item.QuestionID,
-                         Title:item.QuestionTitle,
-                         Status:AnswerInfo.ApproveStatus.SimpleApproveRefuse,
-                         CreaterID:answerItem.CreaterID,
-                         CreaterName:answerItem.CreaterName
+                    if(answerItem.ApproveStatus == objPub.ApproveType.Wait.toString()){
+                        temp += "<a href='javascript:;' id='aAgreeApprove"+Index+"-"+answerIndex+"'>通过</a>";
+                        temp += "<a href='javascript:;' class='refuse' id='aRefuseApprove"+Index+"-"+answerIndex+"'>拒绝</a>";
+                        $("#divAnswerList").off("click", "#aAgreeApprove" + Index+"-"+answerIndex).on("click", "#aAgreeApprove" + Index+"-"+answerIndex, { 
+                            ID: answerItem.AnswerID,
+                            QuestionID:item.QuestionID,
+                            Title:item.QuestionTitle,
+                            Status: AnswerInfo.ApproveStatus.SimpleApproveAgree,
+                            CreaterID:answerItem.CreaterID,
+                            CreaterName:answerItem.CreaterName
                         }, AnswerInfo.Approve.SetApproveEvent);
+                        $("#divAnswerList").off("click", "#aRefuseApprove" + Index+"-"+answerIndex).on("click", "#aRefuseApprove" + Index+"-"+answerIndex, {
+                             ID: answerItem.AnswerID,
+                             QuestionID:item.QuestionID,
+                             Title:item.QuestionTitle,
+                             Status:AnswerInfo.ApproveStatus.SimpleApproveRefuse,
+                             CreaterID:answerItem.CreaterID,
+                             CreaterName:answerItem.CreaterName
+                            }, AnswerInfo.Approve.SetApproveEvent);
+                    }else{
+                            temp +="<a id='aAnswerRevoke" + Index+"-"+answerIndex + "' href='javascript:void(0);' class='refuse'>撤销</a>";
+                            $("#divAnswerList").off("click","#aAnswerRevoke"+ Index+"-"+answerIndex).
+                            on("click","#aAnswerRevoke"+ Index+"-"+answerIndex,{
+                                ID:answerItem.ID,
+                                Title:item.QuestionTitle,
+                            },AnswerInfo.Approve.SetApproveRevokeEvent)
+                    }
+                    temp += "</div>";
+                    temp += "</div>";
+                    temp += "</div>"; 
+                    temp += "</div>"; 
+                    
                 })
             })
-            if (page.pageStart == 1) {
+            if (page.PageStart == 1) {
                 $("#divAnswerList").empty().append(temp);
             } else {
                 $("#divAnswerList").append(temp);
             } 
         } else {
-            $("#divAnswerList").empty().append("<div style='text-align:center;'>暂无待处理的数据</div>");
+            if (page.PageStart == 1) {
+                $("#divAnswerList").empty().append("<div style='text-align:center;'>暂无待处理的数据</div>");
+            }else{
+
+            }
         }
     })
+}
+AnswerInfo.Approve.SetApproveRevokeEvent = function SetApproveRevokeEvent(event){
+    $.Confirm({ content: "您确定要撤销对该问题的操作吗?", width: "auto" }, function () {
+        $.SimpleAjaxPost("service/answer/AnswerRevoke", true, JSON.stringify({
+            ID:event.data.ID,
+            Title:event.data.Title,
+        })).done(function(json){
+            if(json.Result == true){
+                $.Alert("操作成功",function(){
+                    AnswerInfo.Approve.InitApproveData(AnswerInfo.Approve.TempYear+"-"+AnswerInfo.Approve.TempMonth)
+                    var page = {
+                        pageStart: 1,
+                        pageEnd: AnswerInfo.Approve.PageSize * 1
+                    };
+                    var keyword = {
+                        Keyword: $("#txtSearch").val(),
+                        YearMonth:AnswerInfo.Approve.TempYear+"-"+AnswerInfo.Approve.TempMonth,
+                        ApproveStatus:$("#divApproveStatusTab").find(".selected").attr("value")
+                    }
+                    $("#txtApproveReason").val("");
+                    AnswerInfo.Approve.Search(keyword, page);
+                })
+            }
+        });
+    });
 }
 //阅读全文 
 AnswerInfo.Approve.GoDetailEvent = function GoDetailEvent(event) { 

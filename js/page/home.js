@@ -19,6 +19,7 @@ Home.Init= function init() {
             Home.YearInit();
             Home.WaitApproveCountBind()
             $("#divCurrentDate").html(Home.Year+"-"+Home.Month)
+            Home.QuestionAnswerCountInit(Home.Year);
             Home.HotQuestionBind();
             Home.HotPraiseQuestionBind();
             //调好的
@@ -277,6 +278,34 @@ Home.UserVisitStatisticsBind = function user_visit_statistics_bind(year) {
     
     
 }
+Home.QuestionAnswerCountInit = function question_answer_count_init(year){
+    $.SimpleAjaxPost("service/question/GetAnswerAndQuestionCountList" , true, 
+     JSON.stringify({Year:year})).done(function(json){
+        var temp_question_count=""
+        var temp_answer_count=""
+        var temp_question_pass_count=""
+        var temp_answer_pass_count=""
+        var result = $.Deserialize(json.List);
+        $.each(result, function (index, item) {
+            if(item.Key =="QuestionCount"){
+                temp_question_count = item.Count;
+                $("#divQuestionCount").html(temp_question_count);
+            }else if(item.Key =="QuestionPassCount"){
+                temp_question_pass_count = item.Count
+                
+            }else if(item.Key =="AnswerCount"){
+                temp_answer_count = item.Count
+                $("#divAnswerCount").html(temp_answer_count);
+            }else{
+                temp_answer_pass_count = item.Count
+                
+            }
+        });
+
+        $("#divQuestionPassRate").html(objPub.GetPercent(temp_question_pass_count,temp_question_count));
+        $("#divAnswerPassRate").html(objPub.GetPercent(temp_answer_pass_count,temp_answer_count));
+     });
+}
 Home.QaStatisticsBind = function qa_statistics_bind(year_month) {
     var question_data=[]
     var answer_data=[]
@@ -331,7 +360,7 @@ Home.QaStatisticsBind = function qa_statistics_bind(year_month) {
                         }
                     }
                 },
-                data: ["2018-1", "2018-2", "2018-3", "2018-4", "2018-5", "2018-6", "2018-7", "2018-8", "2018-9", "2018-10", "2018-11", "2018-12"]
+                data: [Home.Year+"-1", Home.Year+"-2", Home.Year+"-3", Home.Year+"-4", Home.Year+"-5", Home.Year+"-6", Home.Year+"-7", Home.Year+"-8", Home.Year+"-9", Home.Year+"-10", Home.Year+"-11", Home.Year+"-12"]
             },
             {
                 type: 'category',
@@ -352,7 +381,7 @@ Home.QaStatisticsBind = function qa_statistics_bind(year_month) {
                         }
                     }
                 },
-                data: ["2018-1", "2018-2", "2018-3", "2018-4", "2018-5", "2018-6", "2018-7", "2018-8", "2018-9", "2018-10", "2018-11", "2018-12"]
+                data: [Home.Year+"-1", Home.Year+"-2", Home.Year+"-3", Home.Year+"-4", Home.Year+"-5", Home.Year+"-6", Home.Year+"-7", Home.Year+"-8", Home.Year+"-9", Home.Year+"-10", Home.Year+"-11", Home.Year+"-12"]
             }
         ],
         yAxis: [
