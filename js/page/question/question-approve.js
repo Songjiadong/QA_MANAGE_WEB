@@ -438,7 +438,7 @@ QuestionInfo.Approve.Cancel = function cancel(){
      })
 }
 QuestionInfo.Approve.GetAllSubjectList = function get_all_subject_list() {
-     $("#sltSubject").html(Home.SubjectSltStr);
+     $("#sltSubject").html(Home.SubjectSltStr).selectmenu({ appendTo: "#divSelectSubject", width: 100 });
      var page = {
          pageStart: 1,
          pageEnd: QuestionInfo.Approve.PageSize * 1

@@ -33,7 +33,7 @@ TagInfo.Init = function init() {
                     },
                     "确　定": function () {
                         TagInfo.Submit()
-                        $(this).dialog("close");
+                        
                     }
                 }
             });
@@ -42,7 +42,7 @@ TagInfo.Init = function init() {
 }
 //垃圾回收
 TagInfo.GC=function gc(){
-    $("#txtTagCode,#txtTagName").val("");
+    $("#txtTagCode,#txtTagName,#txtColor").val("");
 }
 //搜索回车事件
 TagInfo.SearchKeyPressEvent = function SearchKeyPressEvent(event) {
@@ -175,6 +175,18 @@ TagInfo.DeleteEvent = function DeleteEvent(event) {
 TagInfo.Submit = function submit() {
     var id = ($("#divTagInfoEditDialog").data("ID") == "" ? $.NewGuid() : $("#divTagInfoEditDialog").data("ID"))
     var tagName=$("#txtTagName").val();
+    if($("#txtTagCode").val() == ""){
+        $.Alert("功能代码不能为空");
+        return ;
+    }
+    if(tagName == ""){
+        $.Alert("功能名称不能为空");
+        return ;
+    }
+    if($("#txtColor").val() == ""){
+        $.Alert("请选择颜色");
+        return ;
+    }
     $.SimpleAjaxPost("service/user/tag/Submit", true, JSON.stringify({
         ID: id,
         Code:$("#txtTagCode").val(),
@@ -185,6 +197,7 @@ TagInfo.Submit = function submit() {
     })).done(function (json) {
         var result=json.Result;
         if(result == true){
+            $("#divTagInfoEditDialog").dialog("close");
             $.Alert({content:"保存标签"+tagName+"成功",width:"auto"}, function () {
                 TagInfo.GC();
                 var page = {

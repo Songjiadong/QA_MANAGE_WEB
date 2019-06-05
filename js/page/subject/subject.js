@@ -33,7 +33,7 @@ SubjectInfo.Init = function init() {
                     },
                     "确　定": function () {
                         SubjectInfo.Submit()
-                        $(this).dialog("close");
+                        
                     }
                 }
             });
@@ -80,6 +80,14 @@ SubjectInfo.AddEvent = function AddEvent(event) {
 SubjectInfo.Submit = function submit(){
     var id = ($("#divSubjectInfoEditDialog").data("ID") == "" ? $.NewGuid() : $("#divSubjectInfoEditDialog").data("ID"))
     var subject_name=$("#txtSubjectName").val();
+    if($("#txtSubjectCode").val()==""){
+        $.Alert("分类编码不能为空");
+        return ;
+    }
+    if($("#txtSubjectName").val()==""){
+        $.Alert("分类名称不能为空");
+        return ;
+    }
     $.SimpleAjaxPost("service/question/subject/Submit", true, 
      JSON.stringify({
         ID:id,
@@ -90,6 +98,7 @@ SubjectInfo.Submit = function submit(){
          var result=json.Result;
         if(result == true){
             $.Alert("保存"+subject_name+"主题成功",function(){
+                $("#divSubjectInfoEditDialog").dialog("close");
                 SubjectInfo.GC();
                 var page = {
                     pageStart: 1,

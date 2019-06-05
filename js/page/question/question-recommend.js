@@ -15,7 +15,7 @@ QuestionInfo.Recommend.TempMonth=Home.Month;
 QuestionInfo.Recommend.Init = function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/question/recommend-question.html", function (respones, status) {
         if (status == "success") {
-            $("#sltSubjectID").html(Home.SubjectSltStr)
+            $("#sltSubjectID").html(Home.SubjectSltStr).selectmenu({ appendTo: "#divSelectSubject", width: 100 });
                 //时间轴
                 QuestionInfo.Recommend.YearInit();
             $(".content-tabs .content-tabs-item").off("click").on("click", QuestionInfo.Recommend.RecommendTypeSearchEvent);
