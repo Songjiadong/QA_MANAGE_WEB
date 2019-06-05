@@ -248,3 +248,32 @@ window.objPub.GetPercent = function get_percent(num, total) {
     total = parseFloat(total);
     return total <= 0 ? "0%" : (Math.round(num / total * 10000) / 100.00)+"%";
 }
+window.objPub.DealTime = function deal_time(date){
+    var deal_str=""
+    var temp_date = new Date(date).format("yyyy-MM-dd HH:mm:ss");
+    var myDate = new Date();
+    var mytime=myDate.format("HH:mm:ss"); 
+    var temp_now = Home.Year+"-"+Home.Month+"-"+Home.Day;  
+    var date_array = temp_date.split(" ")
+    if(date_array[0]==temp_now){
+        var hms_now_arr = mytime.split(":");
+        var hms_date_arr = date_array[1].split(":");
+        if(hms_now_arr[0] == hms_date_arr[0]){
+            if(Math.abs(parseInt(hms_now_arr[1])==parseInt(hms_date_arr[1]))){
+                deal_str="1分钟以内"
+            }else if(Math.abs(parseInt(hms_now_arr[1])-parseInt(hms_date_arr[1]))<10){
+                
+                deal_str="10分钟以内"
+            }else{
+                deal_str="1小时以内"
+            }
+        }else if((parseInt(hms_now_arr[0])-parseInt(hms_date_arr[0]))<2){
+            deal_str="1小时以内"
+        }else{
+            deal_str = new Date(date).format("yyyy-MM-dd");
+        }
+    }else{
+        deal_str = new Date(date).format("yyyy-MM-dd");
+    }
+    return deal_str;
+}

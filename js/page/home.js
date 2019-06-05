@@ -2,6 +2,7 @@
 Home.registerClass("Home");
 Home.Year = "";
 Home.Month = ""; 
+Home.Day = ""; 
 Home.SubjectSltStr ="";
 Home.SubjectArray =[];
 Home.Top = 5;
@@ -9,12 +10,19 @@ Home.Init= function init() {
     $("#sctMain").load(objPub.BaseUrl + "biz/home.html", function (respones, status) {
         if (status == "success") {
             Home.GetAllSubject()
-            Home.Year = new Date().getFullYear().toString();
-            var temp =  (new Date().getMonth() + 1).toString(); 
-            if(temp>9){
-                Home.Month = temp
+            var mydate= new Date();
+            Home.Year = mydate.getFullYear().toString();
+            var tempm =  (mydate.getMonth() + 1).toString(); 
+            var tempd = mydate.getDate()
+            if(tempm>9){
+                Home.Month = tempm
             }else{
-                Home.Month = "0"+temp
+                Home.Month = "0"+tempm
+            }
+            if(tempd>9){
+                Home.Day = tempd
+            }else{
+                Home.Day = "0"+tempd
             }
             Home.YearInit();
             Home.WaitApproveCountBind()

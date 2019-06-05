@@ -8,7 +8,7 @@ QuestionInfo.Approve.TotalCount = 0;
 QuestionInfo.Approve.CurrentIndex = 0;
 QuestionInfo.Approve.OldDocumentHeight = 0;
 
-QuestionInfo.Approve.PageSize = 3;
+QuestionInfo.Approve.PageSize = 10;
 QuestionInfo.Approve.TagStr = "";
 QuestionInfo.Approve.TempYear="";
 QuestionInfo.Approve.TempMonth="";
@@ -194,7 +194,7 @@ QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
                     temp += "<div class='question-title'>"+item.Title+"</div>";
                     temp += "<div class='question-describe'>"+item.Content+"</div></td>";
                     temp += "<td>"+item.CreaterName+"</td>";
-                    temp += "<td class='q-time'>"+new Date(item.CreateTime).format("yyyy-MM-dd")+"</td>";
+                    temp += "<td class='q-time'>"+objPub.DealTime(item.CreateTime)+"</td>";
                     temp +="<td class='to-ratify'>";
                     if(item.ApproveStatus == objPub.ApproveType.Wait.toString()){
                         temp +="<a id='aQuestionPass" + Index + "' href='javascript:void(0);'>通过</a>";

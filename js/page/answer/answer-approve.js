@@ -285,7 +285,7 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page) {
                     temp += "<div> "+answerItem.Remark+"</div>";
                     temp += "</div>";
                     temp += "</div>";
-                    temp += "<div class='answer-item-user-date'>"+new Date(answerItem.CreateTime).format("yyyy-MM-dd")+"</div>";
+                    temp += "<div class='answer-item-user-date'>"+objPub.DealTime(answerItem.CreateTime)+"</div>";
                     temp += "</div>";
                     //判断是短篇还是长篇：短篇直接显示，长篇需要处理
                     if (answerItem.PublishType == AnswerInfo.PublishInfoType.Long.toString()) {
