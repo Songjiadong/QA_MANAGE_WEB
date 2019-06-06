@@ -372,6 +372,7 @@ a.btn-view {
 }
 .aq-item-options .to-ratify {
 	float: right;
+	text-align: center;
 }
 .aq-item-options .to-ratify a {
 	display: inline-block;

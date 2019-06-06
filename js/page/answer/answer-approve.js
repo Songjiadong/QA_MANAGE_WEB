@@ -35,8 +35,8 @@ AnswerInfo.Approve.Init = function init() {
             AnswerInfo.Approve.YearInit();
             //回答审核默认搜索
             var page = {
-                PageStart: 1,
-                PageEnd: AnswerInfo.Approve.PageSize * 1
+                pageStart: 1,
+                pageEnd: AnswerInfo.Approve.PageSize * 1
             }; 
             keyword = {
                 Keyword: $("#txtSearch").val(),
@@ -134,7 +134,6 @@ AnswerInfo.Approve.InitApproveData = function init_approve_data(year_month) {
 AnswerInfo.Approve.SearchKeyPressEvent = function SearchKeyPressEvent(event) {
     if (event.keyCode === 13) {
         AnswerInfo.Approve.GC();
-        alert(AnswerInfo.Approve.TempMonth)
         var page = event.data.Page;
         
         var keyword = {
@@ -329,6 +328,7 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page) {
                     } 
                     temp += "<div class='to-ratify'>";
                     if(answerItem.ApproveStatus == objPub.ApproveType.Wait.toString()){
+                       
                         temp += "<a href='javascript:;' id='aAgreeApprove"+Index+"-"+answerIndex+"'>通过</a>";
                         temp += "<a href='javascript:;' class='refuse' id='aRefuseApprove"+Index+"-"+answerIndex+"'>拒绝</a>";
                         $("#divAnswerList").off("click", "#aAgreeApprove" + Index+"-"+answerIndex).on("click", "#aAgreeApprove" + Index+"-"+answerIndex, { 
@@ -348,6 +348,13 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page) {
                              CreaterName:answerItem.CreaterName
                             }, AnswerInfo.Approve.SetApproveEvent);
                     }else{
+                        if($("#divApproveStatusTab").find(".selected").attr("value")==objPub.ApproveType.Approved.toString()){
+                            if(answerItem.ApproveStatus == objPub.ApproveType.Agree.toString()){
+                                temp+="<div>通过</div>"
+                            }else{
+                                temp+="<div>拒绝</div>"
+                            }
+                        }
                             temp +="<a id='aAnswerRevoke" + Index+"-"+answerIndex + "' href='javascript:void(0);' class='refuse'>撤销</a>";
                             $("#divAnswerList").off("click","#aAnswerRevoke"+ Index+"-"+answerIndex).
                             on("click","#aAnswerRevoke"+ Index+"-"+answerIndex,{
@@ -362,13 +369,13 @@ AnswerInfo.Approve.SearchBind = function search_bind(keyword, page) {
                     
                 })
             })
-            if (page.PageStart == 1) {
+            if (page.pageStart == 1) {
                 $("#divAnswerList").empty().append(temp);
             } else {
                 $("#divAnswerList").append(temp);
             } 
         } else {
-            if (page.PageStart == 1) {
+            if (page.pageStart == 1) {
                 $("#divAnswerList").empty().append("<div style='text-align:center;'>暂无待处理的数据</div>");
             }else{
 
@@ -429,8 +436,8 @@ AnswerInfo.Approve.SetApproveEvent = function SetApproveEvent(event) {
             if (result.Result==true) {
                 $.Alert("审批成功！", function () {
                     var page = {
-                        PageStart: 1,
-                        PageEnd: AnswerInfo.Approve.PageSize * 1
+                        pageStart: 1,
+                        pageEnd: AnswerInfo.Approve.PageSize * 1
                     }; 
                     keyword = {
                         Keyword: $("#txtSearch").val(),

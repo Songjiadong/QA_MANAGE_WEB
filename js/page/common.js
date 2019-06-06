@@ -62,6 +62,8 @@ window.objPub.ApproveType.prototype = {
     Refused:1,
     //等待
     Wait:2,
+    //
+    Approved:4,
 }
 
 window.objPub.ApproveType.registerEnum("window.objPub.ApproveType");

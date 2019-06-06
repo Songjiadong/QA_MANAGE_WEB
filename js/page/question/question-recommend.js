@@ -9,10 +9,12 @@ QuestionInfo.Recommend.TotalCount = 0;
 //当前索引
 QuestionInfo.Recommend.CurrentIndex = 0;
 QuestionInfo.Recommend.OldDocumentHeight = 0;
-QuestionInfo.Recommend.TempYear=Home.Year;
-QuestionInfo.Recommend.TempMonth=Home.Month;
+QuestionInfo.Recommend.TempYear="";
+QuestionInfo.Recommend.TempMonth="";
 //问题推荐初始化
 QuestionInfo.Recommend.Init = function init() {
+    QuestionInfo.Recommend.TempYear=Home.Year;
+    QuestionInfo.Recommend.TempMonth=Home.Month;
     $("#sctMain").load(objPub.BaseUrl + "biz/question/recommend-question.html", function (respones, status) {
         if (status == "success") {
             $("#sltSubjectID").html(Home.SubjectSltStr).selectmenu({ appendTo: "#divSelectSubject", width: 100 });

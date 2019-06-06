@@ -215,6 +215,13 @@ QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
                             CreaterName:item.CreaterName
                             }, QuestionInfo.Approve.CancelEvent);
                     }else{
+                        if($("#divApproveStatusTab").find(".selected").attr("value")==objPub.ApproveType.Approved.toString()){
+                            if(item.ApproveStatus == objPub.ApproveType.Agree.toString()){
+                                temp+="<div>通过</div>"
+                            }else{
+                                temp+="<div>拒绝</div>"
+                            }
+                        }
                         temp +="<a id='aQuestionRevoke" + Index + "' href='javascript:void(0);' class='refuse'>撤销</a>";
                         $("#tbQuestionApproveList").off("click","#aQuestionRevoke"+ Index).
                         on("click","#aQuestionRevoke"+ Index,{ID:item.ID},QuestionInfo.Approve.SetApproveRevokeEvent)
@@ -339,7 +346,7 @@ QuestionInfo.Approve.Pass = function pass(){
            CreaterName:creater_name,
         })).done(function(json){
            if(json.Result == true){
-               $.Alert("保存成功",function(){
+               $.Alert({content:"保存成功",width:160},function(){
                 QuestionInfo.Approve.GetApproveStatusCount(QuestionInfo.Approve.TempYear+"-"+QuestionInfo.Approve.TempMonth);
                    var page = {
                        pageStart: 1,
