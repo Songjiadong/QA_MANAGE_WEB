@@ -217,9 +217,9 @@ QuestionInfo.Approve.SearchBind = function SearchBind(keyword, page) {
                     }else{
                         if($("#divApproveStatusTab").find(".selected").attr("value")==objPub.ApproveType.Approved.toString()){
                             if(item.ApproveStatus == objPub.ApproveType.Agree.toString()){
-                                temp+="<div>通过</div>"
+                                temp+="<div style='color:"+objPub.ApproveType.GetColor(parseInt(item.ApproveStatus))+"'>通过</div>"
                             }else{
-                                temp+="<div>拒绝</div>"
+                                temp+="<div style='color:"+objPub.ApproveType.GetColor(parseInt(item.ApproveStatus))+"'>拒绝</div>"
                             }
                         }
                         temp +="<a id='aQuestionRevoke" + Index + "' href='javascript:void(0);' class='refuse'>撤销</a>";

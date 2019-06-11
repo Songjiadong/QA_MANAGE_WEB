@@ -50,7 +50,7 @@ window.objPub.ScorllEvent = function ScorllEvent(event) {
         }
     }
 }
-///消息类别枚举@start///
+///审批类别枚举@start///
 window.objPub.ApproveType = function () {
     throw Error.notImplemented();
 }
@@ -62,11 +62,31 @@ window.objPub.ApproveType.prototype = {
     Refused:1,
     //等待
     Wait:2,
-    //
+    //审批过
     Approved:4,
 }
 
 window.objPub.ApproveType.registerEnum("window.objPub.ApproveType");
+window.objPub.ApproveType.GetColor = function get_color(approve_type) {
+    var result = "";
+    if (isNaN(approve_type) == true) {
+        throw Error.argumentType("approve_type", null, window.objPub.ApproveType, "参数类型不符");
+    }
+    else {
+        switch (approve_type) {
+            case window.objPub.ApproveType.Agree:
+                result = "#7932ea";
+                break;
+            case window.objPub.ApproveType.Refused:
+                result = "#fa9d1a";
+                break;
+
+            default:
+                break;
+        }
+    }
+    return result;
+}
 ///是否类别枚举@start///
 window.objPub.YesNoType = function () {
     throw Error.notImplemented();
