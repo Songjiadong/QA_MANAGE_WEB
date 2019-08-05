@@ -44,6 +44,7 @@ User.Login.Login = function login(rsa_password){
         }
     })
 }
+
 User.Login.LoginEvent = function LoginEvent(event){
     
     $("#txtUserCodeTip,#txtPasswordTip").hide()
@@ -51,12 +52,9 @@ User.Login.LoginEvent = function LoginEvent(event){
        && $("#txtLoginPass").val() != "") {
     $.SimpleAjaxPost("service/user/GetPublicKey",true).done(function(json){
         var encrypt = new JSEncrypt();
-			var decrypt = new JSEncrypt();
-            encrypt.setPublicKey(json.publicKey);
-            decrypt.setPrivateKey(json.privateKey);
-            var data = encrypt.encrypt($.md5($.md5($("#txtLoginPass").val())));
-            var rsa_password = decrypt.decrypt(data);
-			User.Login.Login(rsa_password)
+        encrypt.setPublicKey(json.publicKey);
+        var rsa_password = encrypt.encrypt($.md5($.md5($("#txtLoginPass").val())));
+        User.Login.Login(rsa_password)
         })
     }
 }
@@ -74,14 +72,11 @@ User.Login.LoginPressEvent = function LoginPressEvent(event) {
     if ($("#txtLoginUser").val() != ""
        && $("#txtLoginPass").val() != "") {
         $.SimpleAjaxPost("service/user/GetPublicKey",true).done(function(json){
-            var encrypt = new JSEncrypt();
-                var decrypt = new JSEncrypt();
-                encrypt.setPublicKey(json.publicKey);
-                decrypt.setPrivateKey(json.privateKey);
-                var data = encrypt.encrypt($.md5($.md5($("#txtLoginPass").val())));
-                var rsa_password = decrypt.decrypt(data);
-                User.Login.Login(rsa_password)
-            })
+        var encrypt = new JSEncrypt();
+        encrypt.setPublicKey(json.publicKey);
+        var rsa_password = encrypt.encrypt($.md5($.md5($("#txtLoginPass").val())));
+        User.Login.Login(rsa_password)
+        })
         }
     }
 }
